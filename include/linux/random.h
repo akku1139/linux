@@ -51,6 +51,27 @@ int wait_for_random_bytes(void);
 int register_random_ready_notifier(struct notifier_block *nb);
 int unregister_random_ready_notifier(struct notifier_block *nb);
 
+/*
+ * On 64-bit architectures, protect against non-terminated C string overflows
+ * by zeroing out the first byte of the canary; this leaves 56 bits of entropy.
+ */
+#ifdef CONFIG_64BIT
+# ifdef __LITTLE_ENDIAN
+#  define CANARY_MASK 0xffffffffffffff00UL
+# else /* big endian, 64 bits: */
+#  define CANARY_MASK 0x00ffffffffffffffUL
+# endif
+#else /* 32 bits: */
+# define CANARY_MASK 0xffffffffUL
+#endif
+
+static inline unsigned long get_random_canary(void)
+{
+	unsigned long val = get_random_long();
+
+	return val & CANARY_MASK;
+}
+
 /* Calls wait_for_random_bytes() and then calls get_random_bytes(buf, nbytes).
  * Returns the result of the call to wait_for_random_bytes. */
 static inline int get_random_bytes_wait(void *buf, size_t nbytes)
