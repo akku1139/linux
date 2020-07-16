@@ -936,6 +936,16 @@ config DRM_PANEL_SITRONIX_ST7789V
 	  Say Y here if you want to enable support for the Sitronix
 	  ST7789V controller for 240x320 LCD panels
 
+config DRM_PANEL_SONY_TD4322_INNOLUX
+	tristate "Sony TD4322 Innolux panel"
+	depends on OF
+	depends on DRM_MIPI_DSI
+	depends on BACKLIGHT_CLASS_DEVICE
+	help
+	  Say Y here if you want to enable the Innolux TD4322
+	  1080-1920 command mode panel (as found on Sony Xperia
+	  XA1 / XA2 Ultra devices).
+
 config DRM_PANEL_SONY_ACX565AKM
 	tristate "Sony ACX565AKM panel"
 	depends on GPIOLIB && OF && SPI
