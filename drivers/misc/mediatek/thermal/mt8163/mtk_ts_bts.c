@@ -32,15 +32,6 @@
 #include "mach/mt_thermal.h"
 #include "mtk_ts_cpu.h"
 
-#ifdef CONFIG_AMAZON_SIGN_OF_LIFE
-#include <linux/sign_of_life.h>
-#endif
-
-#ifdef CONFIG_AMAZON_METRICS_LOG
-#include <linux/metricslog.h>
-#define TSBTS_METRICS_STR_LEN 128
-#endif
-
 static bool gadc_ready = false;
 
 int __attribute__ ((weak))
@@ -488,31 +479,9 @@ static int mtkts_bts_get_crit_temp(struct thermal_zone_device *thermal,
 	return 0;
 }
 
-#define PREFIX "thermaltsbts:def"
 static int mtkts_bts_thermal_notify(struct thermal_zone_device *thermal,
 		int trip, enum thermal_trip_type type)
 {
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	char buf[TSBTS_METRICS_STR_LEN];
-#endif
-
-#ifdef CONFIG_AMAZON_SIGN_OF_LIFE
-	if (type == THERMAL_TRIP_CRITICAL) {
-		pr_err("[%s] Thermal shutdown bts, temp=%d, trip=%d\n",
-				__func__, thermal->temperature, trip);
-		life_cycle_set_thermal_shutdown_reason(
-		THERMAL_SHUTDOWN_REASON_BTS);
-	}
-#endif
-
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	if (type == THERMAL_TRIP_CRITICAL &&
-		snprintf(buf, TSBTS_METRICS_STR_LEN,
-			"%s:tsbtsmonitor;CT;1,temp=%d;trip=%d;CT;1:NR",
-			PREFIX, thermal->temperature, trip) > 0)
-		log_to_metrics(ANDROID_LOG_INFO, "ThermalEvent", buf);
-
-#endif
 	return 0;
 }
 

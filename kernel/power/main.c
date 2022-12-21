@@ -15,7 +15,6 @@
 #include <linux/workqueue.h>
 #include <linux/debugfs.h>
 #include <linux/seq_file.h>
-
 #include "power.h"
 
 DEFINE_MUTEX(pm_mutex);
