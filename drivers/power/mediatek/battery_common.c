@@ -81,7 +81,96 @@
 #include <mt-plat/internal_charging.h>
 #endif
 
+#if defined(CONFIG_EARLYSUSPEND)
+#include <linux/earlysuspend.h>
+#endif
 
+#include <linux/irq.h>
+/* #include <mach/mt_pmic_irq.h> */
+#include <linux/reboot.h>
+
+#ifdef CONFIG_AMAZON_SIGN_OF_LIFE
+#include <linux/sign_of_life.h>
+#endif
+
+#ifdef CONFIG_FB
+#include <linux/notifier.h>
+#include <linux/fb.h>
+#endif
+
+extern signed int g_fg_dbg_bat_qmax;
+
+enum BQ_FLAGS {
+	BQ_STATUS_RESUMING = 0x2,
+};
+
+enum BCCT_STATE {
+	bcct_false = 0,
+	bcct_true
+};
+
+#ifdef CONFIG_USB_AMAZON_DOCK
+enum DOCK_STATE_TYPE {
+	TYPE_DOCKED = 5,
+	TYPE_UNDOCKED = 6,
+};
+#endif
+
+struct battery_info {
+	struct mutex lock;
+
+	int flags;
+
+	/* Time when system enters full suspend */
+	struct timespec suspend_time;
+	/* Time when system enters early suspend */
+	struct timespec early_suspend_time;
+	/* Battery capacity when system enters full suspend */
+	int suspend_capacity;
+	/* Battery capacity, relative and high-precision, when system enters full suspend */
+	int suspend_bat_car;
+	/* Battery capacity when system enters early suspend */
+	int early_suspend_capacity;
+#if defined(CONFIG_EARLYSUSPEND)
+	struct early_suspend early_suspend;
+#endif
+#if defined(CONFIG_FB)
+	struct notifier_block notifier;
+#endif
+};
+
+struct battery_data {
+	struct power_supply psy;
+	int BAT_STATUS;
+	int BAT_HEALTH;
+	int BAT_PRESENT;
+	int BAT_TECHNOLOGY;
+	int BAT_CAPACITY;
+#ifdef CONFIG_USB_AMAZON_DOCK
+	struct switch_dev dock_state;
+#endif
+	/* Add for Battery Service */
+	int BAT_batt_vol;
+	int BAT_batt_temp;
+	/* Add for EM */
+	int BAT_TemperatureR;
+	int BAT_TempBattVoltage;
+	int BAT_InstatVolt;
+	int BAT_BatteryAverageCurrent;
+	int BAT_BatterySenseVoltage;
+	int BAT_ISenseVoltage;
+	int BAT_ChargerVoltage;
+	/* Dual battery */
+	int status_smb;
+	int capacity_smb;
+	int present_smb;
+	int adjust_power;
+	struct mtk_cooler_platform_data *cool_dev;
+};
+
+static struct battery_data battery_main;
+
+struct battery_info BQ_info;
 
 /* ///////////////////////////////////////////////////////////////////////////////////////// */
 /* // Smart Battery Structure */
@@ -794,7 +883,7 @@ static struct battery_data battery_main = {
 
 
 #if !defined(CONFIG_POWER_EXT)
-/* ///////////////////////////////////////////////////////////////////////////////////////// */
+/* //////////////////////////////////////////////////////////////////////////////////////// */
 /* // Create File For EM : ADC_Charger_Voltage */
 /* ///////////////////////////////////////////////////////////////////////////////////////// */
 static ssize_t show_ADC_Charger_Voltage(struct device *dev, struct device_attribute *attr,
