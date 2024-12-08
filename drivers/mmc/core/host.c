@@ -592,20 +592,6 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
 	mutex_init(&host->slot.lock);
 	host->slot.cd_irq = -EINVAL;
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	INIT_DELAYED_WORK(&host->metrics_delay_work,
-				mmc_host_metrics_work);
-
-	/*Only init delayed work for SD card, whose index is 1*/
-	if (host->index == 1) {
-		INIT_DELAYED_WORK(&host->metrics_timeout_work,
-				sd_metrics_timeout_work);
-		mutex_init(&host->cid_mutex);
-
-		atomic64_set(&host->data_timeout_count, 0);
-		atomic64_set(&host->data_count, 0);
-	}
-#endif /* CONFIG_AMAZON_METRICS_LOG */
 
 	spin_lock_init(&host->lock);
 	init_waitqueue_head(&host->wq);

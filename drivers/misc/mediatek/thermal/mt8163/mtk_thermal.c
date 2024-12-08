@@ -35,13 +35,6 @@
 #endif
 #define __MT_MTK_TS_CPU_C__
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-#include <linux/metricslog.h>
-#define TSCPU_METRICS_STR_LEN 128
-#define METRICS_PREFIX "TSCPU:Thermal"
-#define METRICS_MASK 0x6FFF
-#endif
-
 #include <linux/thermal_framework.h>
 #include <linux/platform_data/mtk_thermal.h>
 
@@ -1335,11 +1328,6 @@ static int tscpu_get_temp(struct thermal_zone_device *thermal,
 	int bank1_T;
 	int bank2_T;
 	static int last_cpu_real_temp;
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	struct tscpu_thermal_zone *tz = thermal->devdata;
-	struct mtk_thermal_platform_data *pdata = tz->pdata;
-	char buf[TSCPU_METRICS_STR_LEN];
-#endif
 
 	/*
 	 * Bank0 : CPU (TS_MCU1,TS_MCU2)        (TS3, TS4)
@@ -1433,16 +1421,6 @@ static int tscpu_get_temp(struct thermal_zone_device *thermal,
 
 	g_max_temp = curr_temp;
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	pdata->metrics_count++;
-	if (!(pdata->metrics_count & METRICS_MASK)) {
-		snprintf(buf, TSCPU_METRICS_STR_LEN,
-			"%s:tj_temp=%d;CT;1:NR",
-			METRICS_PREFIX, curr_temp);
-		log_to_metrics(ANDROID_LOG_INFO, "ThermalMetrics", buf);
-		pdata->metrics_count = 0;
-	}
-#endif
 	tscpu_dprintk("tscpu_get_temp, current temp =%d\n", curr_temp);
 	return ret;
 }
@@ -1592,9 +1570,6 @@ static int tscpu_set_trip_hyst(struct thermal_zone_device *thermal,
 static int tscpu_thermal_notify(struct thermal_zone_device *thermal,
 				int trip, enum thermal_trip_type type)
 {
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	char buf[TSCPU_METRICS_STR_LEN];
-#endif
 
 #ifdef CONFIG_AMAZON_SIGN_OF_LIFE
 	if (type == THERMAL_TRIP_CRITICAL) {
@@ -1602,15 +1577,6 @@ static int tscpu_thermal_notify(struct thermal_zone_device *thermal,
 				__func__, thermal->temperature, trip);
 		life_cycle_set_thermal_shutdown_reason(
 						THERMAL_SHUTDOWN_REASON_SOC);
-	}
-#endif
-
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	if (type == THERMAL_TRIP_CRITICAL) {
-		snprintf(buf, TSCPU_METRICS_STR_LEN,
-			"%s:tscpumonitor;CT;1,temp=%d;trip=%d;CT;1:NR",
-			METRICS_PREFIX, thermal->temperature, trip);
-		log_to_metrics(ANDROID_LOG_INFO, "ThermalEvent", buf);
 	}
 #endif
 
@@ -2456,9 +2422,6 @@ static struct mtk_thermal_platform_data tscpu_thermal_data = {
 	.num_trips = THERMAL_MAX_TRIPS,
 	.mode = THERMAL_DEVICE_DISABLED,
 	.polling_delay = 500,
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	.metrics_count = 0,
-#endif
 	.num_cdevs = 2,
 	.trips[0] = {.temp = 95000, .type = THERMAL_TRIP_ACTIVE, .hyst = 0,
 		     .cdev[0] = {

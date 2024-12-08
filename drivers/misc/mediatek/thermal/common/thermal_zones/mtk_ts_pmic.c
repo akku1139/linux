@@ -17,10 +17,6 @@
 #include <tspmic_settings.h>
 #include <linux/uidgid.h>
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-#include <linux/metricslog.h>
-#define METRICS_STR_LEN 128
-#endif
 
 #define PREFIX "thermalthrottle:def"
 
@@ -235,18 +231,9 @@ static int tspmic_sysrst_get_cur_state(struct thermal_cooling_device *cdev, unsi
 
 static int tspmic_sysrst_set_cur_state(struct thermal_cooling_device *cdev, unsigned long state)
 {
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	char buf[METRICS_STR_LEN];
-#endif
 
 	cl_dev_sysrst_state = state;
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	snprintf(buf, METRICS_STR_LEN,
-		"%s:cooler_%s_throttling_state=%ld;CT;1:NR",
-		PREFIX, cdev->type, state);
-	log_to_metrics(ANDROID_LOG_INFO, "ThermalEvent", buf);
-#endif
 
 	if (cl_dev_sysrst_state == 1) {
 		mtktspmic_info("Power/PMIC_Thermal: reset, reset, reset!!!");

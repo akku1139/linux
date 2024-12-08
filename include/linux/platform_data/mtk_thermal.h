@@ -46,9 +46,6 @@ struct mtk_thermal_platform_data {
 	enum thermal_device_mode mode;
 	int polling_delay;
 	int shutdown_wait;
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	int metrics_count;
-#endif
 	/*
 	 * Add a list for sensor params. Note: therm_lock takes
 	 * care of list protection.

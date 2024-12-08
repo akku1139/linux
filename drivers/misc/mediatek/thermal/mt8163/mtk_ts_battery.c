@@ -25,21 +25,7 @@
 #include <linux/sign_of_life.h>
 #endif
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-#include <linux/metricslog.h>
-#define TSBATTERY_METRICS_STR_LEN 128
-#endif
-
 struct proc_dir_entry *mtk_thermal_get_proc_drv_therm_dir_entry(void);
-
-#ifdef CONFIG_AMAZON_METRICS_LOG
-#include <linux/metricslog.h>
-#ifndef THERMO_METRICS_STR_LEN
-#define THERMO_METRICS_STR_LEN 128
-#endif
-static char *mPrefix = "battery_thermal_zone:def:monitor=1";
-static char mBuf[THERMO_METRICS_STR_LEN];
-#endif
 
 static kuid_t uid = KUIDT_INIT(0);
 static kgid_t gid = KGIDT_INIT(1000);
@@ -347,9 +333,6 @@ static int mtktsbattery_get_crit_temp(struct thermal_zone_device *thermal,
 static int mtktsbattery_thermal_notify(struct thermal_zone_device *thermal,
 				int trip, enum thermal_trip_type type)
 {
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	char buf[TSBATTERY_METRICS_STR_LEN];
-#endif
 
 #ifdef CONFIG_THERMAL_DOUGLAS
 	pr_err("%s: thermal_shutdown notify\n", __func__);
@@ -362,15 +345,6 @@ static int mtktsbattery_thermal_notify(struct thermal_zone_device *thermal,
 		pr_debug("[%s] Thermal shutdown Battery, temp=%d, trip=%d\n",
 				__func__, thermal->temperature, trip);
 		life_cycle_set_thermal_shutdown_reason(THERMAL_SHUTDOWN_REASON_BATTERY);
-	}
-#endif
-
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	if (type == THERMAL_TRIP_CRITICAL) {
-		snprintf(buf, TSBATTERY_METRICS_STR_LEN,
-			"%s:tsbatterymonitor;CT;1,temp=%d;trip=%d;CT;1:NR",
-			PREFIX, thermal->temperature, trip);
-		log_to_metrics(ANDROID_LOG_INFO, "ThermalEvent", buf);
 	}
 #endif
 
@@ -435,12 +409,6 @@ static int tsbat_sysrst_set_cur_state(struct thermal_cooling_device *cdev, unsig
 		pr_debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		pr_debug("*****************************************");
 		pr_debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-#ifdef CONFIG_AMAZON_METRICS_LOG
-		snprintf(mBuf, THERMO_METRICS_STR_LEN,
-			 "%s;thermal_caught_shutdown=1;CT;1:NR",
-			 mPrefix);
-		log_to_metrics(ANDROID_LOG_INFO, "ThermalEvent", mBuf);
-#endif
 
 #ifndef CONFIG_ARM64
 		BUG();

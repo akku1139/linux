@@ -29,9 +29,6 @@
 #include <linux/rcupdate.h>
 #include "input-compat.h"
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-#include <linux/metricslog.h>
-#endif
 
 MODULE_AUTHOR("Vojtech Pavlik <vojtech@suse.cz>");
 MODULE_DESCRIPTION("Input core");
@@ -44,12 +41,6 @@ static DEFINE_IDA(input_ida);
 static LIST_HEAD(input_dev_list);
 static LIST_HEAD(input_handler_list);
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-static atomic_t vol_up_counter;
-static atomic_t vol_down_counter;
-static atomic_t touch_tap_counter;
-struct delayed_work metrics_work;
-#endif
 
 /*
  * input_mutex protects access to both input_dev_list and input_handler_list.
@@ -442,19 +433,6 @@ void input_event(struct input_dev *dev,
 		input_handle_event(dev, type, code, value);
 		spin_unlock_irqrestore(&dev->event_lock, flags);
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-		if (type == EV_ABS && code == ABS_MT_POSITION_Y) {
-			atomic_inc(&touch_tap_counter);
-		}
-
-		if (type == EV_KEY && code == KEY_VOLUMEDOWN) {
-			atomic_inc(&vol_down_counter);
-		}
-
-		if (type == EV_KEY && code == KEY_VOLUMEUP) {
-			atomic_inc(&vol_up_counter);
-		}
-#endif
 	}
 }
 EXPORT_SYMBOL(input_event);
@@ -2427,35 +2405,6 @@ void input_free_minor(unsigned int minor)
 }
 EXPORT_SYMBOL(input_free_minor);
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-static void metrics_count_work(struct work_struct *work)
-{
-	char buf[128] = {0};
-	struct delayed_work *dw = container_of(work, struct delayed_work, work);
-
-	snprintf(buf, sizeof(buf),
-		"input_event:def:touch_tap=%ld;CT;1:NA",
-		atomic_xchg(&touch_tap_counter, 0));
-
-	log_to_metrics(ANDROID_LOG_INFO, "InputEvent", buf);
-	memset(buf, 0, 128);
-
-	snprintf(buf, sizeof(buf),
-		"input_event:def:key_voldown=%ld;CT;1:NA",
-		atomic_xchg(&vol_down_counter, 0));
-
-	log_to_metrics(ANDROID_LOG_INFO, "InputEvent", buf);
-	memset(buf, 0, 128);
-
-	snprintf(buf, sizeof(buf),
-		"input_event:def:key_volup=%ld;CT;1:NA",
-		atomic_xchg(&vol_up_counter, 0));
-
-	log_to_metrics(ANDROID_LOG_INFO, "InputEvent", buf);
-
-	schedule_delayed_work(dw, 7200*HZ);
-}
-#endif
 
 static int __init input_init(void)
 {
@@ -2478,10 +2427,6 @@ static int __init input_init(void)
 		goto fail2;
 	}
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	INIT_DELAYED_WORK(&metrics_work, metrics_count_work);
-	schedule_delayed_work(&metrics_work, 0);
-#endif
 
 	return 0;
 
@@ -2497,9 +2442,6 @@ static void __exit input_exit(void)
 				 INPUT_MAX_CHAR_DEVICES);
 	class_unregister(&input_class);
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	cancel_delayed_work_sync(&metrics_work);
-#endif
 }
 
 subsys_initcall(input_init);

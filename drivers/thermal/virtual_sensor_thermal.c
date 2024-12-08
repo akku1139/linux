@@ -34,12 +34,6 @@
 #include <linux/platform_data/mtk_thermal.h>
 #include <linux/thermal_framework.h>
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-#include <linux/metricslog.h>
-#define METRICS_PREFIX "VirtualSensor:Thermal"
-#define TMP103_METRICS_STR_LEN 128
-#define METRICS_MASK 0x6FFF
-#endif
 
 #include "thermal_core.h"
 
@@ -67,9 +61,6 @@ static struct mtk_thermal_platform_data virtual_sensor_0_thermal_data = {
 	.mode = THERMAL_DEVICE_DISABLED,
 	.polling_delay = 1000,
 	.shutdown_wait = 10000,
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	.metrics_count = 0,
-#endif
 	.ts_list = LIST_HEAD_INIT(virtual_sensor_0_thermal_data.ts_list),
 	.trips[0] = {.temp = 59500, .type = THERMAL_TRIP_ACTIVE, .hyst = 0,
 		     .cdev[0] = {
@@ -224,9 +215,6 @@ static struct mtk_thermal_platform_data virtual_sensor_1_thermal_data = {
 	.mode = THERMAL_DEVICE_DISABLED,
 	.polling_delay = 1000,
 	.shutdown_wait = 10000,
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	.metrics_count = 0,
-#endif
 	.ts_list = LIST_HEAD_INIT(virtual_sensor_1_thermal_data.ts_list),
 	.trips[0] = {.temp = 43000, .type = THERMAL_TRIP_ACTIVE, .hyst = 0,
 		     .cdev[0] = {
@@ -349,11 +337,6 @@ static int virtual_sensor_thermal_get_temp(struct thermal_zone_device *thermal,
 	long temp = 0;
 	long tempv = 0;
 	int alpha, offset, weight;
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	char buf[TMP103_METRICS_STR_LEN];
-	struct device_node *node = NULL;
-	int aux_channel = 0;
-#endif
 
 	if (!tzone)
 		return -EINVAL;
@@ -362,9 +345,6 @@ static int virtual_sensor_thermal_get_temp(struct thermal_zone_device *thermal,
 	if (!pdata)
 		return -EINVAL;
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	pdata->metrics_count++;
-#endif
 
 	list_for_each_entry(tdev, &pdata->ts_list, node) {
 		if (strcmp("virtual_sensor_thermistor", tdev->name))
@@ -374,17 +354,6 @@ static int virtual_sensor_thermal_get_temp(struct thermal_zone_device *thermal,
 		offset = tdev->tdp->offset;
 		weight = tdev->tdp->weight;
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-		if (!(pdata->metrics_count & METRICS_MASK)) {
-			node = tdev->dev->of_node;
-			of_property_read_u32(node, "aux_channel_num",
-						&aux_channel);
-			snprintf(buf, TMP103_METRICS_STR_LEN,
-				"Thermistor:Thermal:pcb_temp.%d=%lu;CT;1:NR",
-				aux_channel, temp);
-			log_to_metrics(ANDROID_LOG_INFO, "ThermalMetrics", buf);
-		}
-#endif
 		pr_debug("%s %s t=%ld a=%d o=%d w=%d\n",
 		       __func__,
 		       tdev->name,
@@ -405,15 +374,6 @@ static int virtual_sensor_thermal_get_temp(struct thermal_zone_device *thermal,
 		pr_debug("%s tempv=%ld\n", __func__, tempv);
 	}
 
-#ifdef CONFIG_AMAZON_METRICS_LOG
-	if (!(pdata->metrics_count & METRICS_MASK)) {
-		snprintf(buf, TMP103_METRICS_STR_LEN,
-			"%s:%s=%lu;CT;1:NR",
-			METRICS_PREFIX, tzone->tz->type, tempv);
-		log_to_metrics(ANDROID_LOG_INFO, "ThermalMetrics", buf);
-		pdata->metrics_count = 0;
-	}
-#endif
 
 	*t = tempv; /* back to unsigned expected by linux framework */
 	return 0;
