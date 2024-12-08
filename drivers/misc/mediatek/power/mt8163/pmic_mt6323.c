@@ -83,10 +83,6 @@ static unsigned long timer_pos;
 bool mtk_volume_key_pressed(void);
 #endif
 
-#ifdef CONFIG_AMAZON_POWEROFF_LOG
-static u32 logdump_wait_time = 2000; /* 2sec */
-#endif
-
 struct wake_lock pmicAuxadc_irq_lock;
 
 __attribute__ ((weak))
@@ -728,25 +724,6 @@ static void mt6323_irq_ack_locked(struct mt6323_chip_priv *chip, unsigned int ev
 	pwrap_read(chip->int_stat[1], &val[1]);
 }
 
-#ifdef CONFIG_AMAZON_POWEROFF_LOG
-static void log_long_press_power_key(void)
-{
-	int rc;
-	char *argv[] = {
-		"/sbin/crashreport",
-		"long_press_power_key",
-		NULL
-	};
-
-	rc = call_usermodehelper(argv[0], argv, NULL, UMH_WAIT_EXEC);
-
-	if (rc < 0)
-		pr_err("call /sbin/crashreport failed, rc = %d\n", rc);
-
-	msleep(logdump_wait_time);
-}
-#endif /* CONFIG_AMAZON_POWEROFF_LOG */
-
 static void long_press_restart(struct work_struct *dummy)
 {
 	unsigned int pwrkey_deb = 0;
@@ -768,9 +745,6 @@ static void long_press_restart(struct work_struct *dummy)
 #endif
 
 		pr_err("Long key press power off\n");
-#ifdef CONFIG_AMAZON_POWEROFF_LOG
-		log_long_press_power_key();
-#endif /* CONFIG_AMAZON_POWEROFF_LOG */
 		if (upmu_get_pwrkey_deb())
 			goto done;
 		sys_sync();
@@ -1648,9 +1622,6 @@ static int pmic_mt6323_probe(struct platform_device *dev)
 	hrtimer_init(&chip->check_pwrkey_release_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 	chip->check_pwrkey_release_timer.function = check_pwrkey_release_timer_func;
 
-#ifdef CONFIG_AMAZON_POWEROFF_LOG
-	of_property_read_u32(np, "log-dump-wait-time", &logdump_wait_time);
-#endif
 	device_create_file(&(dev->dev), &dev_attr_pmic_access);
 	return 0;
 

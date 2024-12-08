@@ -31,9 +31,6 @@
 #include <mach/mt_secure_api.h>
 
 #include "../../include/mt-plat/mtk_rtc.h"
-#ifdef CONFIG_AMAZON_SIGN_OF_LIFE
-#include <linux/sign_of_life.h>
-#endif
 
 #define THREAD_INFO(sp) ((struct thread_info *) \
 				((unsigned long)(sp) & ~(THREAD_SIZE - 1)))
@@ -462,9 +459,6 @@ void aee_wdt_atf_info(unsigned int cpu, struct pt_regs *regs)
 #endif
 	aee_sram_fiq_log(wdt_log_buf);
 
-#ifdef CONFIG_AMAZON_SIGN_OF_LIFE
-	life_cycle_set_boot_reason(WARMBOOT_BY_KERNEL_WATCHDOG);
-#endif
 	rtc_mark_reboot_reason(RTC_REBOOT_REASON_SW_WDT);
 
 	/* avoid lock prove to dump_stack in __debug_locks_off() */

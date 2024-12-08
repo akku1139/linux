@@ -43,9 +43,6 @@
 #include "inc/mtk_ts_cpu.h"
 
 #include <linux/platform_data/mtk_thermal.h>
-#ifdef CONFIG_AMAZON_SIGN_OF_LIFE
-#include <linux/sign_of_life.h>
-#endif
 
 struct proc_dir_entry *mtk_thermal_get_proc_drv_therm_dir_entry(void);
 
@@ -387,14 +384,6 @@ static int mtktspmic_thermal_notify(struct thermal_zone_device *thermal,
 	pr_err("%s: thermal_shutdown notify\n", __func__);
 	last_kmsg_thermal_shutdown();
 	pr_err("%s: thermal_shutdown notify end\n", __func__);
-#endif
-
-#ifdef CONFIG_AMAZON_SIGN_OF_LIFE
-	if (type == THERMAL_TRIP_CRITICAL) {
-		pr_debug("[%s] Thermal shutdown PMIC, temp=%d, trip=%d\n",
-				__func__, thermal->temperature, trip);
-		life_cycle_set_thermal_shutdown_reason(THERMAL_SHUTDOWN_REASON_PMIC);
-	}
 #endif
 
 	return 0;
