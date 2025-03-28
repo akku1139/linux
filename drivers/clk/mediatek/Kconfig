@@ -161,6 +161,16 @@ config COMMON_CLK_MT6735_VENCSYS
 	  This enables a driver for clocks provided by vencsys
 	  on the MediaTek MT6735 SoC.
 
+config COMMON_CLK_MT6757
+	tristate "Main clock drivers for MediaTek MT6757"
+	depends on ARCH_MEDIATEK || COMPILE_TEST
+	select COMMON_CLK_MEDIATEK
+	select COMMON_CLK_MEDIATEK_SPM
+	help
+	  This enables drivers for clocks and resets provided
+	  by apmixedsys, topckgen, infracfg, pericfg and spm on the
+	  MediaTek MT6757 SoC.
+
 config COMMON_CLK_MT6765
        bool "Clock driver for MediaTek MT6765"
        depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
