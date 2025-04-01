@@ -46,6 +46,10 @@ properties:
               - mediatek,mt8516-pwrap
       - items:
           - enum:
+              - mediatek,mt6757-pwrap
+          - const: mediatek,mt6797-pwrap
+      - items:
+          - enum:
               - mediatek,mt8186-pwrap
               - mediatek,mt8195-pwrap
           - const: syscon
