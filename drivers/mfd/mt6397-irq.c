@@ -15,6 +15,8 @@
 #include <linux/mfd/mt6328/registers.h>
 #include <linux/mfd/mt6331/core.h>
 #include <linux/mfd/mt6331/registers.h>
+#include <linux/mfd/mt6351/core.h>
+#include <linux/mfd/mt6351/registers.h>
 #include <linux/mfd/mt6397/core.h>
 #include <linux/mfd/mt6397/registers.h>
 
@@ -196,6 +198,17 @@ int mt6397_irq_init(struct mt6397_chip *chip)
 		chip->int_status[0] = MT6331_INT_STATUS_CON0;
 		chip->int_status[1] = MT6331_INT_STATUS_CON1;
 		irq_num = MT6331_IRQ_STATUS_NR;
+		break;
+	case MT6351_CHIP_ID:
+		chip->int_con[0] = MT6351_INT_CON0;
+		chip->int_con[1] = MT6351_INT_CON1;
+		chip->int_con[2] = MT6351_INT_CON2;
+		chip->int_con[3] = MT6351_INT_CON3;
+		chip->int_status[0] = MT6351_INT_STATUS0;
+		chip->int_status[1] = MT6351_INT_STATUS1;
+		chip->int_status[2] = MT6351_INT_STATUS2;
+		chip->int_status[3] = MT6351_INT_STATUS3;
+		irq_num = MT6351_IRQ_STATUS_NR;
 		break;
 	case MT6391_CHIP_ID:
 	case MT6397_CHIP_ID:
