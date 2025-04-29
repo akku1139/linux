@@ -171,6 +171,41 @@ config COMMON_CLK_MT6757
 	  by apmixedsys, topckgen, infracfg, pericfg and spm on the
 	  MediaTek MT6757 SoC.
 
+config COMMON_CLK_MT6757_CAMSYS
+	tristate "Clock driver for MediaTek MT6757 camsys"
+	depends on COMMON_CLK_MT6757
+	help
+	  This enables a driver for clocks provided by camsys
+	  on the MediaTek MT6757 SoC.
+
+config COMMON_CLK_MT6757_IMGSYS
+	tristate "Clock driver for MediaTek MT6757 imgsys"
+	depends on COMMON_CLK_MT6757
+	help
+	  This enables a driver for clocks provided by imgsys
+	  on the MediaTek MT6757 SoC.
+
+config COMMON_CLK_MT6757_MFGCFG
+	tristate "Clock driver for MediaTek MT6757 mfgcfg"
+	depends on COMMON_CLK_MT6757
+	help
+	  This enables a driver for clocks and resets provided
+	  by mfgcfg on the MediaTek MT6757 SoC.
+
+config COMMON_CLK_MT6757_VDECSYS
+	tristate "Clock driver for MediaTek MT6757 vdecsys"
+	depends on COMMON_CLK_MT6757
+	help
+	  This enables a driver for clocks and resets provided
+	  by vdecsys on the MediaTek MT6757 SoC.
+
+config COMMON_CLK_MT6757_VENCSYS
+	tristate "Clock driver for MediaTek MT6757 vencsys"
+	depends on COMMON_CLK_MT6757
+	help
+	  This enables a driver for clocks provided by vencsys
+	  on the MediaTek MT6757 SoC.
+
 config COMMON_CLK_MT6765
        bool "Clock driver for MediaTek MT6765"
        depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
