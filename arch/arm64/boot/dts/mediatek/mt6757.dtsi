@@ -216,6 +216,17 @@
 			#clock-cells = <1>;
 		};
 
+		pwrap: pwrap@1000d000 {
+			compatible = "mediatek,mt6757-pwrap", "mediatek,mt6797-pwrap";
+			reg = <0 0x1000d000 0 0x1000>;
+			reg-names = "pwrap";
+			interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
+			resets = <&infracfg MT6757_INFRA_RST2_PMIC_WRAP>;
+			reset-names = "pwrap";
+			clocks = <&topckgen CLK_TOP_PMICSPI_SEL>, <&clk26m>;
+			clock-names = "spi", "wrap";
+		};
+
 		sysirq: interrupt-controller@10200620 {
 			compatible = "mediatek,mt6757-sysirq", "mediatek,mt6577-sysirq";
 			reg = <0 0x10200620 0 0x20>, /* INT_POL_CTL[0-7] */
