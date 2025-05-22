@@ -5,6 +5,8 @@
 
 #include <dt-bindings/interrupt-controller/arm-gic.h>
 
+#include <dt-bindings/reset/mediatek,mt6757-wdt.h>
+
 / {
 	#address-cells = <2>;
 	#size-cells = <2>;
@@ -170,6 +172,12 @@
 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
 			interrupt-parent = <&gic>;
 			interrupt-controller;
+		};
+
+		watchdog: watchdog@10007000 {
+			compatible = "mediatek,mt6757-wdt";
+			reg = <0 0x10007000 0 0x100>;
+			#reset-cells = <1>;
 		};
 
 		timer: timer@10008000 {
