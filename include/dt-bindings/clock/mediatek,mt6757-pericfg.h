@@ -1,0 +1,8 @@
+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+
+#ifndef _DT_BINDINGS_CLK_MT6757_PERICFG_H
+#define _DT_BINDINGS_CLK_MT6757_PERICFG_H
+
+#define CLK_PERI_AXI	0
+
+#endif /* _DT_BINDINGS_CLK_MT6757_PERICFG_H */
