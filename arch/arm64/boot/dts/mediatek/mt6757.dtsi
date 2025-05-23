@@ -9,6 +9,7 @@
 #include <dt-bindings/clock/mediatek,mt6757-infracfg.h>
 #include <dt-bindings/clock/mediatek,mt6757-pericfg.h>
 #include <dt-bindings/clock/mediatek,mt6757-topckgen.h>
+#include <dt-bindings/pinctrl/mt6757-pinfunc.h>
 #include <dt-bindings/reset/mediatek,mt6757-infracfg.h>
 #include <dt-bindings/reset/mediatek,mt6757-wdt.h>
 
@@ -195,6 +196,26 @@
 		pericfg: syscon@10003000 {
 			compatible = "mediatek,mt6757-pericfg", "syscon";
 			reg = <0 0x10003000 0 0x1000>;
+		};
+
+		pio: pinctrl@10005000 {
+			compatible = "mediatek,mt6757-pinctrl";
+			reg = <0 0x10005000 0 0x1000>,
+			      <0 0x10002000 0 0x200>,
+			      <0 0x10002200 0 0x200>,
+			      <0 0x10002400 0 0x200>,
+			      <0 0x10002600 0 0x200>,
+			      <0 0x10002800 0 0x200>,
+			      <0 0x10002a00 0 0x200>,
+			      <0 0x1000b000 0 0x1000>;
+			reg-names = "gpio", "iocfg0", "iocfg1", "iocfg2",
+				    "iocfg3", "iocfg4", "iocfg5", "eint";
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-ranges = <&pio 0 0 193>;
+			interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-controller;
+			#interrupt-cells = <2>;
 		};
 
 		watchdog: watchdog@10007000 {
