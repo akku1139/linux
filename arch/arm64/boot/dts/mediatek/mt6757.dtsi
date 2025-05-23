@@ -232,5 +232,43 @@
 			clocks = <&clk13m>;
 			clock-names = "clk13m";
 		};
+
+		apdma: dma-controller@11000580 {
+			compatible = "mediatek,mt6757-uart-dma", "mediatek,mt6577-uart-dma";
+			reg = <0 0x11000580 0 0x80>,
+			      <0 0x11000600 0 0x80>,
+			      <0 0x11000680 0 0x80>,
+			      <0 0x11000700 0 0x80>;
+			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_LOW>,
+				     <GIC_SPI 108 IRQ_TYPE_LEVEL_LOW>,
+				     <GIC_SPI 109 IRQ_TYPE_LEVEL_LOW>,
+				     <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>;
+			dma-requests = <4>;
+			clocks = <&infracfg CLK_INFRA_AP_DMA>;
+			clock-names = "apdma";
+			#dma-cells = <1>;
+		};
+
+		uart0: serial@11002000 {
+			compatible = "mediatek,mt6757-uart", "mediatek,mt6577-uart";
+			reg = <0 0x11002000 0 0x400>;
+			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+			clocks = <&infracfg CLK_INFRA_UART0>, <&infracfg CLK_INFRA_AP_DMA>;
+			clock-names = "baud", "bus";
+			dmas = <&apdma 0 &apdma 1>;
+			dma-names = "tx", "rx";
+			status = "disabled";
+		};
+
+		uart1: serial@11003000 {
+			compatible = "mediatek,mt6757-uart", "mediatek,mt6577-uart";
+			reg = <0 0x11003000 0 0x400>;
+			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
+			clocks = <&infracfg CLK_INFRA_UART1>, <&infracfg CLK_INFRA_AP_DMA>;
+			clock-names = "baud", "bus";
+			dmas = <&apdma 2 &apdma 3>;
+			dma-names = "tx", "rx";
+			status = "disabled";
+		};
 	};
 };
