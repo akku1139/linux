@@ -23,6 +23,7 @@ properties:
           - enum:
               - mediatek,mt2712-uart-dma
               - mediatek,mt6795-uart-dma
+              - mediatek,mt8163-uart-dma
               - mediatek,mt8365-uart-dma
               - mediatek,mt8516-uart-dma
           - const: mediatek,mt6577-uart-dma
