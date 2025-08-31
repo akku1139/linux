@@ -53,6 +53,7 @@ properties:
               - mediatek,mt6991-spi
               - mediatek,mt7622-spi
               - mediatek,mt8135-spi
+              - mediatek,mt8163-spi
               - mediatek,mt8173-spi
               - mediatek,mt8183-spi
 
