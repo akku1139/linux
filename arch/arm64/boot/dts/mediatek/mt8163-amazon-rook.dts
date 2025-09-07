@@ -17,6 +17,14 @@
 	/* Needed by stock bootloader */
 	version = "evt";
 
+	simple-framebuffer-params {
+		compatible = "simple-framebuffer-params";
+		width = <480>;
+		height = <480>;
+		stride = <(480 * 4)>; /* 4 bytes per pixel */
+		format = "a8b8g8r8";
+	};
+
 	gpio-keys {
 		compatible = "gpio-keys";
 		pinctrl-names = "default";
