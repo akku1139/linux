@@ -60,6 +60,17 @@ static int __init early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
 	return err;
 }
 
+static bool __init is_nomap(unsigned long node)
+{
+	bool nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
+	if (!nomap) {
+		const char* compatible = of_get_flat_dt_prop(node, "compatible", NULL);
+		if (compatible && strcmp(compatible, "mediatek,fb-reserved-memory") == 0)
+			nomap = true;
+	}
+	return nomap;
+}
+
 /*
  * alloc_reserved_mem_array() - allocate memory for the reserved_mem
  * array using memblock
@@ -170,7 +181,7 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
 		return -EINVAL;
 	}
 
-	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
+	nomap = is_nomap(node);
 
 	while (len >= t_len) {
 		base = dt_mem_next_cell(dt_root_addr_cells, &prop);
@@ -429,7 +440,7 @@ static int __init __reserved_mem_alloc_size(unsigned long node, const char *unam
 		align = dt_mem_next_cell(dt_root_addr_cells, &prop);
 	}
 
-	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
+	nomap = is_nomap(node);
 
 	/* Need adjust the alignment to satisfy the CMA requirement */
 	if (IS_ENABLED(CONFIG_CMA)
@@ -583,7 +594,7 @@ static void __init fdt_init_reserved_mem_node(struct reserved_mem *rmem)
 	int err = 0;
 	bool nomap;
 
-	nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
+	nomap = is_nomap(node);
 
 	err = __reserved_mem_init_node(rmem);
 	if (err != 0 && err != -ENOENT) {
