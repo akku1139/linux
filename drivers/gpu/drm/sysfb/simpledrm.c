@@ -36,6 +36,16 @@
 /*
  * Helpers for simplefb
  */
+static inline struct device_node* simpledrm_get_params_node(struct device *dev)
+{
+	struct device_node *of_node;
+
+	of_node = of_find_compatible_node(NULL, NULL, "simple-framebuffer-params");
+	if (!of_node)
+		of_node = dev->of_node;
+
+	return of_node;
+}
 
 static int
 simplefb_get_validated_int(struct drm_device *dev, const char *name,
@@ -269,7 +279,7 @@ static int simpledrm_device_init_clocks(struct simpledrm_device *sdev)
 {
 	struct drm_device *dev = &sdev->sysfb.dev;
 	struct platform_device *pdev = to_platform_device(dev->dev);
-	struct device_node *of_node = pdev->dev.of_node;
+	struct device_node *of_node = simpledrm_get_params_node(dev->dev);
 	struct clk *clock;
 	unsigned int i;
 	int ret;
@@ -367,7 +377,7 @@ static int simpledrm_device_init_regulators(struct simpledrm_device *sdev)
 {
 	struct drm_device *dev = &sdev->sysfb.dev;
 	struct platform_device *pdev = to_platform_device(dev->dev);
-	struct device_node *of_node = pdev->dev.of_node;
+	struct device_node *of_node = simpledrm_get_params_node(dev->dev);
 	struct property *prop;
 	struct regulator *regulator;
 	const char *p;
@@ -487,9 +497,10 @@ static void simpledrm_device_detach_genpd(void *res)
 static int simpledrm_device_attach_genpd(struct simpledrm_device *sdev)
 {
 	struct device *dev = sdev->sysfb.dev.dev;
+	struct device_node *of_node = simpledrm_get_params_node(dev);
 	int i;
 
-	sdev->pwr_dom_count = of_count_phandle_with_args(dev->of_node, "power-domains",
+	sdev->pwr_dom_count = of_count_phandle_with_args(of_node, "power-domains",
 							 "#power-domain-cells");
 	/*
 	 * Single power-domain devices are handled by driver core nothing to do
@@ -592,7 +603,7 @@ static struct simpledrm_device *simpledrm_device_create(struct drm_driver *drv,
 							struct platform_device *pdev)
 {
 	const struct simplefb_platform_data *pd = dev_get_platdata(&pdev->dev);
-	struct device_node *of_node = pdev->dev.of_node;
+	struct device_node *of_node = simpledrm_get_params_node(&pdev->dev);
 	struct simpledrm_device *sdev;
 	struct drm_sysfb_device *sysfb;
 	struct drm_device *dev;
@@ -864,6 +875,7 @@ static void simpledrm_remove(struct platform_device *pdev)
 
 static const struct of_device_id simpledrm_of_match_table[] = {
 	{ .compatible = "simple-framebuffer", },
+	{ .compatible = "mediatek,fb-reserved-memory", },
 	{ },
 };
 MODULE_DEVICE_TABLE(of, simpledrm_of_match_table);
