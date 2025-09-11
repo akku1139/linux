@@ -30,6 +30,7 @@ properties:
               - mediatek,mt6582-uart
               - mediatek,mt6589-uart
               - mediatek,mt6755-uart
+              - mediatek,mt6757-uart
               - mediatek,mt6765-uart
               - mediatek,mt6779-uart
               - mediatek,mt6795-uart
