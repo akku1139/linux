@@ -1,0 +1,8 @@
+menu "Amazon"
+
+config ROOK
+	bool "Rook MTK platform project"
+	help
+	isolate amazon Rook changes for MTK Platform
+
+endmenu
