@@ -63,7 +63,7 @@
 	};
 
 	chosen {
-		bootargs = "console=ttyS0,921600n1 root=/dev/ram initrd=0x44000200,0x200000";
+		bootargs = "console=ttyMT0,921600n1 root=/dev/ram initrd=0x44000200,0x200000";
 	};
 
 	mtcpufreq {
@@ -1473,7 +1473,7 @@
 	pinctrl-3 = <&CTP_pins_eint_output1>;
 	pinctrl-4 = <&CTP_pins_rst_output0>;
 	pinctrl-5 = <&CTP_pins_rst_output1>;
-	status = "okay";
+	status = "okay"; 
 };
 
 &uart0 {
