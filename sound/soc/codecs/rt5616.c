@@ -1098,6 +1098,7 @@ static int rt5616_hw_params(struct snd_pcm_substream *substream,
 		val_len |= RT5616_I2S_DL_20;
 		break;
 	case SNDRV_PCM_FORMAT_S24_LE:
+	case SNDRV_PCM_FORMAT_S32_LE:
 		val_len |= RT5616_I2S_DL_24;
 		break;
 	case SNDRV_PCM_FORMAT_S8:
@@ -1424,7 +1425,8 @@ static int rt5616_resume(struct snd_soc_codec *codec)
 
 #define RT5616_STEREO_RATES SNDRV_PCM_RATE_8000_192000
 #define RT5616_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE | \
-			SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S8)
+			SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S8 |\
+			SNDRV_PCM_FMTBIT_S32_LE)
 
 static struct snd_soc_dai_ops rt5616_aif_dai_ops = {
 	.hw_params = rt5616_hw_params,
