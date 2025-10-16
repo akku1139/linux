@@ -13,9 +13,7 @@
 #include <linux/slab.h>
 #include <linux/workqueue.h>
 #include <linux/module.h>
-#if 0
 #include <misc/gating.h>
-#endif
 
 #include "kd_camera_hw.h"
 
@@ -54,7 +52,6 @@
 #define VOL_1200 1200000
 #define VOL_1000 1000000
 
-#if 0
 struct cam_gating {
 	struct gpio_desc *cam_pwr_en;
 	enum gating_state cur_state;
@@ -102,7 +99,6 @@ out :
 	mutex_unlock(&cam_gate->mutex);
 	return state;
 }
-#endif
 
 int cntVCAMD = 0;
 int cntVCAMA = 0;
@@ -389,13 +385,11 @@ int kdCISModulePowerOn(enum CAMERA_DUAL_CAMERA_SENSOR_ENUM SensorIdx, char *curr
 		pinSetIdx = 2;
 
 	if (On) {
-#if 0
 		/* Check cam_gate state before powering on sensor */
 		if (set_gate_state(UNGATED) != UNGATED) {
 			PK_DBG("[CAMERA SENSOR] Falied to UNGATE CAM\n");
 			goto _kdCISModulePowerOn_exit_;
 		}
-#endif
 
         /* VCAM_I2C */
 #ifdef NEED_MANUAL_VCAMI2C_POWER
@@ -592,11 +586,9 @@ int kdCISModulePowerOn(enum CAMERA_DUAL_CAMERA_SENSOR_ENUM SensorIdx, char *curr
 				goto _kdCISModulePowerOn_exit_;
 			}
 		}
-#if 0
 		/* GATE the cam_gate when sensor is not in use */
 		set_gate_state(GATED);
-#endif
-		}
+	}
 	PK_DBG(" --- SensorName: %s is going to power on, END --------- \n",currSensorName);
 	return 0;
 
@@ -606,7 +598,6 @@ int kdCISModulePowerOn(enum CAMERA_DUAL_CAMERA_SENSOR_ENUM SensorIdx, char *curr
 }
 EXPORT_SYMBOL(kdCISModulePowerOn);
 
-#if 0
 static void gating_work_func(struct work_struct *work)
 {
 	mutex_lock(&cam_gate->mutex);
@@ -723,4 +714,3 @@ err:
 }
 
 device_initcall_sync(kd_camera_init);
-#endif
