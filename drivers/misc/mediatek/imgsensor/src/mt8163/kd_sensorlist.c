@@ -1412,11 +1412,13 @@ static inline int adopt_CAMERA_HW_Open(void)
 	/*  */
 	if (g_pSensorFunc) {
 		err = g_pSensorFunc->SensorOpen();
+#ifndef CONFIG_CHECKERS
 		if (err != ERROR_NONE)
 			kdModulePowerOn((enum CAMERA_DUAL_CAMERA_SENSOR_ENUM *)
 					g_invokeSocketIdx,
 					g_invokeSensorNameStr, false,
 					CAMERA_HW_DRVNAME1);
+#endif
 	} else
 		PK_ERR(" ERROR:NULL g_pSensorFunc\n");
 
@@ -2193,6 +2195,9 @@ static inline int adopt_CAMERA_HW_FeatureControl(void *pBuf)
 	case SENSOR_FEATURE_GET_RESOLUTION:
 	case SENSOR_FEATURE_GET_PERIOD:
 	case SENSOR_FEATURE_GET_PIXEL_CLOCK_FREQ:
+#ifdef CONFIG_CHECKERS
+	case SENSOR_FEATURE_GET_MUTE_STATE:
+#endif
 	case SENSOR_FEATURE_GET_REGISTER_DEFAULT:
 	case SENSOR_FEATURE_GET_CONFIG_PARA:
 	case SENSOR_FEATURE_GET_GROUP_COUNT:
@@ -2209,6 +2214,7 @@ static inline int adopt_CAMERA_HW_FeatureControl(void *pBuf)
 
 	/*  */
 	switch (pFeatureCtrl->FeatureId) {
+#ifndef CONFIG_CHECKERS
 	case SENSOR_FEATURE_GET_CROP_INFO:
 		{
 			struct SENSOR_WINSIZE_INFO_STRUCT *pCrop = NULL;
@@ -2244,6 +2250,7 @@ static inline int adopt_CAMERA_HW_FeatureControl(void *pBuf)
 			*(pFeaturePara_64 + 1) = (uintptr_t)usr_ptr;
 		}
 		break;
+#endif
 	default:
 		if (g_pSensorFunc) {
 			ret =
@@ -2281,6 +2288,9 @@ static inline int adopt_CAMERA_HW_FeatureControl(void *pBuf)
 	case SENSOR_FEATURE_GET_RESOLUTION:
 	case SENSOR_FEATURE_GET_PERIOD:
 	case SENSOR_FEATURE_GET_PIXEL_CLOCK_FREQ:
+#ifdef CONFIG_CHECKERS
+	case SENSOR_FEATURE_GET_MUTE_STATE:
+#endif
 	case SENSOR_FEATURE_GET_REGISTER:
 	case SENSOR_FEATURE_GET_REGISTER_DEFAULT:
 	case SENSOR_FEATURE_GET_CONFIG_PARA:
