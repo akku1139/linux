@@ -5,4 +5,10 @@ config ROOK
 	help
 	isolate amazon Rook changes for MTK Platform
 
+config CHECKERS
+	bool "Checkers MTK platform project"
+	help
+	isolate amazon Checkers changes for MTK Platform
+
+
 endmenu
