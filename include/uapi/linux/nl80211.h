@@ -2007,9 +2007,64 @@ enum nl80211_commands {
  *	attribute.
  * @NL80211_ATTR_NAN_MATCH: used to report a match. This is a nested attribute.
  *	See &enum nl80211_nan_match_attributes.
+ * @NL80211_ATTR_FILS_KEK: KEK for FILS (Re)Association Request/Response frame
+ *	protection.
+ * @NL80211_ATTR_FILS_NONCES: Nonces (part of AAD) for FILS (Re)Association
+ *	Request/Response frame protection. This attribute contains the 16 octet
+ *	STA Nonce followed by 16 octets of AP Nonce.
+ *
+ * @NL80211_ATTR_MULTICAST_TO_UNICAST_ENABLED: Indicates whether or not multicast
+ *	packets should be send out as unicast to all stations (flag attribute).
  *
  * @NL80211_ATTR_BSSID: The BSSID of the AP. Note that %NL80211_ATTR_MAC is also
  *	used in various commands/events for specifying the BSSID.
+ *
+ * @NL80211_ATTR_SCHED_SCAN_RELATIVE_RSSI: Relative RSSI threshold by which
+ *	other BSSs has to be better or slightly worse than the current
+ *	connected BSS so that they get reported to user space.
+ *	This will give an opportunity to userspace to consider connecting to
+ *	other matching BSSs which have better or slightly worse RSSI than
+ *	the current connected BSS by using an offloaded operation to avoid
+ *	unnecessary wakeups.
+ *
+ * @NL80211_ATTR_SCHED_SCAN_RSSI_ADJUST: When present the RSSI level for BSSs in
+ *	the specified band is to be adjusted before doing
+ *	%NL80211_ATTR_SCHED_SCAN_RELATIVE_RSSI based comparision to figure out
+ *	better BSSs. The attribute value is a packed structure
+ *	value as specified by &struct nl80211_bss_select_rssi_adjust.
+ *
+ * @NL80211_ATTR_TIMEOUT_REASON: The reason for which an operation timed out.
+ *	u32 attribute with an &enum nl80211_timeout_reason value. This is used,
+ *	e.g., with %NL80211_CMD_CONNECT event.
+ *
+ * @NL80211_ATTR_FILS_ERP_USERNAME: EAP Re-authentication Protocol (ERP)
+ *	username part of NAI used to refer keys rRK and rIK. This is used with
+ *	%NL80211_CMD_CONNECT.
+ *
+ * @NL80211_ATTR_FILS_ERP_REALM: EAP Re-authentication Protocol (ERP) realm part
+ *	of NAI specifying the domain name of the ER server. This is used with
+ *	%NL80211_CMD_CONNECT.
+ *
+ * @NL80211_ATTR_FILS_ERP_NEXT_SEQ_NUM: Unsigned 16-bit ERP next sequence number
+ *	to use in ERP messages. This is used in generating the FILS wrapped data
+ *	for FILS authentication and is used with %NL80211_CMD_CONNECT.
+ *
+ * @NL80211_ATTR_FILS_ERP_RRK: ERP re-authentication Root Key (rRK) for the
+ *	NAI specified by %NL80211_ATTR_FILS_ERP_USERNAME and
+ *	%NL80211_ATTR_FILS_ERP_REALM. This is used for generating rIK and rMSK
+ *	from successful FILS authentication and is used with
+ *	%NL80211_CMD_CONNECT.
+ *
+ * @NL80211_ATTR_FILS_CACHE_ID: A 2-octet identifier advertized by a FILS AP
+ *	identifying the scope of PMKSAs. This is used with
+ *	@NL80211_CMD_SET_PMKSA and @NL80211_CMD_DEL_PMKSA.
+ *
+ * @NL80211_ATTR_PMK: PMK for the PMKSA identified by %NL80211_ATTR_PMKID.
+ *	This is used with @NL80211_CMD_SET_PMKSA.
+ * @NL80211_ATTR_PORT_AUTHORIZED: flag attribute used in %NL80211_CMD_ROAMED
+ *	notification indicating that that 802.1X authentication was done by
+ *	the driver or is not needed (because roaming used the Fast Transition
+ *	protocol).
  *
  * @NUM_NL80211_ATTR: total number of nl80211_attrs available
  * @NL80211_ATTR_MAX: highest attribute number currently defined
@@ -2410,7 +2465,32 @@ enum nl80211_attrs {
 	NL80211_ATTR_NAN_FUNC,
 	NL80211_ATTR_NAN_MATCH,
 
+	NL80211_ATTR_FILS_KEK,
+	NL80211_ATTR_FILS_NONCES,
+
+	NL80211_ATTR_MULTICAST_TO_UNICAST_ENABLED,
+
 	NL80211_ATTR_BSSID,
+
+	NL80211_ATTR_SCHED_SCAN_RELATIVE_RSSI,
+	NL80211_ATTR_SCHED_SCAN_RSSI_ADJUST,
+
+	NL80211_ATTR_TIMEOUT_REASON,
+
+	NL80211_ATTR_FILS_ERP_USERNAME,
+	NL80211_ATTR_FILS_ERP_REALM,
+	NL80211_ATTR_FILS_ERP_NEXT_SEQ_NUM,
+	NL80211_ATTR_FILS_ERP_RRK,
+	NL80211_ATTR_FILS_CACHE_ID,
+
+	NL80211_ATTR_PMK,
+
+	NL80211_ATTR_SCHED_SCAN_MULTI,
+	NL80211_ATTR_SCHED_SCAN_MAX_REQS,
+
+	NL80211_ATTR_WANT_1X_4WAY_HS,
+	NL80211_ATTR_PMKR0_NAME,
+	NL80211_ATTR_PORT_AUTHORIZED,
 
 	/* add attributes here, update the policy in nl80211.c */
 
