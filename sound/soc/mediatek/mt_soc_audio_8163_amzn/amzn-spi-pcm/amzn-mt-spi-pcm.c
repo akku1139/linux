@@ -129,9 +129,10 @@ static const struct snd_kcontrol_new amzn_mt_spi_controls[] = {
 static struct snd_pcm_hardware amzn_mt_spi_pcm_hardware = {
 	.info = (SNDRV_PCM_INFO_INTERLEAVED),
 	.formats = SNDRV_PCM_FMTBIT_S24_3LE,
-	.rates = SNDRV_PCM_RATE_16000,
-	.rate_min = SAMPLING_RATE,
-	.rate_max = SAMPLING_RATE,
+	.rates = (SNDRV_PCM_RATE_16000|SNDRV_PCM_RATE_48000 |
+				SNDRV_PCM_RATE_96000),
+	.rate_min = MIN_SAMPLING_RATE,
+	.rate_max = MAX_SAMPLING_RATE,
 	.channels_min = SPI_N_CHANNELS,
 	.channels_max = SPI_N_CHANNELS,
 	.buffer_bytes_max = SPI_BUFFER_BYTES_MAX,
@@ -159,7 +160,8 @@ static struct snd_soc_dai_driver amzn_mt_spi_cpu_dai[] = {
 	{
 		.name = AMZN_MT_SPI_PCM,
 		.capture = {
-			.rates = SNDRV_PCM_RATE_16000,
+			.rates = (SNDRV_PCM_RATE_16000|SNDRV_PCM_RATE_48000 |
+						SNDRV_PCM_RATE_96000),
 			.formats = SNDRV_PCM_FMTBIT_S24_3LE,
 			.channels_min = SPI_N_CHANNELS,
 			.channels_max = SPI_N_CHANNELS,

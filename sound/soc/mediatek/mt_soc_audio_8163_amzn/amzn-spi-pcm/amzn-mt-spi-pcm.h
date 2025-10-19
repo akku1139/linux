@@ -16,7 +16,8 @@
 #define PINCTRL_DELAY_MS        2
 #define MARGIN_USEC             500
 
-#define SAMPLING_RATE           16000
+#define MIN_SAMPLING_RATE       16000
+#define MAX_SAMPLING_RATE       96000
 
 #define SPI_HEADER              1
 #define SPI_HEADER_DISABLE      0
