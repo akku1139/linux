@@ -151,8 +151,8 @@ static void handle_gating_button_event(struct gating_input_event *input,
 	}
 
 	delay = input->last_event_time + LONG_PRESS_DURATION;
-	/* if it is long press, it might be a PWR or Factory reset */
-	if (time_before(delay, jiffies))
+	/* if it is long press, it is a gating event */
+	if (!time_before(delay, jiffies))
 		goto out;
 
 	cancel_work_sync(&priv->priv_update);
