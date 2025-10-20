@@ -92,12 +92,27 @@ unsigned int cci_als_value_cali = 0;
 unsigned int als_cal = 0;
 unsigned int als_count_1 = 0, als_count_2 = 0, setok = 0;
 u8 old_range = 4;
-unsigned int als_compensation = 100;
-const unsigned int default_als_compensation = 100; /* default als compensation */
+unsigned int als_compensation = 100;	/* If the calculated lux is not accurate, you can adjust the lux by modify the variable. */
+unsigned int black_als_range = 4;	/* the default als range of black devices */
+unsigned int white_als_range = 3;	/* the default als range of white devices */
+unsigned int low_als_adc_limit = 0;			/* the limit of the low als adc value */
+unsigned int low_als_adc_limit_per = 105;	/* the percent of the low als adc limit to low als cali data */
+unsigned int light_source_lux = 400;		/* the lux value of the light source */
 #define STK3X1X_CAL_FILE            "/data/als_cal_data.bin"
 #define STK3x1x_DATA_BUF_NUM        1
-#define Default_cali                2
+#define CALI_DEFAULT_DATA           2
+#define CALI_DATA_MAX               65535
 #define COLOR_BUF_SIZE              12
+#define SCALER_BUF_SIZE             12
+#define ALSCAL_BUF_SIZE             (STK3x1x_DATA_BUF_NUM*sizeof(unsigned int)*2+COLOR_BUF_SIZE+SCALER_BUF_SIZE)
+#define CALI_DATA_MASK              0xFFFF
+
+#ifdef CONFIG_MTK_JSA1214_SWITCH_RANGE_AUTO
+static unsigned int scaling_factor = 0;
+#define ALS_CAL_SCALER_DEFAULT_PERCENTAGE	100
+#define ALS_CAL_SCALER_LOWER_LIMIT 		1
+#define ALS_CAL_SCALER_UPPER_LIMIT		999
+#endif
 
 static struct of_device_id stk3x1x_dts_table[] = {
 	{ .compatible  = "mediatek,alsps",},
@@ -286,6 +301,9 @@ struct stk3x1x_priv {
 	int32_t als_lux_last;
 	bool als_polling_enable;
 	unsigned int jsa1214_cali_data;
+	unsigned int jsa1214_cali_data_high;	/* als two point cali, the cali data of high light source */
+	unsigned int jsa1214_cali_data_low;	/* als two point cali, the cali data of low light source */
+	bool is_supported_two_point_als_cali;
 };
 
 static struct i2c_driver stk3x1x_i2c_driver = {
@@ -468,16 +486,11 @@ int stk3x1x_read_als(struct i2c_client *client, u16 *data)
 	}
 
 #ifdef CONFIG_MTK_JSA1214_SWITCH_RANGE_AUTO
-	if (capcolor == default_black_color) {
-		range[0] = 0x04;	/* black devices light sensor enable */
-	} else {
-#ifdef CONFIG_ALS_WHITE_RANGE_CHANGE
-		if (als_compensation == default_als_compensation)
-			range[0] = 0x04;
-		else
-#endif
-		range[0] = 0x03;	/* white devices light sensor enable */
-	}
+	if (capcolor == default_black_color)
+		range[0] = black_als_range;	/* black devices light sensor enable */
+	else
+		range[0] = white_als_range;	/* white devices light sensor enable */
+
 	ret = stk3x1x_master_send(client, 0x0B, &range[0], 1);
 
 	/* ALS PD Reading & dynamic range */
@@ -1145,9 +1158,9 @@ static int stk3x1x_init_client(struct i2c_client *client)
 	thres[1] = 0x00;	/* ALS high threshold is set 4000 */
 	thres[2] = 0xFA;
 	if (capcolor == default_black_color)
-		range[0] = 0x04;	/* black devices light sensor enable */
+		range[0] = black_als_range;	/* black devices light sensor enable */
 	else
-		range[0] = 0x03;	/* white devices light sensor enable */
+		range[0] = white_als_range;	/* white devices light sensor enable */
 #else
 	range[0] = 0x04;	/* light sensor enable */
 #endif
@@ -1275,13 +1288,33 @@ inline uint32_t stk_alscode2lux(struct stk3x1x_priv *ps_data, uint32_t alscode)
 		return 0;
 	}
 #endif
-
-	if (ps_data->jsa1214_cali_data > 0) {
-		alscode = (alscode * 400 * als_compensation)/100;
-		alscode /= ps_data->jsa1214_cali_data;
+	if (ps_data->is_supported_two_point_als_cali) {
+		if (alscode <= low_als_adc_limit) {
+			if (ps_data->jsa1214_cali_data_low > 0) {
+				alscode = (alscode * 20 * als_compensation) / 100;	/* als_compensation needs to divide by 100 to convert to a percentage */
+				alscode /= ps_data->jsa1214_cali_data_low;
+			} else {
+				return 0;
+			}
+		} else {
+			if (ps_data->jsa1214_cali_data_high > 0) {
+				alscode = (alscode * 400 * als_compensation) / 100;	/* als_compensation needs to divide by 100 to convert to a percentage */
+				alscode /= ps_data->jsa1214_cali_data_high;
+			} else {
+				return 0;
+			}
+		}
 	} else {
-		return 0;
+		if (ps_data->jsa1214_cali_data > 0) {
+			alscode = (alscode * 400 * als_compensation) / 100;		/* als_compensation needs to divide by 100 to convert to a percentage */
+			alscode /= ps_data->jsa1214_cali_data;
+		} else {
+			return 0;
+		}
 	}
+#ifdef CONFIG_MTK_JSA1214_SWITCH_RANGE_AUTO
+	alscode = (alscode * scaling_factor) / 100;
+#endif
 	return alscode;
 }
 
@@ -1348,7 +1381,7 @@ static inline uint32_t stk3x1x_get_als_reading_AVG(struct stk3x1x_priv *ps_data,
 static char als_read_cali_transmittance_file(void){
 	struct file *cali_file;
 	int size = 0;
-	char buf[size];
+	char buf[ALSCAL_BUF_SIZE] = {0};
 	mm_segment_t fs;
 	char *substr = ",capColor";
 	char *read_color = NULL;
@@ -1362,7 +1395,7 @@ static char als_read_cali_transmittance_file(void){
 	} else {
 		fs = get_fs();
 		set_fs(get_ds());
-		size=vfs_read(cali_file, (void *)buf,size,&cali_file->f_pos);
+		size = vfs_read(cali_file, (void *)buf, ALSCAL_BUF_SIZE, &cali_file->f_pos);
 		set_fs(fs);
 	}
 	filp_close(cali_file, NULL);
@@ -1380,13 +1413,14 @@ static bool als_store_cali_transmittance_in_file(const char *filename, unsigned 
 {
 	struct file *cali_file;
 	mm_segment_t fs;
-	char w_buf[STK3x1x_DATA_BUF_NUM*sizeof(unsigned int)*2+COLOR_BUF_SIZE] = {0};
-	char r_buf[STK3x1x_DATA_BUF_NUM*sizeof(unsigned int)*2+COLOR_BUF_SIZE] = {0};
+	char w_buf[ALSCAL_BUF_SIZE] = {0};
+	char r_buf[ALSCAL_BUF_SIZE] = {0};
 	char *dest = w_buf;
 	char color_buf[COLOR_BUF_SIZE];
+	char scaler_buf[SCALER_BUF_SIZE];
 	int i;
 
-	APS_LOG("%s enter", __func__);
+	APS_LOG("%s enter\n", __func__);
 	cali_file = filp_open(filename, O_CREAT | O_RDWR, 0777);
 
 	if (IS_ERR(cali_file)) {
@@ -1396,29 +1430,26 @@ static bool als_store_cali_transmittance_in_file(const char *filename, unsigned 
 		fs = get_fs();
 		set_fs(get_ds());
 
-		for (i = 0; i < STK3x1x_DATA_BUF_NUM; i++) {
-			sprintf(dest,  "%02X", value & 0x000000FF);
-			dest += 2;
-			sprintf(dest,  "%02X", (value >> 8) & 0x000000FF);
-			dest += 2;
-			sprintf(dest,  "%02X", (value >> 16) & 0x000000FF);
-			dest += 2;
-			sprintf(dest,  "%02X", (value >> 24) & 0x000000FF);
-			dest += 2;
-		}
-		sprintf(color_buf,",capColor=%c",(capcolor_to_bin == '\0' ? capcolor : capcolor_to_bin));
-		strncat(dest,color_buf,COLOR_BUF_SIZE-1);
+		snprintf(dest, ALSCAL_BUF_SIZE-strlen(dest)-1, "%02X%02X%02X%02X",
+			(value & 0x000000FF),
+			((value >> 8) & 0x000000FF),
+			((value >> 16) & 0x000000FF),
+			((value >> 24) & 0x000000FF));
+
+		snprintf(color_buf, COLOR_BUF_SIZE, ",capColor=%c", (capcolor_to_bin == '\0' ? capcolor : capcolor_to_bin));
+		strncat(dest, color_buf, ALSCAL_BUF_SIZE-strlen(dest)-1);
+
+#ifdef CONFIG_MTK_JSA1214_SWITCH_RANGE_AUTO
+		snprintf(scaler_buf, SCALER_BUF_SIZE, ",scaler=%03d", scaling_factor);
+		strncat(dest, scaler_buf, ALSCAL_BUF_SIZE-strlen(dest)-1);
+#endif
 
 		APS_LOG("w_buf: %s \n", w_buf);
-		vfs_write(cali_file, (void *)w_buf,
-                          STK3x1x_DATA_BUF_NUM*sizeof(unsigned int)*2+COLOR_BUF_SIZE,
-                          &cali_file->f_pos);
+		vfs_write(cali_file, (void *)w_buf, ALSCAL_BUF_SIZE, &cali_file->f_pos);
 		cali_file->f_pos = 0x00;
-		vfs_read(cali_file, (void *)r_buf,
-                         STK3x1x_DATA_BUF_NUM*sizeof(unsigned int)*2+COLOR_BUF_SIZE,
-                         &cali_file->f_pos);
+		vfs_read(cali_file, (void *)r_buf, ALSCAL_BUF_SIZE, &cali_file->f_pos);
 
-		for (i = 0; i < STK3x1x_DATA_BUF_NUM*sizeof(unsigned int)*2+COLOR_BUF_SIZE; i++) {
+		for (i = 0; i < ALSCAL_BUF_SIZE; i++) {
 			if (r_buf[i] != w_buf[i]) {
 				filp_close(cali_file, NULL);
 				APS_ERR("%s read back error! exit!\n",  __func__);
@@ -1998,26 +2029,57 @@ static ssize_t als_CCI_cali_Light_show(struct device_driver *ddri, char *buf)
 	msleep(150);
 	als_reading = stk3x1x_get_als_reading_AVG(stk3x1x_obj, 5);
 	cci_als_value_cali_adc = als_reading;
-	stk3x1x_obj->jsa1214_cali_data = als_reading;
 	mutex_lock(&stk3x1x_obj->io_lock);
-	cci_als_value_cali = stk_alscode2lux(stk3x1x_obj, als_reading);
-	if (cci_als_value_cali_adc > 0 && (cci_als_value_cali_adc <= 65535)) {
-		result = als_store_cali_transmittance_in_file(STK3X1X_CAL_FILE, cci_als_value_cali_adc);
-		capcolor = als_read_cali_transmittance_file();
 
-		APS_LOG("%s: result:=%d\n", __func__, result);
+	if (stk3x1x_obj->is_supported_two_point_als_cali) {
+		if (light_source_lux == 20) {
+			stk3x1x_obj->jsa1214_cali_data_low = als_reading;
+			low_als_adc_limit = (stk3x1x_obj->jsa1214_cali_data_low * low_als_adc_limit_per / 100);
+		} else {
+			stk3x1x_obj->jsa1214_cali_data_high = als_reading;
+		}
+		cci_als_value_cali_adc = (((stk3x1x_obj->jsa1214_cali_data_low & CALI_DATA_MASK) << 16) |
+			(stk3x1x_obj->jsa1214_cali_data_high & CALI_DATA_MASK));
 		cci_als_value_cali = stk_alscode2lux(stk3x1x_obj, als_reading);
-		APS_LOG("%s:[#23][STK]cali light done!!! cci_als_value_cali = %d lux, cci_als_value_cali_adc = %d code\n",
-			__func__, cci_als_value_cali, cci_als_value_cali_adc);
-	} else {
-		APS_LOG("%s:[#23][STK]cali light fail!!! cci_als_value_cali = %d lux, cci_als_value_cali_adc = %d code\n",
-			__func__, cci_als_value_cali, cci_als_value_cali_adc);
-		result = false;
-	}
-	mutex_unlock(&stk3x1x_obj->io_lock);
 
-	return scnprintf(buf, PAGE_SIZE, "%s: cci_als_value_cali = %d lux, cci_als_value_cali_adc = %d code\n",
+		if (((light_source_lux == 20) && (stk3x1x_obj->jsa1214_cali_data_low > 0)) ||
+			((light_source_lux == 400) && (stk3x1x_obj->jsa1214_cali_data_high > 0))) {
+			result = als_store_cali_transmittance_in_file(STK3X1X_CAL_FILE, cci_als_value_cali_adc);
+			capcolor = als_read_cali_transmittance_file();
+
+			APS_LOG("%s: result:=%d\n", __func__, result);
+			cci_als_value_cali = stk_alscode2lux(stk3x1x_obj, als_reading);
+			APS_LOG("%s:[#23][STK]cali light done!!! cci_als_value_cali = %d lux, cci_als_value_cali_adc = %d code \n",
+				__func__, cci_als_value_cali, cci_als_value_cali_adc);
+		} else {
+			APS_LOG("%s:[#23][STK]cali light fail!!! cci_als_value_cali = %d lux, cci_als_value_cali_adc = %d code \n",
+				__func__, cci_als_value_cali, cci_als_value_cali_adc);
+			result = false;
+		}
+		mutex_unlock(&stk3x1x_obj->io_lock);
+		return scnprintf(buf, PAGE_SIZE, "%s: cci_als_value_cali = %d lux, cci_als_value_cali_adc = %d code.\n",
 			result ? "PASSED" : "FAIL", cci_als_value_cali, cci_als_value_cali_adc);
+	} else {
+		stk3x1x_obj->jsa1214_cali_data = als_reading;
+		cci_als_value_cali = stk_alscode2lux(stk3x1x_obj, als_reading);
+
+		if (cci_als_value_cali_adc > 0 && (cci_als_value_cali_adc <= CALI_DATA_MAX)) {
+			result = als_store_cali_transmittance_in_file(STK3X1X_CAL_FILE, cci_als_value_cali_adc);
+			capcolor = als_read_cali_transmittance_file();
+
+			APS_LOG("%s: result:=%d\n", __func__, result);
+			cci_als_value_cali = stk_alscode2lux(stk3x1x_obj, als_reading);
+			APS_LOG("%s:[#23][STK]cali light done!!! cci_als_value_cali = %d lux, cci_als_value_cali_adc = %d code\n",
+				__func__, cci_als_value_cali, cci_als_value_cali_adc);
+		} else {
+			APS_LOG("%s:[#23][STK]cali light fail!!! cci_als_value_cali = %d lux, cci_als_value_cali_adc = %d code\n",
+				__func__, cci_als_value_cali, cci_als_value_cali_adc);
+			result = false;
+		}
+		mutex_unlock(&stk3x1x_obj->io_lock);
+		return scnprintf(buf, PAGE_SIZE, "%s: cci_als_value_cali = %d lux, cci_als_value_cali_adc = %d code\n",
+			result ? "PASSED" : "FAIL", cci_als_value_cali, cci_als_value_cali_adc);
+	}
 }
 
 static ssize_t stk_set_capcolor_store(struct device_driver *ddri, const char *buf, size_t size)
@@ -2033,6 +2095,29 @@ static ssize_t stk_set_capcolor_store(struct device_driver *ddri, const char *bu
 
 	return size;
 }
+
+#ifdef CONFIG_MTK_JSA1214_SWITCH_RANGE_AUTO
+static ssize_t stk_set_scaler_store(struct device_driver *ddri, const char *buf, size_t count)
+{
+	int scaler;
+
+	if (sscanf(buf, "%d", &scaler) == 1) {
+		scaling_factor = scaler;
+
+		if (scaling_factor < ALS_CAL_SCALER_LOWER_LIMIT || \
+			scaling_factor > ALS_CAL_SCALER_UPPER_LIMIT) {
+			pr_err("alscal scaler invalid converted value = %d, using default = %d \n",\
+				scaling_factor, ALS_CAL_SCALER_DEFAULT_PERCENTAGE);
+			scaling_factor = ALS_CAL_SCALER_DEFAULT_PERCENTAGE;
+		}
+	} else {
+		APS_ERR("invalid content: '%s', length = %d\n", buf, (int)count);
+		return -EINVAL;
+	}
+
+	return count;
+}
+#endif
 
 static ssize_t stk_all_reg_show(struct device_driver *ddri, char *buf)
 {
@@ -2099,6 +2184,101 @@ static ssize_t pin_sensor_show(struct device_driver *ddri, char *buf)
 	}
 }
 
+
+static ssize_t als_cali_value_show(struct device_driver *ddri, char *buf)
+{
+	ssize_t res;
+
+	if (!stk3x1x_obj) {
+		APS_ERR("stk3x1x_obj is null!!!\n");
+		return 0;
+	}
+	mutex_lock(&stk3x1x_obj->io_lock);
+	if (stk3x1x_obj->is_supported_two_point_als_cali) {
+		res = scnprintf(buf, PAGE_SIZE, "als high calibration value = %d, als low calibration value = %d\n",
+			stk3x1x_obj->jsa1214_cali_data_high, stk3x1x_obj->jsa1214_cali_data_low);
+	} else {
+		res = scnprintf(buf, PAGE_SIZE, "als calibration value = %d\n", stk3x1x_obj->jsa1214_cali_data);
+	}
+
+	mutex_unlock(&stk3x1x_obj->io_lock);
+	return res;
+}
+
+static ssize_t als_cali_value_store(struct device_driver *ddri, const char *buf, size_t count)
+{
+	int als_cali_value_high;
+	int als_cali_value_low;
+	int als_cali_value;
+
+	if (!stk3x1x_obj) {
+		APS_ERR("stk3x1x_obj is null!!!!\n");
+		return 0;
+	}
+	mutex_lock(&stk3x1x_obj->io_lock);
+	if (stk3x1x_obj->is_supported_two_point_als_cali) {
+		if (sscanf(buf, "%d %d", &als_cali_value_high, &als_cali_value_low) == 2) {
+			stk3x1x_obj->jsa1214_cali_data_high = als_cali_value_high;
+			stk3x1x_obj->jsa1214_cali_data_low = als_cali_value_low;
+			low_als_adc_limit = (stk3x1x_obj->jsa1214_cali_data_low * low_als_adc_limit_per / 100);
+		} else {
+			mutex_unlock(&stk3x1x_obj->io_lock);
+			APS_ERR("invalid content: '%s', length = %d\n", buf, (int)count);
+			return -EINVAL;
+		}
+	} else {
+		if (sscanf(buf, "%d", &als_cali_value) == 1) {
+			stk3x1x_obj->jsa1214_cali_data = als_cali_value;
+		} else {
+			mutex_unlock(&stk3x1x_obj->io_lock);
+			APS_ERR("invalid content: '%s', length = %d\n", buf, (int)count);
+			return -EINVAL;
+		}
+	}
+
+	mutex_unlock(&stk3x1x_obj->io_lock);
+	return count;
+}
+
+static ssize_t als_cali_mode_show(struct device_driver *ddri, char *buf)
+{
+	ssize_t res;
+
+	if (!stk3x1x_obj) {
+		APS_ERR("stk3x1x_obj is null!!!\n");
+		return 0;
+	}
+
+	mutex_lock(&stk3x1x_obj->io_lock);
+	res = scnprintf(buf, PAGE_SIZE, " als two point cali = %d\n", stk3x1x_obj->is_supported_two_point_als_cali);
+	mutex_unlock(&stk3x1x_obj->io_lock);
+
+	return res;
+}
+
+static ssize_t light_source_lux_show(struct device_driver *ddri, char *buf)
+{
+	ssize_t res;
+
+	res = scnprintf(buf, PAGE_SIZE, "light source lux = %d\n", light_source_lux);
+
+	return res;
+}
+
+static ssize_t light_source_lux_store(struct device_driver *ddri, const char *buf, size_t count)
+{
+	int als_light_source_lux;
+
+	if (sscanf(buf, "%d", &als_light_source_lux) == 1) {
+		light_source_lux = als_light_source_lux;
+	} else {
+		APS_ERR("invalid content: '%s', length = %d\n", buf, (int)count);
+		return -EINVAL;
+	}
+
+	return count;
+}
+
 static DRIVER_ATTR(als,     S_IWUSR | S_IRUGO, stk3x1x_show_als,   NULL);
 static DRIVER_ATTR(ps,      S_IWUSR | S_IRUGO, stk3x1x_show_ps,    NULL);
 static DRIVER_ATTR(ir,      S_IWUSR | S_IRUGO, stk3x1x_show_ir,    NULL);
@@ -2115,6 +2295,7 @@ static DRIVER_ATTR(allreg_ori,  S_IWUSR | S_IRUGO, stk3x1x_show_allreg,   NULL);
 static DRIVER_ATTR(enable, S_IWUSR | S_IRUGO, stk_als_enable_show, stk_als_enable_store);
 static DRIVER_ATTR(enable_als_polling, S_IWUSR | S_IRUGO, NULL, stk_als_enable_alsdata_polling_store);
 static DRIVER_ATTR(set_capcolor, S_IWUSR | S_IRUGO, NULL, stk_set_capcolor_store);
+static DRIVER_ATTR(set_scaler, S_IWUSR | S_IRUGO, NULL, stk_set_scaler_store);
 static DRIVER_ATTR(lux, S_IWUSR | S_IRUGO, stk_als_lux_show, NULL);
 static DRIVER_ATTR(code, S_IWUSR | S_IRUGO, stk_als_code_show, NULL);
 static DRIVER_ATTR(transmittance, S_IWUSR | S_IRUGO, stk_als_transmittance_show, stk_als_transmittance_store);
@@ -2122,6 +2303,9 @@ static DRIVER_ATTR(test_Light, S_IWUSR | S_IRUGO, als_CCI_test_Light_show, NULL)
 static DRIVER_ATTR(cali_Light, S_IWUSR | S_IRUGO, als_CCI_cali_Light_show, NULL);
 static DRIVER_ATTR(allreg, S_IWUSR | S_IRUGO, stk_all_reg_show, NULL);
 static DRIVER_ATTR(pin_sensor, S_IWUSR | S_IRUGO, pin_sensor_show, NULL);
+static DRIVER_ATTR(als_cali_value, S_IWUSR | S_IRUGO, als_cali_value_show, als_cali_value_store);
+static DRIVER_ATTR(als_cali_mode, S_IWUSR | S_IRUGO, als_cali_mode_show, NULL);
+static DRIVER_ATTR(light_source_lux, S_IWUSR | S_IRUGO, light_source_lux_show, light_source_lux_store);
 
 static struct driver_attribute *stk3x1x_attr_list[] = {
 	&driver_attr_als,
@@ -2139,6 +2323,7 @@ static struct driver_attribute *stk3x1x_attr_list[] = {
 	&driver_attr_enable,		/* cei start */
 	&driver_attr_enable_als_polling,		/* als data polling start */
 	&driver_attr_set_capcolor,
+	&driver_attr_set_scaler,
 	&driver_attr_lux,
 	&driver_attr_code,
 	&driver_attr_transmittance,
@@ -2146,6 +2331,9 @@ static struct driver_attribute *stk3x1x_attr_list[] = {
 	&driver_attr_cali_Light,
 	&driver_attr_allreg,
 	&driver_attr_pin_sensor,	/* cei end */
+	&driver_attr_als_cali_value,
+	&driver_attr_als_cali_mode,
+	&driver_attr_light_source_lux,
 };
 
 static int stk3x1x_create_attr(struct device_driver *driver)
@@ -3158,27 +3346,33 @@ static int stk3x1x_i2c_probe(struct i2c_client *client, const struct i2c_device_
 
 	atomic_set(&obj->recv_reg, 0);
 
+#ifdef CONFIG_MTK_JSA1214_SWITCH_RANGE_AUTO
 	capcolor = idme_get_alscal_cap_color();
-
+	scaling_factor = idme_get_alscal_scaler_value();
+#endif
 #ifdef CONFIG_ALS_FORMULA_CHANGE
 	alscal_is_old = search_non_dvt_new_alscal();
 #endif
 
-#ifdef CONFIG_ALS_WHITE_RANGE_CHANGE
 	if (!(capcolor == default_black_color) && !(obj->hw->als_compensation == 0))
 		als_compensation = obj->hw->als_compensation;
-#endif
-
+	if (obj->hw->black_als_range > 0)
+		black_als_range = obj->hw->black_als_range;
+	if (obj->hw->white_als_range > 0)
+		white_als_range = obj->hw->white_als_range;
 	if (obj->hw->polling_mode_ps == 0) {
 		APS_LOG("%s: enable PS interrupt\n", __FUNCTION__);
 	}
 	obj->int_val |= STK_INT_PS_MODE1;
+	obj->is_supported_two_point_als_cali = obj->hw->is_supported_two_point_als_cali;
 
 	if (obj->hw->polling_mode_als == 0) {
 		obj->int_val |= STK_INT_ALS;
 		APS_LOG("%s: enable ALS interrupt\n", __FUNCTION__);
 	}
-
+#ifdef CONFIG_MTK_JSA1214_SWITCH_RANGE_AUTO
+	APS_LOG("scaling factor= %d in als probe\n",scaling_factor);
+#endif
 	APS_LOG("%s: state_val=0x%x, psctrl_val=0x%x, alsctrl_val=0x%x, \
             ledctrl_val=0x%x, wait_val=0x%x, int_val=0x%x\n",__FUNCTION__,
             atomic_read(&obj->state_val), atomic_read(&obj->psctrl_val),
@@ -3319,7 +3513,7 @@ static int stk3x1x_local_init(void)
 	als_cal = idme_get_alscal_value();
 #ifdef CONFIG_ALS_FORMULA_CHANGE
 	if (alscal_is_old){
-		if (als_cal > 0 && als_cal <= 65535)
+		if (als_cal > 0 && als_cal <= CALI_DATA_MAX)
 			g_stk3x1x_ptr->als_transmittance = als_cal;
 		else
 			g_stk3x1x_ptr->als_transmittance = 765;
@@ -3328,10 +3522,15 @@ static int stk3x1x_local_init(void)
 	}
 #endif
 
-	if (als_cal > 0 && als_cal <= 65535)
+	if (stk3x1x_obj->is_supported_two_point_als_cali) {
+		stk3x1x_obj->jsa1214_cali_data_high = ((als_cal & CALI_DATA_MASK));
+		stk3x1x_obj->jsa1214_cali_data_low = ((als_cal >> 16) & CALI_DATA_MASK);
+		low_als_adc_limit = (stk3x1x_obj->jsa1214_cali_data_low * low_als_adc_limit_per / 100);	/* the adc value limit of low light source */
+	} else if (als_cal > 0 && als_cal <= CALI_DATA_MAX) {
 		stk3x1x_obj->jsa1214_cali_data = als_cal;
-	else
-		stk3x1x_obj->jsa1214_cali_data = Default_cali;
+	} else {
+		stk3x1x_obj->jsa1214_cali_data = CALI_DEFAULT_DATA;
+	}
 
 	return ret;
 }

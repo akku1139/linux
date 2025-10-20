@@ -49,6 +49,9 @@ struct alsps_hw {
 	bool is_batch_supported_ps;
 	bool is_batch_supported_als;
 	unsigned int    als_compensation;               /*!< the compensation value of als */
+	unsigned int    black_als_range;                /*!< the als range of balck devices */
+	unsigned int    white_als_range;                /*!< the als range of white devices */
+	bool is_supported_two_point_als_cali;           /*!< the als cali method */
 };
 
 struct alsps_hw *get_alsps_dts_func(const char *, struct alsps_hw*);

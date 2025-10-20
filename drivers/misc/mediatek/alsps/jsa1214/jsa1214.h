@@ -139,7 +139,10 @@
 extern struct platform_device *get_alsps_platformdev(void);
 extern unsigned int idme_get_alscal_value(void);
 #endif
+#ifdef CONFIG_MTK_JSA1214_SWITCH_RANGE_AUTO
 extern char idme_get_alscal_cap_color(void);
+extern unsigned int idme_get_alscal_scaler_value(void);
+#endif
 #ifdef CONFIG_ALS_FORMULA_CHANGE
 extern char idme_get_productid2(void);
 #endif
