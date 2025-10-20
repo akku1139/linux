@@ -44,6 +44,14 @@
 
 #define SENSOR_CAL_SIZE 96
 
+#ifdef CONFIG_MTK_JSA1214_SWITCH_RANGE_AUTO
+#define ALS_CAL_SCALER_DEFAULT_PERCENTAGE	100
+#define ALS_CAL_SCALER_LOWER_LIMIT 		1
+#define ALS_CAL_SCALER_UPPER_LIMIT		999
+#define ALS_CAL_SCALER_NUM_OF_DIGITS		3
+#define ALS_CAL_SCALER_FIELD_LENGTH		8
+#define ALS_CAL_SCALER_FIELD_KEY		",scaler="
+#endif
 #define LEDCAL_MAX_SCALING 254
 
 char gbuffer[SENSOR_CAL_SIZE];
@@ -308,6 +316,50 @@ char idme_get_alscal_cap_color(void){
         return alscal_capcolor[10];
 }
 EXPORT_SYMBOL(idme_get_alscal_cap_color);
+
+unsigned int idme_get_alscal_scaler_value(void)
+{
+    struct device_node *ap = NULL;
+    char *alscal = NULL;
+    char *alscal_scaler = NULL;
+    // + 1 for null termination
+    char alscal_scaler_chars[ALS_CAL_SCALER_NUM_OF_DIGITS + 1] = {0};
+    unsigned int scaler_value = 0;
+    int err = 0;
+
+    ap = of_find_node_by_path(IDME_OF_ALSCAL);
+    if (ap) {
+        alscal = (char *)of_get_property(ap, "value", NULL);
+        pr_info("alscal= %s\n", alscal);
+    } else {
+        pr_err("of_find_node_by_path failed\n");
+        return ALS_CAL_SCALER_DEFAULT_PERCENTAGE;
+    }
+
+    alscal_scaler = strstr(alscal, ALS_CAL_SCALER_FIELD_KEY);
+    if (alscal_scaler == NULL)
+        return ALS_CAL_SCALER_DEFAULT_PERCENTAGE;
+
+    strncpy(alscal_scaler_chars, \
+        (alscal_scaler + ALS_CAL_SCALER_FIELD_LENGTH), \
+        ALS_CAL_SCALER_NUM_OF_DIGITS);
+
+    pr_info("alscal scaler = %s\n", alscal_scaler_chars);
+
+    err = kstrtouint(alscal_scaler_chars, 10, &scaler_value);
+    if (err)
+            return ALS_CAL_SCALER_DEFAULT_PERCENTAGE;
+
+    if (scaler_value < ALS_CAL_SCALER_LOWER_LIMIT || \
+            scaler_value > ALS_CAL_SCALER_UPPER_LIMIT) {
+            pr_err("alscal scaler invalid converted value = %d, using default = %d",\
+                   scaler_value, ALS_CAL_SCALER_DEFAULT_PERCENTAGE);
+            return ALS_CAL_SCALER_DEFAULT_PERCENTAGE;
+    }
+
+    return scaler_value;
+}
+EXPORT_SYMBOL(idme_get_alscal_scaler_value);
 #endif
 
 unsigned int idme_get_alscal_value(void)

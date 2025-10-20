@@ -21,11 +21,3 @@ config ALS_FORMULA_CHANGE
 	help
 	  If this option is set, it will support
 	  for changing als formula.
-
-config ALS_WHITE_RANGE_CHANGE
-	bool "JSA1214 support for switching white range"
-	default n
-	depends on MTK_JSA1214
-	help
-	  If this option is set, it will support
-	  for searching abc123 evt white device.
