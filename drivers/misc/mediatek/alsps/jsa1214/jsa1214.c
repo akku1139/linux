@@ -3281,7 +3281,6 @@ static int reset_test_mode(struct i2c_client *client)
 
 static int als_set_delay(u64 ns)
 {
-	udelay(ns);
 	return 0;
 }
 
