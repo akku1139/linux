@@ -34,8 +34,8 @@
 #include <linux/iio/iio.h>
 #include <linux/iio/sysfs.h>
 
-#include <mt-plat/mt_pwm.h>
-#include <mt-plat/mt_boot_common.h>
+#include <mt-plat/mtk_pwm.h>
+#include <mt-plat/mtk_boot_common.h>
 
 #ifdef CONFIG_MTK_SENSOR_SUPPORT
 #include <alsps.h>
@@ -1123,13 +1123,13 @@ static irqreturn_t opt3001_irq(int irq, void *_iio)
 					IIO_UNMOD_EVENT_CODE(IIO_LIGHT, 0,
 							IIO_EV_TYPE_THRESH,
 							IIO_EV_DIR_RISING),
-					iio_get_time_ns());
+					iio_get_time_ns(iio));
 		if (ret & OPT3001_CONFIGURATION_FL)
 			iio_push_event(iio,
 					IIO_UNMOD_EVENT_CODE(IIO_LIGHT, 0,
 							IIO_EV_TYPE_THRESH,
 							IIO_EV_DIR_FALLING),
-					iio_get_time_ns());
+					iio_get_time_ns(iio));
 	} else if (ret & OPT3001_CONFIGURATION_CRF) {
 		ret = i2c_smbus_read_word_swapped(opt->client, OPT3001_RESULT);
 		if (ret < 0) {
