@@ -1885,17 +1885,25 @@ static void lcm_suspend_power(void)
 	MDELAY(10);
 }
 
+static const char* nt35521_wxga_dsi_vdo_douglas_lcm_drv_names[] = {
+        "nt35521_wxga_dsi_vdo_douglas",
+        "nt35521_wxga_dsi_vdo_douglas_tpv",
+        "nt35521_wxga_dsi_vdo_douglas_tcl_kd",
+        "nt35521_wxga_dsi_vdo_douglas_inx"
+};
 
 struct LCM_DRIVER nt35521_wxga_dsi_vdo_douglas_lcm_drv = {
-	.name			= "nt35521_wxga_dsi_vdo_douglas",
-	.set_util_funcs = lcm_set_util_funcs,
-	.get_params     = lcm_get_params,
-	.init           = lcm_init,
-	.suspend        = lcm_suspend,
-	.resume         = lcm_resume,
-/*	.set_backlight	= lcm_set_backlight,*/
-	/*.set_backlight_mode	= lcm_set_backlight_mode, */
-	/* .compare_id    = lcm_compare_id, */
-	.resume_power	= lcm_resume_power,
-	.suspend_power	= lcm_suspend_power,
+        //.name                 = "nt35521_wxga_dsi_vdo_douglas",
+        .multi_names = nt35521_wxga_dsi_vdo_douglas_lcm_drv_names,
+        .num_multi_names = ARRAY_SIZE(nt35521_wxga_dsi_vdo_douglas_lcm_drv_names),
+        .set_util_funcs = lcm_set_util_funcs,
+        .get_params     = lcm_get_params,
+        .init           = lcm_init,
+        .suspend        = lcm_suspend,
+        .resume         = lcm_resume,
+/*      .set_backlight  = lcm_set_backlight,*/
+        /*.set_backlight_mode   = lcm_set_backlight_mode, */
+        /* .compare_id    = lcm_compare_id, */
+        .resume_power   = lcm_resume_power,
+        .suspend_power  = lcm_suspend_power,
 };
