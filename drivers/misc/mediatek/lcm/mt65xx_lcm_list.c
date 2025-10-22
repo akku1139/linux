@@ -1163,6 +1163,10 @@ struct LCM_DRIVER *lcm_driver_list[] = {
         &st7701s_wsvga_dsi_vdo_checkers_st_kd_hsd_lcm_drv,
 #endif
 
+#if defined(NT35521_WXGA_DSI_VDO_DOUGLAS)
+        &nt35521_wxga_dsi_vdo_douglas_lcm_drv,
+#endif
+
 };
 
 unsigned char lcm_name_list[][128] = {
