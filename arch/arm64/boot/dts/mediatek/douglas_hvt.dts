@@ -88,6 +88,15 @@
 		ps_threshold_low	= <40>;
 		is_batch_supported_ps	= <1>;
 	};
+
+        /* auxadc thermistor channel */
+        thermal-sensor {
+                compatible = "generic-adc-thermal";
+                #thermal-sensor-cells = <0>;
+                io-channels = <&auxadc 0>, <&auxadc 12>, <&auxadc 13>;
+                io-channel-names = "sensor-channel";
+        };
+
 	/* Virtual sensor thermistor */
 	thermistor@0 {
 		compatible = "amazon,virtual_sensor_thermistor";
