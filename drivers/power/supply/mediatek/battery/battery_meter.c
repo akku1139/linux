@@ -904,6 +904,9 @@ int __batt_meter_init_cust_data_from_dt(void)
 	}
 
 	fgauge_get_profile_id();
+#ifdef CONFIG_DOUGLAS
+	__batt_meter_parse_table(np, "r_profile_t4", (BATTERY_PROFILE_STRUCT *)&r_profile_t4[0]);
+#endif
 #endif
 
 	if (g_fg_battery_id == 0) {
@@ -1433,6 +1436,18 @@ struct battery_profile_struct *fgauge_get_profile(unsigned int temperature)
 	return NULL;
 }
 
+#if defined(CONFIG_MTK_MULTI_BAT_PROFILE_SUPPORT) && defined(CONFIG_DOUGLAS)
+static bool bNew50dprofile;
+static int g_custom_batt_temp = 38;
+void update_new_50d_profile(int curr_temp)
+{
+	if (curr_temp >= g_custom_batt_temp)
+		bNew50dprofile = true;
+	else
+		bNew50dprofile = false;
+}
+#endif
+
 struct r_profile_struct *fgauge_get_profile_r_table(unsigned int temperature)
 {
 	if (temperature == batt_meter_cust_data.temperature_t0)
@@ -1446,6 +1461,15 @@ struct r_profile_struct *fgauge_get_profile_r_table(unsigned int temperature)
 
 	if (temperature == batt_meter_cust_data.temperature_t2)
 		return &r_profile_t2[0];
+
+#if defined(CONFIG_MTK_MULTI_BAT_PROFILE_SUPPORT) && defined(CONFIG_DOUGLAS)
+	if (g_fg_battery_id == 0 && bNew50dprofile) {
+		if (temperature == batt_meter_cust_data.temperature_t3) {
+			pr_debug("[%s] use new 50d zcv table\r\n", __func__);
+			return &r_profile_t4[0];
+		}
+	}
+#endif
 
 	if (temperature == batt_meter_cust_data.temperature_t3)
 		return &r_profile_t3[0];
@@ -1802,6 +1826,10 @@ void fgauge_construct_r_table_profile(
 	int i, saddles;
 	signed int temp_v_1, temp_v_2;
 	signed int temp_r_1, temp_r_2;
+
+#if defined(CONFIG_MTK_MULTI_BAT_PROFILE_SUPPORT) && defined(CONFIG_DOUGLAS)
+	update_new_50d_profile(temperature);
+#endif
 
 	if (temperature <= batt_meter_cust_data.temperature_t1) {
 		low_profile_p = fgauge_get_profile_r_table(

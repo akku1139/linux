@@ -4298,6 +4298,57 @@ static int __batt_init_cust_data_from_dt(void)
 
 	__batt_parse_node(np, "jeita_neg_10_to_pos_0_full_current",
 		&batt_cust_data.jeita_neg_10_to_pos_0_full_current);
+	if (batt_cust_data.jeita_neg_10_to_pos_0_full_current == 0)
+		batt_cust_data.jeita_neg_10_to_pos_0_full_current
+			= JEITA_NEG_10_TO_POS_0_FULL_CURRENT;
+
+	__batt_parse_node(np, "jeita_temp_pos_45_to_pos_60_recharge_voltage",
+		&batt_cust_data.jeita_temp_pos_45_to_pos_60_recharge_voltage);
+	if (batt_cust_data.jeita_temp_pos_45_to_pos_60_recharge_voltage == 0)
+		batt_cust_data.jeita_temp_pos_45_to_pos_60_recharge_voltage
+			= JEITA_TEMP_POS_45_TO_POS_60_RECHARGE_VOLTAGE;
+
+	__batt_parse_node(np, "jeita_temp_pos_10_to_pos_45_recharge_voltage",
+		&batt_cust_data.jeita_temp_pos_10_to_pos_45_recharge_voltage);
+	if (batt_cust_data.jeita_temp_pos_10_to_pos_45_recharge_voltage == 0)
+		batt_cust_data.jeita_temp_pos_10_to_pos_45_recharge_voltage
+			= JEITA_TEMP_POS_10_TO_POS_45_RECHARGE_VOLTAGE;
+
+	__batt_parse_node(np, "jeita_temp_pos_0_to_pos_10_recharge_voltage",
+		&batt_cust_data.jeita_temp_pos_0_to_pos_10_recharge_voltage);
+	if (batt_cust_data.jeita_temp_pos_0_to_pos_10_recharge_voltage == 0)
+		batt_cust_data.jeita_temp_pos_0_to_pos_10_recharge_voltage
+			= JEITA_TEMP_POS_0_TO_POS_10_RECHARGE_VOLTAGE;
+
+	__batt_parse_node(np, "jeita_temp_neg_10_to_pos_0_recharge_voltage",
+		&batt_cust_data.jeita_temp_neg_10_to_pos_0_recharge_voltage);
+	if (batt_cust_data.jeita_temp_neg_10_to_pos_0_recharge_voltage == 0)
+		batt_cust_data.jeita_temp_neg_10_to_pos_0_recharge_voltage
+			= JEITA_TEMP_NEG_10_TO_POS_0_RECHARGE_VOLTAGE;
+
+	__batt_parse_node(np, "jeita_temp_pos_45_to_pos_60_cc2topoff_threshold",
+		&batt_cust_data.jeita_temp_pos_45_to_pos_60_cc2topoff_threshold);
+	if (batt_cust_data.jeita_temp_pos_45_to_pos_60_cc2topoff_threshold == 0)
+		batt_cust_data.jeita_temp_pos_45_to_pos_60_cc2topoff_threshold
+			= JEITA_TEMP_POS_45_TO_POS_60_CC2TOPOFF_THRESHOLD;
+
+	__batt_parse_node(np, "jeita_temp_pos_10_to_pos_45_cc2topoff_threshold",
+		&batt_cust_data.jeita_temp_pos_10_to_pos_45_cc2topoff_threshold);
+	if (batt_cust_data.jeita_temp_pos_10_to_pos_45_cc2topoff_threshold == 0)
+		batt_cust_data.jeita_temp_pos_10_to_pos_45_cc2topoff_threshold
+			= JEITA_TEMP_POS_10_TO_POS_45_CC2TOPOFF_THRESHOLD;
+
+	__batt_parse_node(np, "jeita_temp_pos_0_to_pos_10_cc2topoff_threshold",
+		&batt_cust_data.jeita_temp_pos_0_to_pos_10_cc2topoff_threshold);
+	if (batt_cust_data.jeita_temp_pos_0_to_pos_10_cc2topoff_threshold == 0)
+		batt_cust_data.jeita_temp_pos_0_to_pos_10_cc2topoff_threshold
+			= JEITA_TEMP_POS_0_TO_POS_10_CC2TOPOFF_THRESHOLD;
+
+	__batt_parse_node(np, "jeita_temp_neg_10_to_pos_0_cc2topoff_threshold",
+		&batt_cust_data.jeita_temp_neg_10_to_pos_0_cc2topoff_threshold);
+	if (batt_cust_data.jeita_temp_neg_10_to_pos_0_cc2topoff_threshold == 0)
+		batt_cust_data.jeita_temp_neg_10_to_pos_0_cc2topoff_threshold
+			= JEITA_TEMP_NEG_10_TO_POS_0_CC2TOPOFF_THRESHOLD;
 
 	/* For fast charger detection */
 	__ap15_charger_detection_read_dt(np);
