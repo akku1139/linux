@@ -186,6 +186,13 @@
 
 	step_of_qmax = <60>; /* Unit: mAh */
 
+	/* Multi battery support */
+	io-channels = <&auxadc 1>;
+	id_volt_max = <1400>;
+	id_volt_min = <800>;
+	total_battery_number = <2>;
+	bat_id_volt_thres = <1200 (-1)>;
+
 	batt_temperature_table_num = <17>;
 	batt_temperature_table = <
 				(-20) 499900
