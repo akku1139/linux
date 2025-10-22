@@ -20,5 +20,9 @@ config CHECKERS
 	help
 	isolate amazon Checkers changes for MTK Platform
 
+config DOUGLAS
+	bool "Douglas MTK platform project"
+	help
+	isolate amazon Douglas changes for MTK Platform
 
 endmenu
