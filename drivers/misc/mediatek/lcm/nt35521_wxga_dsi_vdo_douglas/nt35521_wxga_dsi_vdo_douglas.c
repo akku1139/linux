@@ -1,4 +1,5 @@
 #ifdef BUILD_LK
+#include <linux/module.h>
 #include <string.h>
 #include <platform/mt_gpio.h>
 #include <platform/mt_pmic.h>
@@ -245,7 +246,7 @@ static unsigned char lcm_id;
 static unsigned char vendor_id = 0xFF;
 static unsigned char build_id = 0xFF;
 
-static LCM_UTIL_FUNCS lcm_util = {
+static struct LCM_UTIL_FUNCS lcm_util = {
 	.set_reset_pin = NULL,
 	.udelay = NULL,
 	.mdelay = NULL,
@@ -1510,14 +1511,14 @@ static void init_douglas_inx_lcm(void)
 /* -----------------------------------------
  *  LCM Driver Implementations
  * ----------------------------------------- */
-static void lcm_set_util_funcs(const LCM_UTIL_FUNCS *util)
+static void lcm_set_util_funcs(const struct LCM_UTIL_FUNCS *util)
 {
-	memcpy(&lcm_util, util, sizeof(LCM_UTIL_FUNCS));
+	memcpy(&lcm_util, util, sizeof(struct LCM_UTIL_FUNCS));
 }
 
-static void lcm_get_params(LCM_PARAMS *params)
+static void lcm_get_params(struct LCM_PARAMS *params)
 {
-	memset(params, 0, sizeof(LCM_PARAMS));
+	memset(params, 0, sizeof(struct LCM_PARAMS));
 
 	params->type   = LCM_TYPE_DSI;
 
@@ -1885,7 +1886,7 @@ static void lcm_suspend_power(void)
 }
 
 
-LCM_DRIVER nt35521_wxga_dsi_vdo_douglas_lcm_drv = {
+struct LCM_DRIVER nt35521_wxga_dsi_vdo_douglas_lcm_drv = {
 	.name			= "nt35521_wxga_dsi_vdo_douglas",
 	.set_util_funcs = lcm_set_util_funcs,
 	.get_params     = lcm_get_params,
