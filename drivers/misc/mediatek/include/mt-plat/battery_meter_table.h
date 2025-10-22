@@ -104,6 +104,10 @@ R_PROFILE_STRUCT r_profile_t2[PROFILE_TABLE_SIZE];
 /* T3 50C*/
 R_PROFILE_STRUCT r_profile_t3[PROFILE_TABLE_SIZE];
 
+#if defined(CONFIG_MTK_MULTI_BAT_PROFILE_SUPPORT) && defined(CONFIG_DOUGLAS)
+R_PROFILE_STRUCT r_profile_t4[PROFILE_TABLE_SIZE];
+#endif
+
 R_PROFILE_STRUCT r_profile_temperature[PROFILE_TABLE_SIZE];
 #if defined(CONFIG_MTK_BATTERY_LIFETIME_DATA_SUPPORT)
 /* ============================================================*/

@@ -147,11 +147,13 @@ unsigned int do_jeita_state_machine(void)
 			"[BATTERY] Battery Temperature between %d and %d !!\n\r",
 			TEMP_POS_45_THRESHOLD, TEMP_POS_60_THRESHOLD);
 		g_temp_status = TEMP_POS_45_TO_POS_60;
-		g_jeita_recharging_voltage =
-			JEITA_TEMP_POS_45_TO_POS_60_RECHARGE_VOLTAGE;
-		v_cc2topoff_threshold =
-			JEITA_TEMP_POS_45_TO_POS_60_CC2TOPOFF_THRESHOLD;
-		charging_full_current = batt_cust_data.charging_full_current;
+			g_jeita_recharging_voltage =
+				batt_cust_data.
+				jeita_temp_pos_45_to_pos_60_recharge_voltage;
+			v_cc2topoff_threshold =
+				batt_cust_data.
+				jeita_temp_pos_45_to_pos_60_cc2topoff_threshold;
+			charging_full_current = batt_cust_data.charging_full_current;
 		/*}*/
 	} else if (BMT_status.temperature >= TEMP_POS_10_THRESHOLD) {
 		if (((g_temp_status == TEMP_POS_45_TO_POS_60) &&
@@ -172,10 +174,11 @@ unsigned int do_jeita_state_machine(void)
 			g_jeita_recharging_voltage = 4200;
 		else
 			g_jeita_recharging_voltage =
-			JEITA_TEMP_POS_10_TO_POS_45_RECHARGE_VOLTAGE;
-
+				batt_cust_data.
+				jeita_temp_pos_10_to_pos_45_recharge_voltage;
 			v_cc2topoff_threshold =
-				JEITA_TEMP_POS_10_TO_POS_45_CC2TOPOFF_THRESHOLD;
+				batt_cust_data.
+				jeita_temp_pos_10_to_pos_45_cc2topoff_threshold;
 			charging_full_current =
 				batt_cust_data.charging_full_current;
 		}
@@ -203,11 +206,12 @@ unsigned int do_jeita_state_machine(void)
 				TEMP_POS_0_THRESHOLD, TEMP_POS_10_THRESHOLD);
 			g_temp_status = TEMP_POS_0_TO_POS_10;
 			g_jeita_recharging_voltage =
-				JEITA_TEMP_POS_0_TO_POS_10_RECHARGE_VOLTAGE;
+				batt_cust_data.
+				jeita_temp_pos_0_to_pos_10_recharge_voltage;
 			v_cc2topoff_threshold =
-				JEITA_TEMP_POS_0_TO_POS_10_CC2TOPOFF_THRESHOLD;
-			charging_full_current =
-				batt_cust_data.charging_full_current;
+				batt_cust_data.
+				jeita_temp_pos_0_to_pos_10_cc2topoff_threshold;
+			charging_full_current = batt_cust_data.charging_full_current;
 		}
 	} else if (BMT_status.temperature >= TEMP_NEG_10_THRESHOLD) {
 		if ((g_temp_status == TEMP_BELOW_NEG_10) &&
@@ -223,11 +227,14 @@ unsigned int do_jeita_state_machine(void)
 			"[BATTERY] Battery Temperature between %d and %d !!\n\r",
 			TEMP_NEG_10_THRESHOLD, TEMP_POS_0_THRESHOLD);
 		g_temp_status = TEMP_NEG_10_TO_POS_0;
-		g_jeita_recharging_voltage =
-			JEITA_TEMP_NEG_10_TO_POS_0_RECHARGE_VOLTAGE;
-		v_cc2topoff_threshold =
-			JEITA_TEMP_NEG_10_TO_POS_0_CC2TOPOFF_THRESHOLD;
-		charging_full_current = JEITA_NEG_10_TO_POS_0_FULL_CURRENT;
+			g_jeita_recharging_voltage =
+				batt_cust_data.
+				jeita_temp_neg_10_to_pos_0_recharge_voltage;
+			v_cc2topoff_threshold =
+				batt_cust_data.
+				jeita_temp_neg_10_to_pos_0_cc2topoff_threshold;
+			charging_full_current =
+				batt_cust_data.jeita_neg_10_to_pos_0_full_current;
 		/*}*/
 	} else {
 		pr_debug("[BATTERY] Battery below low Temperature(%d) !!\n\r",
@@ -250,6 +257,37 @@ unsigned int do_jeita_state_machine(void)
 	return PMU_STATUS_OK;
 }
 
+#ifdef CONFIG_DOUGLAS
+static void set_jeita_charging_current(void)
+{
+	static bool above_4000;
+#ifdef CONFIG_USB_IF
+	if (BMT_status.charger_type == STANDARD_HOST)
+		return;
+#endif
+
+	if (g_temp_status == TEMP_NEG_10_TO_POS_0
+		|| g_temp_status == TEMP_BELOW_NEG_10
+		|| g_temp_status == TEMP_ABOVE_POS_60)
+		g_temp_CC_value = CHARGE_CURRENT_0_00_MA;
+	else if (g_temp_status == TEMP_POS_0_TO_POS_10) {
+		if (BMT_status.bat_vol > 4000) {
+			g_temp_CC_value = CHARGE_CURRENT_500_00_MA;
+			above_4000 = true;
+		} else if (BMT_status.bat_vol > 3900 && above_4000 == true) {
+			g_temp_CC_value = CHARGE_CURRENT_500_00_MA;
+		} else {
+			g_temp_CC_value =
+			(CHARGE_CURRENT_800_00_MA > g_temp_CC_value) ?
+			g_temp_CC_value : CHARGE_CURRENT_800_00_MA;
+			above_4000 = false;
+		}
+	}
+
+	pr_debug("[%s] status: %d, charging current : %d\r\n",
+		__func__, g_temp_status, g_temp_CC_value);
+}
+#else
 static void set_jeita_charging_current(void)
 {
 #ifdef CONFIG_USB_IF
@@ -263,6 +301,7 @@ static void set_jeita_charging_current(void)
 			 g_temp_CC_value);
 	}
 }
+#endif
 
 #endif
 
