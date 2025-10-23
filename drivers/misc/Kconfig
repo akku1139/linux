@@ -787,6 +787,23 @@ config MEMORY_STATE_TIME
 	help
 	  Memory time statistics exported to /sys/kernel/memory_state_time
 
+config IDME
+	bool "IDME support"
+	depends on PROC_FS
+	help
+	  Select Y here to enable IDME support to read the data
+	  via userspace (i.e. /proc/idme/* entries)
+
+config GATING
+	bool "GATING support"
+	help
+	  Select Y here to enable MUTE button and GATING circuit support.
+
+config PWM_INVERTED
+       bool "PWM duty cycle and calibration parameter is inverted"
+       help
+         This option should be used if PWM and scaling factor are not directly proportional
+
 source "drivers/misc/c2port/Kconfig"
 source "drivers/misc/eeprom/Kconfig"
 source "drivers/misc/cb710/Kconfig"
@@ -799,4 +816,5 @@ source "drivers/misc/mic/Kconfig"
 source "drivers/misc/genwqe/Kconfig"
 source "drivers/misc/echo/Kconfig"
 source "drivers/misc/cxl/Kconfig"
+source "drivers/misc/mediatek/Kconfig"
 endmenu
