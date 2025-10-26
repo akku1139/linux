@@ -28,7 +28,6 @@ obj-$(CONFIG_MTK_BASE_POWER) += base/
 obj-$(CONFIG_MTK_ACCDET) += accdet/
 obj-$(CONFIG_MTK_AMZN_ACCDET)   += accdet/
 obj-$(CONFIG_MTK_BASE_POWER) += base/
-obj-$(CONFIG_MEDIATEK_SOLUTION) += sched/
 obj-$(CONFIG_MTK_FREQ_HOPPING) += freqhopping/
 obj-$(CONFIG_MMC_MTK_SDIO) += mtk_sdio/
 obj-$(CONFIG_MTK_COMBO) += connectivity/
