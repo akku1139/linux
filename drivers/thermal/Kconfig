@@ -423,12 +423,6 @@ config VIRTUAL_SENSOR_THERMAL
 	  created. Cooling devices can be bound to the trip points to cool this
 	  thermal zone if trip points reached.
 
-config THERMAL_SHUTDOWN_LAST_KMESG
-	bool "THERMAL_SHUTDOWN_LAST_KMESG save the last kmsg"
-	default n
-	help
-	  Save the last kmsg when thermal shuts down the system.
-
 config AMAZON_THERMAL
 	bool
 	prompt "Amazon thermal driver"

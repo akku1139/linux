@@ -353,29 +353,6 @@ static int virtual_sensor_thermal_set_trip_hyst(struct thermal_zone_device *ther
 	return 0;
 }
 
-#ifdef CONFIG_THERMAL_SHUTDOWN_LAST_KMESG
-void last_kmsg_thermal_shutdown(void)
-{
-	int rc;
-	char *argv[] = {
-		"/sbin/crashreport",
-		"thermal_shutdown",
-		NULL
-	};
-
-	pr_err("%s: start to save last kmsg\n", __func__);
-	//UMH_WAIT_PROC UMH_WAIT_EXEC
-	rc = call_usermodehelper(argv[0], argv, NULL, UMH_WAIT_EXEC);
-	pr_err("%s: save last kmsg finish\n", __func__);
-
-	if (rc < 0)
-		pr_err("call /sbin/crashreport failed, rc = %d\n", rc);
-	else
-		msleep(6000); /* 6000ms */
-}
-EXPORT_SYMBOL_GPL(last_kmsg_thermal_shutdown);
-#endif
-
 static int virtual_sensor_thermal_notify(struct thermal_zone_device *thermal,
 				 int trip,
 				 enum thermal_trip_type type)
@@ -384,14 +361,6 @@ static int virtual_sensor_thermal_notify(struct thermal_zone_device *thermal,
 	char *envp[] = { data, NULL};
 	snprintf(data, sizeof(data), "%s", "SHUTDOWN_WARNING");
 	kobject_uevent_env(&thermal->device.kobj, KOBJ_CHANGE, envp);
-
-#ifdef CONFIG_THERMAL_SHUTDOWN_LAST_KMESG
-	if (type == THERMAL_TRIP_CRITICAL) {
-		pr_err("%s: thermal_shutdown notify\n", __func__);
-		last_kmsg_thermal_shutdown();
-		pr_err("%s: thermal_shutdown notify end\n", __func__);
-	}
-#endif
 
 #ifdef CONFIG_AMAZON_SIGN_OF_LIFE
 	if (type == THERMAL_TRIP_CRITICAL)

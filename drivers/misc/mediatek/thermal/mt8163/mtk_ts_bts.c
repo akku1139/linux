@@ -32,10 +32,6 @@
 #include "mach/mt_thermal.h"
 #include "mtk_ts_cpu.h"
 
-#ifdef CONFIG_THERMAL_SHUTDOWN_LAST_KMESG
-#include <linux/thermal_framework.h>
-#endif
-
 #ifdef CONFIG_AMAZON_SIGN_OF_LIFE
 #include <linux/sign_of_life.h>
 #endif
@@ -506,14 +502,6 @@ static int mtkts_bts_thermal_notify(struct thermal_zone_device *thermal,
 				__func__, thermal->temperature, trip);
 		life_cycle_set_thermal_shutdown_reason(
 		THERMAL_SHUTDOWN_REASON_BTS);
-	}
-#endif
-
-#ifdef CONFIG_THERMAL_SHUTDOWN_LAST_KMESG
-	if (type == THERMAL_TRIP_CRITICAL) {
-		pr_err("%s: thermal_shutdown notify\n", __func__);
-		last_kmsg_thermal_shutdown();
-		pr_err("%s: thermal_shutdown notify end\n", __func__);
 	}
 #endif
 

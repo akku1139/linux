@@ -36,10 +36,6 @@
 #include <linux/sign_of_life.h>
 #endif
 
-#ifdef CONFIG_THERMAL_SHUTDOWN_LAST_KMESG
-#include <linux/thermal_framework.h>
-#endif
-
 #ifdef CONFIG_AMAZON_METRICS_LOG
 #include <linux/metricslog.h>
 #define TSBATTERY_METRICS_STR_LEN 128
@@ -343,11 +339,6 @@ static int mtktsbattery_thermal_notify(struct thermal_zone_device *thermal,
 #ifdef CONFIG_AMAZON_METRICS_LOG
 	char buf[TSBATTERY_METRICS_STR_LEN];
 #endif
-	if (type == THERMAL_TRIP_CRITICAL) {
-		pr_err("%s: thermal_shutdown notify\n", __func__);
-		last_kmsg_thermal_shutdown();
-		pr_err("%s: thermal_shutdown notify end\n", __func__);
-	}
 
 #ifdef CONFIG_AMAZON_SIGN_OF_LIFE
 	if (type == THERMAL_TRIP_CRITICAL) {
@@ -355,14 +346,6 @@ static int mtktsbattery_thermal_notify(struct thermal_zone_device *thermal,
 			__func__, thermal->temperature, trip);
 		life_cycle_set_thermal_shutdown_reason(
 			THERMAL_SHUTDOWN_REASON_BATTERY);
-	}
-#endif
-
-#ifdef CONFIG_THERMAL_SHUTDOWN_LAST_KMESG
-	if (type == THERMAL_TRIP_CRITICAL) {
-		pr_err("%s: thermal_shutdown notify\n", __func__);
-		last_kmsg_thermal_shutdown();
-		pr_err("%s: thermal_shutdown notify end\n", __func__);
 	}
 #endif
 
