@@ -68,21 +68,6 @@ int amazon_enable_throttle(struct thermal_cooling_device *cdev, int state)
 	return 0;
 }
 
-static struct thermal_zone_device *amazon_cooling_find_tz_in_state(
-	struct thermal_cooling_device *cdev, unsigned long state)
-{
-	struct thermal_instance *instance;
-
-	list_for_each_entry(instance, &cdev->thermal_instances, cdev_node) {
-		/* return the first thermal instance in target state */
-		if (instance->target == state)
-			return instance->tz;
-	}
-	pr_warn("%s: No thermal zone found for cdev %s target state %lu",
-		__func__, cdev->type, state);
-	return NULL;
-}
-
 static int amazon_cooling_get_max_state(struct thermal_cooling_device *cdev,
 	unsigned long *state)
 {
@@ -185,7 +170,6 @@ static int amazon_cooling_set_cur_state(struct thermal_cooling_device *cdev,
 	unsigned long state)
 {
 	struct cooler_platform_data *pdata = cdev->devdata;
-	struct thermal_zone_device *tz;
 	struct task_struct *amazon_suspend_cooler_task;
 	static bool suspend_cooler_in_suspend_state;
 
@@ -195,8 +179,6 @@ static int amazon_cooling_set_cur_state(struct thermal_cooling_device *cdev,
 		if (!strcmp(cdev->type, SUSPEND_COOLER) &&
 				state == SUSPEND_COOLER_SUSPEND_STATE) {
 			suspend_cooler_in_suspend_state = true;
-			tz = amazon_cooling_find_tz_in_state(cdev, state);
-			if (tz)
 			amazon_suspend_cooler_task =
 				kthread_create(amazon_suspend_cooler_kthread,
 					cdev, "amazon_suspend_cooler_kthread");
