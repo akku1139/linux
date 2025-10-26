@@ -5,7 +5,6 @@ config ANDROID_DEFAULT_SETTING
 	select AIO
 	select ANDROID
 	select ANDROID_BINDER_IPC
-	select ANDROID_LOW_MEMORY_KILLER
 	select ASHMEM
 	select AUDIT
 	select BLK_DEV_INITRD
