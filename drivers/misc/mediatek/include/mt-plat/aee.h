@@ -175,7 +175,8 @@ struct aee_kernel_api {
 			const char *detail, const int db_opt);
 };
 
-void aee_sram_printk(const char *fmt, ...);
+//void aee_sram_printk(const char *fmt, ...);
+static inline void aee_sram_printk(const char *fmt, ...) { }
 int aee_nested_printf(const char *fmt, ...);
 void aee_wdt_irq_info(void);
 void aee_wdt_fiq_info(void *arg, void *regs, void *svc_sp);
@@ -262,58 +263,73 @@ void aee_oops_free(struct aee_oops *oops);
 	aed_combo_exception_api(log, log_size, phy, phy_size, detail,	\
 			DB_OPT_DEFAULT)
 
-void aee_kernel_exception_api(const char *file, const int line,
-		const int db_opt, const char *module, const char *msg, ...);
-void aee_kernel_warning_api(const char *file, const int line, const int db_opt,
-		const char *module, const char *msg, ...);
-void aee_kernel_reminding_api(const char *file, const int line,
-		const int db_opt, const char *module, const char *msg, ...);
-void aee_kernel_dal_api(const char *file, const int line, const char *msg);
+static inline void aee_kernel_exception_api(const char *file, const int line,
+        const int db_opt, const char *module, const char *msg, ...) {}
 
-void aed_md_exception_api(const int *log, int log_size, const int *phy,
-			int phy_size, const char *detail, const int db_opt);
-void aed_md32_exception_api(const int *log, int log_size, const int *phy,
-			int phy_size, const char *detail, const int db_opt);
-void aed_scp_exception_api(const int *log, int log_size, const int *phy,
-			int phy_size, const char *detail, const int db_opt);
-void aed_combo_exception_api(const int *log, int log_size, const int *phy,
-			int phy_size, const char *detail, const int db_opt);
+static inline void aee_kernel_warning_api(const char *file, const int line,
+        const int db_opt, const char *module, const char *msg, ...) {}
 
-void aee_kernel_wdt_kick_Powkey_api(const char *module, int msg);
-int aee_kernel_wdt_kick_api(int kinterval);
-void aee_powerkey_notify_press(unsigned long pressed);
-int aee_kernel_Powerkey_is_press(void);
+static inline void aee_kernel_reminding_api(const char *file, const int line,
+        const int db_opt, const char *module, const char *msg, ...) {}
 
-void ipanic_recursive_ke(struct pt_regs *regs, struct pt_regs *excp_regs,
-			int cpu);
+static inline void aee_kernel_dal_api(const char *file, const int line,
+        const char *msg) {}
+
+static inline void aed_md_exception_api(const int *log, int log_size,
+        const int *phy, int phy_size, const char *detail, const int db_opt) {}
+
+static inline void aed_md32_exception_api(const int *log, int log_size,
+        const int *phy, int phy_size, const char *detail, const int db_opt) {}
+
+static inline void aed_scp_exception_api(const int *log, int log_size,
+        const int *phy, int phy_size, const char *detail, const int db_opt) {}
+
+static inline void aed_combo_exception_api(const int *log, int log_size,
+        const int *phy, int phy_size, const char *detail, const int db_opt) {}
+
+static inline void aee_kernel_wdt_kick_Powkey_api(const char *module, int msg) {}
+
+static inline int aee_kernel_wdt_kick_api(int kinterval) { return 0; }
+
+static inline void aee_powerkey_notify_press(unsigned long pressed) {}
+
+static inline int aee_kernel_Powerkey_is_press(void) { return 0; }
+
+static inline void ipanic_recursive_ke(struct pt_regs *regs,
+        struct pt_regs *excp_regs, int cpu) {}
 
 /* QHQ RT Monitor */
-void aee_kernel_RT_Monitor_api(int lParam);
+static inline void aee_kernel_RT_Monitor_api(int lParam) {}
 /* QHQ RT Monitor    end */
-void mt_fiq_printf(const char *fmt, ...);
-void aee_register_api(struct aee_kernel_api *aee_api);
-int aee_in_nested_panic(void);
-void aee_save_excp_regs(struct pt_regs *regs);
-void aee_stop_nested_panic(struct pt_regs *regs);
-void aee_wdt_dump_info(void);
-void aee_wdt_printf(const char *fmt, ...);
 
-void aee_fiq_ipi_cpu_stop(void *arg, void *regs, void *svc_sp);
+static inline void mt_fiq_printf(const char *fmt, ...) {}
 
-extern void rtc_mark_wdt_aee(void) __attribute__((weak));
+static inline void aee_register_api(struct aee_kernel_api *aee_api) {}
+
+static inline int aee_in_nested_panic(void) { return 0; }
+
+static inline void aee_save_excp_regs(struct pt_regs *regs) {}
+
+static inline void aee_stop_nested_panic(struct pt_regs *regs) {}
+
+static inline void aee_wdt_dump_info(void) {}
+
+static inline void aee_wdt_printf(const char *fmt, ...) {}
+
+static inline void aee_fiq_ipi_cpu_stop(void *arg, void *regs, void *svc_sp) {}
+
+__attribute__((weak)) void rtc_mark_wdt_aee(void) {}
 
 #if defined(CONFIG_MTK_AEE_DRAM_CONSOLE)
-void aee_dram_console_reserve_memory(void);
+static inline void aee_dram_console_reserve_memory(void) {}
 #else
-static inline void aee_dram_console_reserve_memory(void)
-{
-}
+static inline void aee_dram_console_reserve_memory(void) {}
 #endif
 
 #ifdef CONFIG_MACH_MT6763
-extern void msdc_hang_detect_dump(u32 id);
-extern void mtk_wdt_mode_config(bool dual_mode_en,
-		bool irq, bool ext_en, bool ext_pol, bool wdt_en);
+static inline void msdc_hang_detect_dump(u32 id) {}
+static inline void mtk_wdt_mode_config(bool dual_mode_en,
+        bool irq, bool ext_en, bool ext_pol, bool wdt_en) {}
 #endif
 
 /* To store latest exception, in case of stack corruption */

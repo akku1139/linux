@@ -98,7 +98,7 @@ int get_wd_api(struct wd_api **obj);
 int wd_api_init(void);
 void wk_cpu_update_bit_flag(int cpu, int plug_status);
 
-extern void aee_wdt_printf(const char *fmt, ...);
+//extern void aee_wdt_printf(const char *fmt, ...);
 
 #endif				/* _MT_WD_API_H_ */
 
