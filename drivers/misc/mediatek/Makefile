@@ -69,7 +69,6 @@ obj-$(CONFIG_MTK_LEDS)	+= leds/
 obj-$(CONFIG_MTK_BOOT) += boot/
 obj-$(CONFIG_MTK_BOOT_REASON) += boot_reason/
 obj-$(CONFIG_MTK_CHIP) += chip/
-obj-$(CONFIG_MTK_SELINUX_AEE_WARNING)	+= selinux_warning/
 ifeq ($(CONFIG_MTK_GAUGE_VERSION),30)
 obj-y += power/
 endif
@@ -111,9 +110,6 @@ obj-$(CONFIG_MTK_RTC)	+= rtc/
 obj-y += mtprintk/
 obj-$(CONFIG_MTK_XO)	+= xo/
 obj-$(CONFIG_MICROTRUST_TEE_SUPPORT) += teei/
-obj-$(CONFIG_MTK_RAM_CONSOLE) += ram_console/
-obj-$(CONFIG_MTK_DRAM_LOG_STORE)    += log_store/
-obj-$(CONFIG_MEDIATEK_SOLUTION)	+= aee/
 obj-$(CONFIG_MTK_CAMERA_ISP) += cameraisp/
 obj-$(CONFIG_MTK_CMDQ) += cmdq/
 obj-$(CONFIG_MTK_CMDQ) += mdp/
