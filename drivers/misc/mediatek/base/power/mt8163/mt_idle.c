@@ -1634,7 +1634,7 @@ int rgidle_enter(int cpu)
 }
 EXPORT_SYMBOL(rgidle_enter);
 
-static int __init get_base_from_node(
+static int get_base_from_node(
 	const char *cmp, void __iomem **pbase, int idx)
 {
 	struct device_node *node;
@@ -2142,7 +2142,7 @@ static int __init mt_cpuidle_debugfs_init(void)
 	return 0;
 }
 
-void __init mt_cpuidle_framework_init(void)
+void mt_cpuidle_framework_init(void)
 {
 #if !IDLE_HAVE_STD_TIMER
 	int err = 0;
