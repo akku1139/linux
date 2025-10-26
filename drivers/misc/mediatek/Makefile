@@ -133,7 +133,6 @@ obj-y += atf/
 obj-$(CONFIG_THERMAL)   += thermal/
 obj-$(CONFIG_MTK_DEBUG_LATCH)   += debug_latch/
 obj-$(CONFIG_MTK_DFD_INTERNAL_DUMP) += dfd/
-obj-$(CONFIG_MTK_SYSTRACKER)   += systracker/
 obj-$(CONFIG_MEDIATEK_SOLUTION) += cmo/
 obj-$(CONFIG_MTK_VOW_SUPPORT)  += vow/
 obj-y += timer/
