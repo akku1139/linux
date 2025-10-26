@@ -106,7 +106,6 @@ obj-$(CONFIG_MTK_USB_TYPEC) += typec/
 obj-$(CONFIG_MTK_VPU_SUPPORT) += vpu/
 obj-$(CONFIG_MTK_CCU)	+= ccu/src/
 obj-$(CONFIG_MTK_RTC)	+= rtc/
-obj-y += mtprintk/
 obj-$(CONFIG_MTK_XO)	+= xo/
 obj-$(CONFIG_MICROTRUST_TEE_SUPPORT) += teei/
 obj-$(CONFIG_MTK_CAMERA_ISP) += cameraisp/
