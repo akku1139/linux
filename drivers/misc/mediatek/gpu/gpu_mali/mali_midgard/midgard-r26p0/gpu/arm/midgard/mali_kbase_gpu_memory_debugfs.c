@@ -66,12 +66,6 @@ static int kbasep_gpu_memory_seq_show(struct seq_file *sfile, void *data)
 	return 0;
 }
 
-void kbasep_gpu_memory_seq_show_lmk(void)
-{
-	return;
-}
-/* fosmod_fireos_crash_reporting begin */
-
 /*
  *  File operations related to debugfs entry for gpu_memory
  */
