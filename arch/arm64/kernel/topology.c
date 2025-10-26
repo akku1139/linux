@@ -350,6 +350,8 @@ topology_populated:
 	update_cpu_capacity(cpuid);
 }
 
+#include "topology_mtk.c"
+
 static void __init reset_cpu_topology(void)
 {
 	unsigned int cpu;
