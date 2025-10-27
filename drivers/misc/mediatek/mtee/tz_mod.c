@@ -1374,6 +1374,7 @@ static struct cma *tz_cma;
 #endif  /* CONFIG_CMA */
 
 #ifdef CONFIG_MTEE_CMA_SECURE_MEMORY
+#define NO_CMA_RELEASE_THROUGH_SHRINKER_FOR_EARLY_STAGE
 static struct page *secure_pages;
 static size_t secure_size;
 
