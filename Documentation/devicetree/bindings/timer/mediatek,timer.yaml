@@ -22,6 +22,11 @@ properties:
               - mediatek,mt6577-timer
               - mediatek,mt6765-timer
               - mediatek,mt6795-systimer
+      # CPUXGPT Timers
+      - items:
+          - enum:
+              - mediatek,mt6757-systimer
+          - const: mediatek,mt6795-systimer
       # GPT Timers
       - items:
           - enum:
