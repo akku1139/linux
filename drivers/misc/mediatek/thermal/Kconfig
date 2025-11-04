@@ -72,4 +72,10 @@ config THERMAL_DOUGLAS
         help
           For DOUGLAS specific configurations for thermal related.
 
+config THERMAL_CROWN
+	bool "THERMAL_CROWN"
+	default n
+	help
+	  For CROWN specific configurations for thermal related.
+
 source "drivers/misc/mediatek/thermal/tmp103/Kconfig"
