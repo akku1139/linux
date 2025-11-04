@@ -1167,6 +1167,18 @@ struct LCM_DRIVER *lcm_driver_list[] = {
         &nt35521_wxga_dsi_vdo_douglas_lcm_drv,
 #endif
 
+#if defined(JD936X_WXGA_DSI_VDO_CROWN)
+        &jd936x_wxga_dsi_vdo_crown_st_inx_lcm_drv,
+        &jd936x_wxga_dsi_vdo_crown_st_kd_inx_lcm_drv,
+        &jd936x_wxga_dsi_vdo_crown_st_kd_hsd_lcm_drv,
+        &jd936x_wxga_dsi_vdo_crown_st_boe_lcm_drv,
+        &jd936x_wxga_dsi_vdo_crown_st_proto_inx_lcm_drv,
+        &jd936x_wxga_dsi_vdo_crown_st_proto_kd_inx_lcm_drv,
+        &jd936x_wxga_dsi_vdo_crown_st_proto_kd_hsd_lcm_drv,
+        &ili9881c_wxga_dsi_vdo_crown_hsd_lcm_drv,
+        &ili9881c_wxga_dsi_vdo_crown_boe_lcm_drv,
+#endif
+
 };
 
 unsigned char lcm_name_list[][128] = {
