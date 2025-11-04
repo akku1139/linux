@@ -16,13 +16,12 @@
 
 #include "lcm_drv.h"
 
-#if defined(MTK_LCM_DEVICE_TREE_SUPPORT)
 enum LCM_STATUS {
 	LCM_STATUS_OK = 0,
 	LCM_STATUS_ERROR,
 };
 
-
+#if defined(MTK_LCM_DEVICE_TREE_SUPPORT)
 void lcm_common_parse_dts(const struct LCM_DTS *DTS,
 	unsigned char force_update);
 void lcm_common_set_util_funcs(const struct LCM_UTIL_FUNCS *util);

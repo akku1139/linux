@@ -45,9 +45,6 @@
 #define LCM_GPIO_OUT_ZERO	0
 #define LCM_GPIO_OUT_ONE	1
 
-/* LCM_I2C_TYPE */
-#define LCM_I2C_WRITE	1
-
 /* LCM_UTIL_TYPE */
 #define LCM_UTIL_RESET	1
 #define LCM_UTIL_MDELAY	2
@@ -68,5 +65,8 @@
 /* LCM_UTIL_WRITE_CMD_V2_DATA */
 #define LCM_UTIL_WRITE_CMD_V2_NULL	0xF9
 #endif
+
+/* LCM_I2C_TYPE */
+#define LCM_I2C_WRITE	1
 
 #endif				/* _LCM_DEFINE_H */
