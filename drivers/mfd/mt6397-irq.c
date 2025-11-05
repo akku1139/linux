@@ -18,6 +18,9 @@
 #include <linux/mfd/mt6397/core.h>
 #include <linux/mfd/mt6397/registers.h>
 
+#define for_each_interrupt_base(i)			\
+	for (unsigned int i = 0; i < MT6397_INTERRUPT_BASES; i++)	\
+
 static void mt6397_irq_lock(struct irq_data *data)
 {
 	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
@@ -29,13 +32,13 @@ static void mt6397_irq_sync_unlock(struct irq_data *data)
 {
 	struct mt6397_chip *mt6397 = irq_data_get_irq_chip_data(data);
 
-	regmap_write(mt6397->regmap, mt6397->int_con[0],
-		     mt6397->irq_masks_cur[0]);
-	regmap_write(mt6397->regmap, mt6397->int_con[1],
-		     mt6397->irq_masks_cur[1]);
-	if (mt6397->int_con[2])
-		regmap_write(mt6397->regmap, mt6397->int_con[2],
-			     mt6397->irq_masks_cur[2]);
+	for_each_interrupt_base(i) {
+		if (!mt6397->int_con[i])
+			continue;
+
+		regmap_write(mt6397->regmap, mt6397->int_con[i],
+				 mt6397->irq_masks_cur[i]);
+	}
 
 	mutex_unlock(&mt6397->irqlock);
 }
@@ -108,10 +111,8 @@ static irqreturn_t mt6397_irq_thread(int irq, void *data)
 {
 	struct mt6397_chip *mt6397 = data;
 
-	mt6397_irq_handle_reg(mt6397, mt6397->int_status[0], 0);
-	mt6397_irq_handle_reg(mt6397, mt6397->int_status[1], 16);
-	if (mt6397->int_status[2])
-		mt6397_irq_handle_reg(mt6397, mt6397->int_status[2], 32);
+	for_each_interrupt_base(i)
+		mt6397_irq_handle_reg(mt6397, mt6397->int_status[i], 16 * i);
 
 	return IRQ_HANDLED;
 }
@@ -132,7 +133,6 @@ static int mt6397_irq_domain_map(struct irq_domain *d, unsigned int irq,
 static const struct irq_domain_ops mt6397_irq_domain_ops = {
 	.map = mt6397_irq_domain_map,
 };
-
 static int mt6397_irq_pm_notifier(struct notifier_block *notifier,
 				  unsigned long pm_event, void *unused)
 {
@@ -141,24 +141,22 @@ static int mt6397_irq_pm_notifier(struct notifier_block *notifier,
 
 	switch (pm_event) {
 	case PM_SUSPEND_PREPARE:
-		regmap_write(chip->regmap,
-			     chip->int_con[0], chip->wake_mask[0]);
-		regmap_write(chip->regmap,
-			     chip->int_con[1], chip->wake_mask[1]);
-		if (chip->int_con[2])
-			regmap_write(chip->regmap,
-				     chip->int_con[2], chip->wake_mask[2]);
+		for_each_interrupt_base(i) {
+			if (!chip->int_con[i])
+				continue;
+			regmap_write(chip->regmap, chip->int_con[i],
+					 chip->wake_mask[i]);
+		}
 		enable_irq_wake(chip->irq);
 		break;
 
 	case PM_POST_SUSPEND:
-		regmap_write(chip->regmap,
-			     chip->int_con[0], chip->irq_masks_cur[0]);
-		regmap_write(chip->regmap,
-			     chip->int_con[1], chip->irq_masks_cur[1]);
-		if (chip->int_con[2])
-			regmap_write(chip->regmap,
-				     chip->int_con[2], chip->irq_masks_cur[2]);
+		for_each_interrupt_base(i) {
+			if (!chip->int_con[i])
+				continue;
+			regmap_write(chip->regmap, chip->int_con[i],
+					 chip->irq_masks_cur[i]);
+		}
 		disable_irq_wake(chip->irq);
 		break;
 
@@ -214,10 +212,11 @@ int mt6397_irq_init(struct mt6397_chip *chip)
 	}
 
 	/* Mask all interrupt sources */
-	regmap_write(chip->regmap, chip->int_con[0], 0x0);
-	regmap_write(chip->regmap, chip->int_con[1], 0x0);
-	if (chip->int_con[2])
-		regmap_write(chip->regmap, chip->int_con[2], 0x0);
+	for_each_interrupt_base(i) {
+		if (!chip->int_con[i])
+			continue;
+		regmap_write(chip->regmap, chip->int_con[i], 0x0);
+	}
 
 	chip->pm_nb.notifier_call = mt6397_irq_pm_notifier;
 	chip->irq_domain = irq_domain_create_linear(dev_fwnode(chip->dev), irq_num,
