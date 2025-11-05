@@ -191,9 +191,9 @@ void hps_cpu_get_big_little_cpumasks(
 	cpumask_clear(little);
 
 	for_each_possible_cpu(cpu) {
-		if (arch_cpu_is_big(cpu))
-			cpumask_set_cpu(cpu, big);
-		else
+		//if (arch_cpu_is_big(cpu))
+		//	cpumask_set_cpu(cpu, big);
+		//else
 			cpumask_set_cpu(cpu, little);
 	}
 #endif /* HP_HAVE_SCHED_TPLG */
