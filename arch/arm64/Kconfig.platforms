@@ -100,6 +100,8 @@ config MACH_MT8163
     select MTK_GIC_EXT
     select CPU_IDLE
     select CPU_IDLE_GOV_MTK
+	select MTK_SCHED_RQAVG_KS
+	select MTK_SCHED_RQAVG_US
     help
       This enable support for MediaTek MT8163. If you need support
       for MediaTek MT8163, say Y here.
