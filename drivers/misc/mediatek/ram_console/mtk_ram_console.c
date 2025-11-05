@@ -575,6 +575,9 @@ static int __init ram_console_save_old(struct ram_console_buffer *buffer,
 static int __init ram_console_init(struct ram_console_buffer *buffer,
 		size_t buffer_size)
 {
+#ifdef CONFIG_CROWN
+	return 0;
+#endif
 	ram_console_buffer = buffer;
 	buffer->sz_buffer = buffer_size;
 
