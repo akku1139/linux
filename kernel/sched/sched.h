@@ -1594,10 +1594,17 @@ static inline void sched_update_tick_dependency(struct rq *rq)
 static inline void sched_update_tick_dependency(struct rq *rq) { }
 #endif
 
+#ifdef CONFIG_MTK_SCHED_RQAVG_KS
+extern void sched_update_nr_prod(int cpu, unsigned long nr_running, int inc);
+#endif
+
 static inline void __add_nr_running(struct rq *rq, unsigned count)
 {
 	unsigned prev_nr = rq->nr_running;
 
+#ifdef CONFIG_MTK_SCHED_RQAVG_KS
+	sched_update_nr_prod(cpu_of(rq), rq->nr_running, count);
+#endif
 	rq->nr_running = prev_nr + count;
 
 	if (prev_nr < 2 && rq->nr_running >= 2) {
@@ -1612,6 +1619,9 @@ static inline void __add_nr_running(struct rq *rq, unsigned count)
 
 static inline void __sub_nr_running(struct rq *rq, unsigned count)
 {
+#ifdef CONFIG_MTK_SCHED_RQAVG_KS
+	sched_update_nr_prod(cpu_of(rq), rq->nr_running, -count);
+#endif
 	rq->nr_running -= count;
 	/* Check if we still need preemption */
 	sched_update_tick_dependency(rq);
