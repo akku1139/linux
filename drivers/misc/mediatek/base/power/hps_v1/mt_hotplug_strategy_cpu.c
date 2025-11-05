@@ -162,11 +162,11 @@ unsigned int hps_cpu_get_percpu_load(int cpu)
 
 unsigned int hps_cpu_get_nr_heavy_task(void)
 {
-#ifdef CONFIG_MTK_SCHED_RQAVG_US
-	return sched_get_nr_heavy_task();
-#else
+//#ifdef CONFIG_MTK_SCHED_RQAVG_US
+//	return sched_get_nr_heavy_task();
+//#else
 	return 0;
-#endif
+//#endif
 }
 
 void hps_cpu_get_tlp(unsigned int *avg, unsigned int *iowait_avg)
