@@ -6500,6 +6500,7 @@ static int _config_interface_input(struct primary_disp_input_config *input)
 	return ret;
 }
 #endif
+#if 0
 static void update_debug_fps_meter(struct disp_ddp_path_config *data_config)
 {
 	int i, dst_id = 0;
@@ -6517,6 +6518,7 @@ static void update_debug_fps_meter(struct disp_ddp_path_config *data_config)
 			 data_config->ovl_config[dst_id].src_pitch, 0x00000000,
 			 dst_id, data_config->ovl_config[dst_id].buff_idx);
 }
+#endif
 
 static int _config_ovl_input(struct disp_session_input_config *session_input)
 {
@@ -6560,11 +6562,11 @@ static int _config_ovl_input(struct disp_session_input_config *session_input)
 		}
 		_convert_disp_input_to_ovl(ovl_cfg, input_cfg);
 
-		if (ovl_cfg->layer_en)
-			_debug_pattern(ovl_cfg->addr, ovl_cfg->vaddr,
-				       ovl_cfg->dst_w, ovl_cfg->dst_h,
-				       ovl_cfg->src_pitch, 0x00000000,
-				       ovl_cfg->layer, ovl_cfg->buff_idx);
+		//if (ovl_cfg->layer_en)
+		//	_debug_pattern(ovl_cfg->addr, ovl_cfg->vaddr,
+		//		       ovl_cfg->dst_w, ovl_cfg->dst_h,
+		//		       ovl_cfg->src_pitch, 0x00000000,
+		//		       ovl_cfg->layer, ovl_cfg->buff_idx);
 
 		dprec_logger_start(DPREC_LOGGER_PRIMARY_CONFIG,
 				   ovl_cfg->layer | (ovl_cfg->layer_en << 16),
@@ -6692,7 +6694,7 @@ static int _config_ovl_input(struct disp_session_input_config *session_input)
 		}
 	}
 
-	update_debug_fps_meter(data_config);
+	//update_debug_fps_meter(data_config);
 #ifdef CONFIG_FREE_FB_BUFFER
 	if (!g_free_fb->is_fb_freed) {
 		if (!ovl_is_config_fb)

@@ -21,7 +21,7 @@ extern unsigned int dprec_error_log_len;
 extern unsigned int dprec_error_log_id;
 extern unsigned int dprec_error_log_buflen;
 extern char dprec_error_log_buffer[];
-#if 0
+#if 1
 #define DISPMSG(string, args...)                                               \
 	pr_debug("[DISP]" string,                                              \
 		 ##args) /* default on, important msg, not err */
@@ -141,7 +141,7 @@ extern char dprec_error_log_buffer[];
 #define DISPDBGFUNC()                                                          \
 	DISPDBG("[DISP]func|%s\n", __func__) /* default on, err msg */
 
-#ifdef CONFIG_MTK_DISP_HIDE_ERROR_LOGS
+#ifdef 1
 #define DISPCHECK(string, args...)                                             \
 	do {                                                                   \
 		dprec_logger_pr(DPREC_LOGGER_DEBUG, string, ##args);           \
@@ -178,7 +178,7 @@ extern char dprec_error_log_buffer[];
 	string,                                                                \
 	args...) /* dprec_logger_pr(DPREC_LOGGER_HWOP, string, ##args); */
 
-#ifdef CONFIG_MTK_DISP_HIDE_ERROR_LOGS
+#ifdef 1
 #define DISPPR_ERROR(string, args...)                                          \
 	do {                                                                   \
 		dprec_logger_pr(DPREC_LOGGER_ERROR, string, ##args);           \

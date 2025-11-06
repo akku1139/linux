@@ -19,7 +19,10 @@
 #define RDMA_MAX_WIDTH 4095
 #define RDMA_MAX_HEIGHT 4095
 
-extern unsigned int gRDMAUltraSetting;
+//extern unsigned int gRDMAUltraSetting;
+// unsigned int gRDMAUltraSetting = 0x1b013bea; /*so we can modify RDMA ultra at run-time */
+#define gRDMAUltraSetting 0x1b013bea
+
 extern unsigned long long rdma_start_time[2];
 extern unsigned long long rdma_end_time[2];
 
@@ -27,7 +30,10 @@ extern unsigned int rdma_start_irq_cnt[2];
 extern unsigned int rdma_done_irq_cnt[2];
 extern unsigned int rdma_underflow_irq_cnt[2];
 extern unsigned int rdma_targetline_irq_cnt[2];
-extern unsigned int gUltraEnable;
+
+//extern unsigned int gUltraEnable;
+// unsigned int gUltraEnable = 1;
+#define gUltraEnable 1
 
 enum RDMA_OUTPUT_FORMAT {
 	RDMA_OUTPUT_FORMAT_ARGB = 0,

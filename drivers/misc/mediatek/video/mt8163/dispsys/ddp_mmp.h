@@ -17,7 +17,7 @@
 #include "ddp_info.h"
 #include "ddp_ovl.h"
 #include "mmprofile.h"
-extern char *disp_get_fmt_name(enum DP_COLOR_ENUM color);
+//extern char *disp_get_fmt_name(enum DP_COLOR_ENUM color);
 #ifdef DEFAULT_MMP_ENABLE
 extern void mmprofile_enable(int enable);
 extern void mmprofile_start(int start);
@@ -121,6 +121,7 @@ struct DDP_MMP_Events_t {
 	MMP_Event dsi_te;
 };
 
+#if 0
 struct DDP_MMP_Events_t *ddp_mmp_get_events(void);
 void init_ddp_mmp_events(void);
 void ddp_mmp_init(void);
@@ -140,5 +141,28 @@ void _ddp_mmp_ovl_raw_under_session(unsigned int session,
 void _ddp_mmp_ovl_not_raw_under_session(unsigned int session,
 					struct OVL_CONFIG_STRUCT *pLayer,
 					struct mmp_metadata_bitmap_t *Bitmap);
-
+#else
+static inline struct DDP_MMP_Events_t *ddp_mmp_get_events(void)
+{
+	return NULL;
+}
+static inline void init_ddp_mmp_events(void) {}
+static inline void ddp_mmp_init(void) {}
+static inline void ddp_mmp_ovl_layer(
+	struct OVL_CONFIG_STRUCT *pLayer, unsigned int down_sample_x,
+	unsigned int down_sample_y,
+	unsigned int session /*1:primary, 2:external, 3:memory */) { }
+static inline void ddp_mmp_wdma_layer(struct WDMA_CONFIG_STRUCT *wdma_layer,
+			unsigned int wdma_num, unsigned int down_sample_x,
+			unsigned int down_sample_y) { }
+static inline void ddp_mmp_rdma_layer(struct RDMA_CONFIG_STRUCT *rdma_layer,
+			unsigned int rdma_num, unsigned int down_sample_x,
+			unsigned int down_sample_y) { }
+static inline void _ddp_mmp_ovl_raw_under_session(unsigned int session,
+				    struct OVL_CONFIG_STRUCT *pLayer,
+				    struct mmp_metadata_t *meta) { }
+static inline void _ddp_mmp_ovl_not_raw_under_session(unsigned int session,
+					struct OVL_CONFIG_STRUCT *pLayer,
+					struct mmp_metadata_bitmap_t *Bitmap) { }
+#endif
 #endif

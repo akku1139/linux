@@ -17,7 +17,10 @@
 #include "ddp_info.h"
 
 #define DDP_OVL_LAYER_MUN OVL_LAYER_NUM
-extern unsigned int gEnableMutexRisingEdge;
+// unsigned int gEnableMutexRisingEdge;
+//extern unsigned int gEnableMutexRisingEdge;
+#define gEnableMutexRisingEdge 0
+
 extern struct clk *ddp_clk_map[MM_CLK_NUM];
 
 enum DDP_MODE {

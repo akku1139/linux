@@ -140,6 +140,7 @@ enum DPREC_LOGGER_PR_TYPE {
 
 #define DPREC_ERROR_LOG_BUFFER_LENGTH (1024 * 16)
 
+#if 0
 void dprec_event_op(enum DPREC_EVENT event);
 void dprec_reg_op(void *cmdq, unsigned int reg, unsigned int val,
 		  unsigned int mask);
@@ -188,5 +189,66 @@ void dprec_logger_frame_seq_begin(unsigned int session_id,
 				  unsigned int frm_sequence);
 void dprec_logger_frame_seq_end(unsigned int session_id,
 				unsigned int frm_sequence);
+#else
+static inline void dprec_event_op(enum DPREC_EVENT event) { }
+static inline void dprec_reg_op(void *cmdq, unsigned int reg,
+                                unsigned int val, unsigned int mask) { }
+static inline int dprec_handle_option(unsigned int option) { return 0; }
+static inline int dprec_init(void) { return 0; }
 
+static inline void dprec_logger_trigger(enum DPREC_LOGGER_ENUM source,
+                                        unsigned int val1, unsigned int val2) { }
+static inline void dprec_logger_start(enum DPREC_LOGGER_ENUM source,
+                                      unsigned int val1, unsigned int val2) { }
+static inline void dprec_logger_done(enum DPREC_LOGGER_ENUM source,
+                                     unsigned int val1, unsigned int val2) { }
+static inline void dprec_logger_reset(enum DPREC_LOGGER_ENUM source) { }
+static inline void dprec_logger_reset_all(void) { }
+
+static inline int dprec_logger_get_result_string(enum DPREC_LOGGER_ENUM source,
+                                                 char *stringbuf, int strlen) { return 0; }
+static inline int dprec_logger_get_result_string_all(char *stringbuf,
+                                                     int strlen) { return 0; }
+
+static inline void dprec_stub_irq(unsigned int irq_bit) { }
+static inline void dprec_stub_event(enum DISP_PATH_EVENT event) { }
+static inline unsigned int dprec_get_vsync_count(void) { return 0; }
+
+static inline void dprec_logger_submit(enum DPREC_LOGGER_ENUM source,
+                                       unsigned long long period,
+                                       unsigned int fence_idx) { }
+
+static inline void dprec_logger_dump(char *string) { }
+static inline void dprec_logger_dump_reset(void) { }
+static inline char *dprec_logger_get_dump_addr(void) { return NULL; }
+static inline unsigned int dprec_logger_get_dump_len(void) { return 0; }
+static inline unsigned long long
+dprec_logger_get_current_hold_period(unsigned int type_logsrc) { return 0ULL; }
+
+static inline int dprec_logger_get_buf(enum DPREC_LOGGER_PR_TYPE type,
+                                       char *stringbuf, int strlen) { return 0; }
+static inline int dprec_logger_pr(unsigned int type, char *fmt, ...) { return 0; }
+
+static inline void dprec_logger_event_init(struct dprec_logger_event *p,
+                                           char *name, uint32_t level,
+                                           MMP_Event *mmp_root) { }
+static inline void dprec_start(struct dprec_logger_event *event,
+                               unsigned int val1, unsigned int val2) { }
+static inline void dprec_done(struct dprec_logger_event *event,
+                              unsigned int val1, unsigned int val2) { }
+static inline void dprec_trigger(struct dprec_logger_event *event,
+                                 unsigned int val1, unsigned int val2) { }
+static inline void dprec_submit(struct dprec_logger_event *event,
+                                unsigned int val1, unsigned int val2) { }
+
+static inline int dprec_mmp_dump_wdma_layer(void *wdma_layer,
+                                            unsigned int wdma_num) { return 0; }
+static inline int dprec_mmp_dump_rdma_layer(void *wdma_layer,
+                                            unsigned int wdma_num) { return 0; }
+
+static inline void dprec_logger_frame_seq_begin(unsigned int session_id,
+                                                unsigned int frm_sequence) { }
+static inline void dprec_logger_frame_seq_end(unsigned int session_id,
+                                              unsigned int frm_sequence) { }
+#endif
 #endif

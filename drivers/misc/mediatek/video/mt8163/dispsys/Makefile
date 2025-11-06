@@ -46,7 +46,7 @@ obj-y += ddp_ufoe.o
 #common
 obj-y += ddp_drv.o
 obj-y += ddp_path.o
-obj-y += ddp_debug.o
+#obj-y += ddp_debug.o
 obj-y += ddp_dump.o
 
 obj-y += ddp_manager.o
@@ -57,13 +57,11 @@ obj-y += ddp_color_format.o
 obj-y += data_rgb888_64x64.o
 obj-y += data_rgb888_64x64_golden.o
 
-obj-y += ddp_mmp.o
-obj-y += ddp_met.o
+#obj-y += ddp_mmp.o
+#obj-y += ddp_met.o
 
 #should remove
 obj-y += ddp_misc.o
-
-obj-y += display_recorder.o
 
 ifeq ($(CONFIG_MMPROFILE),y)
 ccflags-y += -DDEFAULT_MMP_ENABLE

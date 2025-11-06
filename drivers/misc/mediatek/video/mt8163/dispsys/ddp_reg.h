@@ -1246,11 +1246,9 @@ extern void _disp_primary_path_exit_idle(const char *caller,
 	} while (0)
 
 /* write to reg only if the value is different from reg value */
-extern unsigned int gEnableReduceRegWrite;
 #define DISP_REG_SET_DIRTY(handle, reg32, val)                                 \
 	do {                                                                   \
-		if (gEnableReduceRegWrite == 0 ||                              \
-		    DISP_REG_GET(reg32) != (val)) {                            \
+		if (DISP_REG_GET(reg32) != (val)) {                            \
 			if (handle == 0) {                                     \
 				mt_reg_sync_writel(                            \
 					val,                                   \

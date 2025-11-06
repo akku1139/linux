@@ -82,12 +82,21 @@ extern unsigned int gCapturePriLayerNum;
 extern struct OVL_CONFIG_STRUCT cached_layer_config[DDP_OVL_LAYER_MUN];
 #endif
 
+#if 0
 void DBG_Init(void);
 void DBG_Deinit(void);
 
 void DBG_OnTriggerLcd(void);
 void DBG_OnTeDelayDone(void);
 void DBG_OnLcdDone(void);
+#else
+static inline void DBG_Init(void) { }
+static inline void DBG_Deinit(void) { }
+
+static inline void DBG_OnTriggerLcd(void) { }
+static inline void DBG_OnTeDelayDone(void) { }
+static inline void DBG_OnLcdDone(void) { }
+#endif
 
 #include "mmprofile.h"
 extern struct MTKFB_MMP_Events_t {
@@ -207,15 +216,19 @@ static inline void dbg_print(int level, const char *fmt, ...)
 #define MSG(evt, fmt, args...)
 #define MSG_FUNC_ENTER()
 #define MSG_FUNC_LEAVE()
-void _debug_pattern(unsigned int mva, unsigned long va, unsigned int w,
-		    unsigned int h, unsigned int linepitch, unsigned int color,
-		    unsigned int layerid, unsigned int bufidx);
-void _debug_fps_meter(unsigned int mva, unsigned long va, unsigned int w,
-		      unsigned int h, unsigned int linepitch,
-		      unsigned int color, unsigned int layerid,
-		      unsigned int bufidx);
+//void _debug_pattern(unsigned int mva, unsigned long va, unsigned int w,
+//		    unsigned int h, unsigned int linepitch, unsigned int color,
+//		    unsigned int layerid, unsigned int bufidx);
+//void _debug_fps_meter(unsigned int mva, unsigned long va, unsigned int w,
+//		      unsigned int h, unsigned int linepitch,
+//		      unsigned int color, unsigned int layerid,
+//		      unsigned int bufidx);
 
-bool get_ovl1_to_mem_on(void);
+//bool get_ovl1_to_mem_on(void);
+static inline bool get_ovl1_to_mem_on(void)
+{
+	return true; // apparently on by default
+}
 
 #endif /* MTKFB_DBG */
 

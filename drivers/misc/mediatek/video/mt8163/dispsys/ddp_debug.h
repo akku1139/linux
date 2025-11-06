@@ -21,13 +21,18 @@
 
 extern unsigned int gDDPError;
 extern unsigned int g_mobilelog;
-extern unsigned int force_sec;
+//extern unsigned int force_sec;
+// unsigned int force_sec;
+#define force_sec 0
+
 extern int disp_create_session(struct disp_session_config *config);
 extern int disp_destroy_session(struct disp_session_config *config);
 
 extern struct OVL_CONFIG_STRUCT cached_layer_config[DDP_OVL_LAYER_MUN];
 
 #define DISP_ENABLE_SODI_FOR_VIDEO_MODE
+
+#if 0
 void ddp_debug_init(void);
 void ddp_debug_exit(void);
 
@@ -37,5 +42,16 @@ unsigned int ddp_debug_irq_log_level(void);
 
 int ddp_mem_test(void);
 int ddp_lcd_test(void);
+#else
+static inline void ddp_debug_init(void) { }
+static inline void ddp_debug_exit(void) { }
+
+static inline unsigned int ddp_debug_analysis_to_buffer(void) { return 0; }
+static inline unsigned int ddp_debug_dbg_log_level(void) { return 0; }
+static inline unsigned int ddp_debug_irq_log_level(void) { return 0; }
+
+static inline int ddp_mem_test(void) { return 0; }
+static inline int ddp_lcd_test(void) { return 0; }
+#endif
 
 #endif /* __DDP_DEBUG_H__ */

@@ -14,5 +14,12 @@
 #ifndef __H_DDP_MET__
 #define __H_DDP_MET__
 
+#if 0
 void ddp_init_met_tag(int state, int rdma0_mode, int rdma1_mode);
+#else
+static inline void ddp_init_met_tag(int state, int rdma0_mode,
+                    int rdma1_mode)
+{
+}
+#endif
 #endif

@@ -33,10 +33,10 @@
 	} while (0)
 
 /* just print in mobile log */
-extern unsigned int gEnableUartLog;
+//extern unsigned int gEnableUartLog;
 #define DDPMLOG(string, args...)                                               \
 	do {                                                                   \
-		if (gEnableUartLog == 0)                                       \
+		if (0)                                       \
 			pr_debug("DDP/ " string, ##args);                      \
 		else                                                           \
 			pr_debug("DDP/" string, ##args);                       \
@@ -75,7 +75,7 @@ extern unsigned int gEnableUartLog;
 		DISP_LOG_E(fmt, ##args);                                       \
 	}
 
-#ifdef CONFIG_MTK_DISP_HIDE_ERROR_LOGS
+#if 1
 #define DDPDUMP(fmt, ...)                                                      \
 	do {                                                                   \
 		if (ddp_debug_analysis_to_buffer()) {                          \

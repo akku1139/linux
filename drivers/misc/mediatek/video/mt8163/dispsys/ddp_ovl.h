@@ -27,7 +27,9 @@
 
 #define OVL_LAYER_NUM_PER_OVL 4
 extern unsigned int ovl_complete_irq_cnt[2];
-extern unsigned int gOVLBackground;
+//extern unsigned int gOVLBackground;
+// unsigned int gOVLBackground = 0xFF000000;
+#define gOVLBackground 0xFF000000
 
 enum DISP_OVL1_STATUS {
 	DDP_OVL1_STATUS_IDLE = 0,

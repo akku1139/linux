@@ -23,22 +23,43 @@
 #include <linux/types.h>
 #include <linux/types.h>
 
-extern unsigned int gEnableSODIControl;
-extern unsigned int gPrefetchControl;
-extern unsigned int gDisableSODIForTriggerLoop;
+//extern unsigned int gEnableSODIControl;
+//extern unsigned int gPrefetchControl;
+
+#ifdef DISP_ENABLE_SODI_FOR_VIDEO_MODE
+#define gEnableSODIControl 1
+#define gPrefetchControl 1
+#else
+#define gEnableSODIControl 0
+#define gPrefetchControl 0
+#endif
+
+//extern unsigned int gDisableSODIForTriggerLoop;
+//unsigned int gDisableSODIForTriggerLoop = 1;
+#define gDisableSODIForTriggerLoop 1
+
 extern bool is_ipoh_bootup;
-extern unsigned int isAEEEnabled;
-extern unsigned int gEnableMutexRisingEdge;
-extern unsigned int gDumpConfigCMD;
-extern unsigned int gEnableOVLStatusCheck;
-extern unsigned int gESDEnableSODI;
+//extern unsigned int isAEEEnabled;
+//extern unsigned int gEnableMutexRisingEdge;
+
+//extern unsigned int gDumpConfigCMD;
+#define gDumpConfigCMD 0
+
+//extern unsigned int gEnableOVLStatusCheck;
+//extern unsigned int gESDEnableSODI;
+//unsigned int gESDEnableSODI = 1;
+//unsigned int gEnableOVLStatusCheck = 1;
+#define gEnableOVLStatusCheck 1
+#define gESDEnableSODI 1
 
 extern int dfo_query(const char *s, unsigned long *v);
 extern unsigned int ddp_ovl_get_cur_addr(bool rdma_mode, int layerid);
 extern wait_queue_head_t ovl1_wait_queue;
 
 extern int disp_get_session_number(void);
-extern unsigned int gDumpMemoutCmdq;
+//extern unsigned int gDumpMemoutCmdq;
+//unsigned int gDumpMemoutCmdq;
+#define gDumpMemoutCmdq 0
 
 extern uint32_t DSI_dcs_read_lcm_reg_v2(enum DISP_MODULE_ENUM module,
 					struct cmdqRecStruct *cmdq, uint8_t cmd,
@@ -64,13 +85,28 @@ extern int _parse_tag_videolfb(void);
 
 #endif
 #ifdef MTK_DISP_IDLE_LP
-extern unsigned long dispsys_reg[DISP_REG_NUM];
-extern unsigned int disp_low_power_enlarge_blanking;
-extern unsigned int disp_low_power_disable_ddp_clock;
-extern unsigned int disp_low_power_disable_fence_thread;
-extern unsigned int disp_low_power_remove_ovl;
-extern unsigned int gDumpClockStatus;
-extern unsigned int gSkipIdleDetect;
+//extern unsigned long dispsys_reg[DISP_REG_NUM];
+//extern unsigned int disp_low_power_enlarge_blanking;
+//extern unsigned int disp_low_power_disable_ddp_clock;
+//extern unsigned int disp_low_power_disable_fence_thread;
+//extern unsigned int disp_low_power_remove_ovl;
+//extern unsigned int gDumpClockStatus;
+//extern unsigned int gSkipIdleDetect;
+//
+//unsigned int disp_low_power_enlarge_blanking;
+//unsigned int disp_low_power_disable_ddp_clock;
+//unsigned int disp_low_power_disable_fence_thread;
+//unsigned int disp_low_power_remove_ovl = 1;
+//unsigned int gSkipIdleDetect;
+//unsigned int gDumpClockStatus = 1;
+
+#define disp_low_power_enlarge_blanking 0
+#define disp_low_power_disable_ddp_clock 0
+#define disp_low_power_disable_fence_thread 0
+#define disp_low_power_remove_ovl 1
+
+#define gSkipIdleDetect 0
+#define gDumpClockStatus 0
 #endif
 
 extern unsigned int _need_wait_esd_eof(void);
@@ -78,8 +114,13 @@ extern unsigned int _need_register_eint(void);
 extern unsigned int _need_do_esd_check(void);
 
 extern int is_DAL_Enabled(void);
-extern int dprec_mmp_dump_ovl_layer(struct OVL_CONFIG_STRUCT *ovl_layer,
-				    unsigned int l, unsigned int ovl_idx);
+//extern int dprec_mmp_dump_ovl_layer(struct OVL_CONFIG_STRUCT *ovl_layer,
+//				    unsigned int l, unsigned int ovl_idx);
+static inline int dprec_mmp_dump_ovl_layer(struct OVL_CONFIG_STRUCT *ovl_layer,
+				    unsigned int l, unsigned int ovl_idx)
+{
+	return 0;
+}
 
 extern unsigned int ddp_ovl_get_cur_addr(bool rdma_mode, int layerid);
 extern unsigned int ddp_wdma_get_cur_addr(void);
