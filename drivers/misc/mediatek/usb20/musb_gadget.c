@@ -2602,7 +2602,9 @@ static int musb_gadget_stop(struct usb_gadget *g)
 {
 	struct musb *musb = gadget_to_musb(g);
 	unsigned long flags;
+#ifdef CONFIG_USB_G_ANDROID
 	struct usb_gadget_driver *driver = musb->gadget_driver;
+#endif
 
 	if (musb->xceiv->last_event == USB_EVENT_NONE)
 		pm_runtime_get_sync(musb->controller);
@@ -2625,7 +2627,7 @@ static int musb_gadget_stop(struct usb_gadget *g)
 #endif
 	otg_set_peripheral(musb->xceiv->otg, NULL);
 
-	DBG(0, "unregistering driver %s\n", driver->function);
+	//DBG(0, "unregistering driver %s\n", driver->function);
 
 	musb->is_active = 0;
 	musb->gadget_driver = NULL;

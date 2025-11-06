@@ -328,10 +328,11 @@ static void musb_start_urb(struct musb *musb, int is_in, struct musb_qh *qh)
 	void *buf = urb->transfer_buffer;
 	u32 offset = 0;
 	struct musb_hw_ep *hw_ep = qh->hw_ep;
-	unsigned int pipe = urb->pipe;
-	u8 address = usb_pipedevice(pipe);
+	//unsigned int pipe = urb->pipe;
+	//u8 address = usb_pipedevice(pipe);
 	int epnum = hw_ep->epnum;
 
+#if 0
 	DBG(4, "address=%d,hw_ep->epnum=%d,urb_ep_addr:0x%x\r\n", address,
 	    epnum, urb->ep->desc.bEndpointAddress);
 	DBG(3, "qh->epnum=%d,epnum=%d\r\n", qh->epnum, epnum);
@@ -339,6 +340,7 @@ static void musb_start_urb(struct musb *musb, int is_in, struct musb_qh *qh)
 		DBG(3, "toggle_IN=0x%x\n", urb->dev->toggle[0]);
 	else
 		DBG(3, "toggle_OUT=0x%x\n", urb->dev->toggle[1]);
+#endif
 
 	/* initialize software qh state */
 	qh->offset = 0;

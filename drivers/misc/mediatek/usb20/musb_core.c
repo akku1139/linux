@@ -136,7 +136,6 @@ void qmu_done_tasklet(unsigned long data)
 #endif
 
 DEFINE_SPINLOCK(usb_io_lock);
-int musb_debug;
 int musb_uart_debug = 1;
 int musb_speed = 1;
 struct musb *mtk_musb;
@@ -160,8 +159,6 @@ static const struct of_device_id apusb_of_ids[] = {
 
 module_param_named(speed, musb_speed, int, 0400);
 MODULE_PARM_DESC(debug, "USB speed configuration. default = 1, high speed");
-module_param_named(debug, musb_debug, int, 0400);
-MODULE_PARM_DESC(debug, "Debug message level. Default = 0");
 module_param_named(dbg_uart, musb_uart_debug, int, 0400);
 
 #define TA_WAIT_BCON(m) max_t(int, (m)->a_wait_bcon, OTG_TIME_A_WAIT_BCON)
@@ -1490,7 +1487,7 @@ static int fifo_setup(struct musb *musb, struct musb_hw_ep *hw_ep,
 /* void __iomem	*mbase = musb->mregs; */
 	int size = 0;
 	u16 maxpacket = cfg->maxpacket;
-	u16 c_off = offset >> 3;
+	//u16 c_off = offset >> 3;
 	u8 c_size;
 
 	/* expect hw_ep has already been zero-initialized */
@@ -1513,8 +1510,8 @@ static int fifo_setup(struct musb *musb, struct musb_hw_ep *hw_ep,
 
 	switch (cfg->style) {
 	case MUSB_FIFO_TX:
-		DBG(0, "Tx ep %d fifo size is %d fifo address is %x\n",
-		    hw_ep->epnum, maxpacket, c_off);
+//		DBG(0, "Tx ep %d fifo size is %d fifo address is %x\n",
+//		    hw_ep->epnum, maxpacket, c_off);
 /* musb_write_txfifosz(mbase, c_size); */
 /* musb_write_txfifoadd(mbase, c_off); */
 		hw_ep->tx_double_buffered = !!(c_size & MUSB_FIFOSZ_DPB);
@@ -1523,8 +1520,8 @@ static int fifo_setup(struct musb *musb, struct musb_hw_ep *hw_ep,
 		hw_ep->ep_in.fifo_mode = cfg->mode;
 		break;
 	case MUSB_FIFO_RX:
-		DBG(0, "Rx ep %d fifo size is %d fifo address is %x\n",
-		    hw_ep->epnum, maxpacket, c_off);
+//		DBG(0, "Rx ep %d fifo size is %d fifo address is %x\n",
+//		    hw_ep->epnum, maxpacket, c_off);
 /* musb_write_rxfifosz(mbase, c_size); */
 /* musb_write_rxfifoadd(mbase, c_off); */
 		hw_ep->rx_double_buffered = !!(c_size & MUSB_FIFOSZ_DPB);

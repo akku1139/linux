@@ -32,7 +32,7 @@
  * needs to be dropped to allow reentering this driver ... like upcalls to
  * the gadget driver, or adjusting endpoint halt status.
  */
-
+#if 0
 static char *decode_ep0stage(u8 stage)
 {
 	switch (stage) {
@@ -54,6 +54,7 @@ static char *decode_ep0stage(u8 stage)
 		return "?";
 	}
 }
+#endif
 
 /* handle a standard GET_STATUS request
  * Context:  caller holds controller lock

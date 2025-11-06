@@ -14,9 +14,7 @@
 #ifndef __MUSB_LINUX_DEBUG_H__
 #define __MUSB_LINUX_DEBUG_H__
 
-#define yprintk(facility, format, args...) \
-		printk(facility "%s %d: " format, \
-		__func__, __LINE__, ## args)
+#define yprintk(facility, format, args...) do { } while (0)
 
 /* workaroud for redefine warning in usb_dump.c */
 #ifdef WARNING
@@ -35,17 +33,7 @@
 #define INFO(fmt, args...) yprintk(KERN_INFO, fmt, ## args)
 #define ERR(fmt, args...) yprintk(KERN_ERR, fmt, ## args)
 
-#define xprintk(level,  format, args...) do { \
-	if (_dbg_level(level)) { \
-		if (musb_uart_debug) {\
-			pr_notice("[MUSB]%s %d: " format, \
-				__func__, __LINE__, ## args); \
-		} \
-		else{\
-			pr_debug("[MUSB]%s %d: " format, \
-				__func__, __LINE__, ## args); \
-		} \
-	} } while (0)
+#define xprintk(level,  format, args...) do { } while (0)
 
 extern int musb_debug;
 extern int musb_uart_debug;
@@ -58,7 +46,7 @@ static inline int _dbg_level(unsigned int level)
 #ifdef DBG
 #undef DBG
 #endif
-#define DBG(level, fmt, args...) xprintk(level, fmt, ## args)
+#define DBG(level, fmt, args...) do { } while (0)
 
 /* extern const char *otg_state_string(struct musb *); */
 
