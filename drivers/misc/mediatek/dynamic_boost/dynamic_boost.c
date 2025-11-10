@@ -346,7 +346,6 @@ static struct platform_driver dynamic_boost_driver = {
 };
 
 #ifdef CONFIG_TOUCH_BOOST
-static bool flag; /* flasg to filter botton event */
 /******************************************************************************
  *                         Handle touch boost                                 *
  ******************************************************************************/
@@ -357,14 +356,7 @@ static void dboost_input_event(struct input_handle *handle, unsigned int type,
 			struct dboost_input_handle, handle);
 
 	if (type == EV_KEY && code == BTN_TOUCH) {
-		flag = true;
 		if (value == 1) /** for touch down */
-			goto boost_on;
-		else
-			goto boost_off;
-	}
-	if (!flag && type == EV_ABS && code == ABS_MT_TRACKING_ID) {
-		if (value != -1)
 			goto boost_on;
 		else
 			goto boost_off;
