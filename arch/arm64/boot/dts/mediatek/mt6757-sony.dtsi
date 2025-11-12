@@ -1,0 +1,66 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright (c) 2025 Ben Grisdale <bengris32@protonmail.ch>
+ */
+
+#include <dt-bindings/gpio/gpio.h>
+#include "mt6757.dtsi"
+
+/ {
+	aliases {
+		serial0 = &uart0;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0 0x40000000 0 0x20000000>;
+	};
+
+	reserved_memory: reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		/* Reserve memory for ATF + its ramdump region */
+		atf-reserved-memory@50e00000 {
+			reg = <0 0x50e00000 0 0x14000>;
+			no-map;
+		};
+
+		atf-ramdump-memory@50e14000 {
+			reg = <0 0x50e14000 0 0x2c000>;
+			no-map;
+		};
+
+		/* Use the same ramoops region as downstream */
+		ramoops@44410000 {
+			compatible = "ramoops";
+			reg = <0x0 0x44410000 0x0 0xe0000>;
+			console-size = <0x10000>;
+			record-size = <0x10000>;
+		};
+	};
+};
+
+&uart0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart0_pins_default>;
+	status = "okay";
+};
+
+&pio {
+	uart0_pins_default: uart0-pins {
+		pins-rx {
+			pinmux = <PINMUX_GPIO105__FUNC_URXD0>;
+			input-enable;
+			bias-pull-up;
+		};
+		pins-tx {
+			pinmux = <PINMUX_GPIO106__FUNC_UTXD0>;
+		};
+	};
+};
