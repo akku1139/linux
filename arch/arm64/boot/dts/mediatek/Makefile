@@ -1,6 +1,9 @@
 # SPDX-License-Identifier: GPL-2.0
 dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
 dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+dtb-$(CONFIG_ARCH_MEDIATEK) += mt6757-sony-xperia-xa1.dtb
+dtb-$(CONFIG_ARCH_MEDIATEK) += mt6757-sony-xperia-xa1-plus.dtb
+dtb-$(CONFIG_ARCH_MEDIATEK) += mt6757-sony-xperia-xa1-ultra.dtb
 dtb-$(CONFIG_ARCH_MEDIATEK) += mt6779-evb.dtb
 dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
 dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-sony-xperia-m5.dtb
@@ -112,3 +115,4 @@ DTC_FLAGS_mt7986a-bananapi-bpi-r3-mini := -@
 DTC_FLAGS_mt7988a-bananapi-bpi-r4 := -@
 DTC_FLAGS_mt7988a-bananapi-bpi-r4-2g5 := -@
 DTC_FLAGS_mt8395-radxa-nio-12l := -@
+DTC_FLAGS_mt6757-sony-xperia-xa1 := -@

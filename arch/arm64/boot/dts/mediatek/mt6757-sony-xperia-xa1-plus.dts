@@ -1,0 +1,13 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Copyright (c) 2025 Ben Grisdale <bengris32@protonmail.ch>
+ */
+
+/dts-v1/;
+#include "mt6757-sony.dtsi"
+
+/ {
+	model = "Sony Xperia XA1 Plus";
+	compatible = "sony,xperia-xa1-plus", "mediatek,mt6757";
+	chassis-type = "handset";
+};
