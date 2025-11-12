@@ -53,6 +53,28 @@
 	pinctrl-0 = <&i2c1_pins_default>;
 	clock-frequency = <400000>;
 
+	tusb320: typec@61 {
+		compatible = "ti,tusb320";
+		reg = <0x61>;
+		interrupt-parent = <&pio>;
+		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
+
+		connector {
+			compatible = "usb-c-connector";
+			label = "USB-C";
+			data-role = "dual";
+			power-role = "dual";
+			typec-power-opmode = "default";
+			pd-disable;
+
+			port {
+				tusb320_hs_in: endpoint {
+					remote-endpoint = <&usb_role_sw>;
+				};
+			};
+		};
+	};
+
 	bq25896: charger@6b {
 		compatible = "ti,bq25896";
 		reg = <0x6b>;
@@ -77,10 +99,45 @@
 	interrupts-extended = <&pio 150 IRQ_TYPE_LEVEL_HIGH>;
 };
 
+&ssusb {
+	status = "okay";
+	dr_mode = "otg";
+	usb-role-switch;
+	role-switch-default-mode = "host";
+	maximum-speed = "high-speed";
+	phys = <&u2port0 PHY_TYPE_USB2>;
+	mediatek,u3p-dis-msk = <1>;
+	vusb33-supply = <&mt6351_vusb33_reg>;
+	vbus-supply = <&bq25896_vbus>;
+
+	port {
+		usb_role_sw: endpoint {
+			remote-endpoint = <&tusb320_hs_in>;
+		};
+	};
+};
+
 &uart0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart0_pins_default>;
 	status = "okay";
+};
+
+&usb_host {
+	status = "okay";
+	vusb33-supply = <&mt6351_vusb33_reg>;
+};
+
+&usb_phy {
+	status = "okay";
+};
+
+&u2port0 {
+	mediatek,eye-vrt = <3>;
+	mediatek,eye-term = <1>;
+	mediatek,eye-src = <1>;
+	mediatek,pre-emphasis = <1>;
+	mediatek,discth = <15>;
 };
 
 &pio {
