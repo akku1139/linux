@@ -8,6 +8,7 @@
 
 #include "clk-mtk.h"
 #include "clk-pll.h"
+#include "clk-fhctl.h"
 
 #include <dt-bindings/clock/mediatek,mt6757-apmixedsys.h>
 
@@ -108,12 +109,63 @@ static const struct mtk_pll_data apmixedsys_plls[] = {
 		32, APLL2_CON0, 4, APLL2_CON2, APLL2_CON1, 0),
 };
 
+enum fh_pll_id {
+	FH_ARMPLL_LL,
+	FH_ARMPLL_L,
+	FH_CCIPLL,
+	FH_MPLL,
+	FH_MEMPLL,
+	FH_MAINPLL,
+	FH_MSDCPLL,
+	FH_MMPLL,
+	FH_VDECPLL,
+	FH_TVDPLL,
+	FH_NR_FH,
+};
+
+#define _FH(_pllid, _fhid, _slope, _offset) {				\
+		.data = {						\
+			.pll_id = _pllid,				\
+			.fh_id = _fhid,					\
+			.fh_ver = FHCTL_PLLFH_V1,			\
+			.fhx_offset = _offset,				\
+			.dds_mask = GENMASK(21, 0),			\
+			.slope0_value = _slope,				\
+			.slope1_value = _slope,				\
+			.sfstrx_en = BIT(2),				\
+			.frddsx_en = BIT(1),				\
+			.fhctlx_en = BIT(0),				\
+			.tgl_org = BIT(31),				\
+			.dvfs_tri = BIT(31),				\
+			.pcwchg = BIT(31),				\
+			.dt_val = 0x0,					\
+			.df_val = 0x9,					\
+			.updnlmt_shft = 16,				\
+			.msk_frddsx_dys = GENMASK(23, 20),		\
+			.msk_frddsx_dts = GENMASK(19, 16),		\
+		},							\
+	}
+
+#define FH(_pllid, _fhid, _offset)	_FH(_pllid, _fhid, 0x6003c97, _offset)
+
+static struct mtk_pllfh_data apmixedsys_pllfhs[] = {
+	FH(CLK_APMIXED_ARMPLL_LL, FH_ARMPLL_LL, 0x38),
+	FH(CLK_APMIXED_ARMPLL_L, FH_ARMPLL_L, 0x4c),
+	FH(CLK_APMIXED_CCIPLL, FH_CCIPLL, 0x74),
+	FH(CLK_APMIXED_MAINPLL, FH_MAINPLL, 0xc4),
+	FH(CLK_APMIXED_MSDCPLL, FH_MSDCPLL, 0xd8),
+	FH(CLK_APMIXED_MMPLL, FH_MMPLL, 0xec),
+	FH(CLK_APMIXED_VENCPLL, FH_VDECPLL, 0x100),
+	FH(CLK_APMIXED_TVDPLL, FH_TVDPLL, 0x114),
+};
+
 static int clk_mt6757_apmixed_probe(struct platform_device *pdev)
 {
 	struct clk_hw_onecell_data *clk_data;
 	struct device *dev = &pdev->dev;
 	struct device_node *node = dev->of_node;
 	void __iomem *base;
+	const u8 *fhctl_node = "mediatek,mt6757-fhctl";
 	int ret;
 
 	base = devm_platform_ioremap_resource(pdev, 0);
@@ -125,8 +177,10 @@ static int clk_mt6757_apmixed_probe(struct platform_device *pdev)
 		return -ENOMEM;
 	platform_set_drvdata(pdev, clk_data);
 
-	ret = mtk_clk_register_plls(node, apmixedsys_plls,
-				   ARRAY_SIZE(apmixedsys_plls), clk_data);
+	fhctl_parse_dt(fhctl_node, apmixedsys_pllfhs, ARRAY_SIZE(apmixedsys_pllfhs));
+	ret = mtk_clk_register_pllfhs(node, apmixedsys_plls, ARRAY_SIZE(apmixedsys_plls),
+				   apmixedsys_pllfhs, ARRAY_SIZE(apmixedsys_pllfhs),
+				   clk_data);
 	if (ret) {
 		dev_err(dev, "Failed to register PLLs: %d\n", ret);
 		return ret;
@@ -146,7 +200,8 @@ static int clk_mt6757_apmixed_probe(struct platform_device *pdev)
 	return 0;
 
 unregister_plls:
-	mtk_clk_unregister_plls(apmixedsys_plls, ARRAY_SIZE(apmixedsys_plls),
+	mtk_clk_unregister_pllfhs(apmixedsys_plls, ARRAY_SIZE(apmixedsys_plls),
+				   apmixedsys_pllfhs, ARRAY_SIZE(apmixedsys_pllfhs),
 				   clk_data);
 	return ret;
 }
@@ -155,7 +210,9 @@ static void clk_mt6757_apmixed_remove(struct platform_device *pdev)
 {
 	struct clk_hw_onecell_data *clk_data = platform_get_drvdata(pdev);
 
-	mtk_clk_unregister_plls(apmixedsys_plls, ARRAY_SIZE(apmixedsys_plls), clk_data);
+	mtk_clk_unregister_pllfhs(apmixedsys_plls, ARRAY_SIZE(apmixedsys_plls),
+				   apmixedsys_pllfhs, ARRAY_SIZE(apmixedsys_pllfhs),
+				   clk_data);
 }
 
 static const struct of_device_id of_match_mt6757_apmixedsys[] = {
