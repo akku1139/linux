@@ -4,6 +4,7 @@
  */
 
 #include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/phy/phy.h>
 
 #include <dt-bindings/clock/mediatek,mt6757-apmixedsys.h>
 #include <dt-bindings/clock/mediatek,mt6757-infracfg.h>
@@ -519,6 +520,60 @@
 			resets = <&infracfg MT6757_INFRA_RST0_MSDC2>;
 			reset-names = "hrst";
 			status = "disabled";
+		};
+
+		ssusb: usb@11271000 {
+			compatible = "mediatek,mt6757-mtu3", "mediatek,mtu3";
+			reg = <0 0x11271000 0 0x3000>, <0 0x11280700 0 0x0100>;
+			reg-names = "mac", "ippc";
+			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
+			phys = <&u2port1 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
+			clocks = <&topckgen CLK_TOP_USB_TOP_SEL>,
+				 <&infracfg CLK_INFRA_SSUSB_TOP>,
+				 <&topckgen CLK_TOP_SSUSB_TOP_XHCI_SEL>;
+			clock-names = "sys_ck", "ref_ck", "xhci_ck";
+			mediatek,syscon-wakeup = <&pericfg 0x420 1>;
+			wakeup-source;
+			#address-cells = <2>;
+			#size-cells = <2>;
+			ranges;
+			status = "disabled";
+
+			usb_host: usb@11270000 {
+				compatible = "mediatek,mt6757-xhci",
+					     "mediatek,mtk-xhci";
+				reg = <0 0x11270000 0 0x1000>;
+				reg-names = "mac";
+				interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_LOW>;
+				clocks = <&topckgen CLK_TOP_USB_TOP_SEL>,
+					 <&infracfg CLK_INFRA_SSUSB_TOP>,
+					 <&topckgen CLK_TOP_SSUSB_TOP_XHCI_SEL>;
+				clock-names = "sys_ck", "ref_ck", "xhci_ck";
+				status = "disabled";
+			};
+		};
+
+		usb_phy: t-phy@11290000 {
+			compatible = "mediatek,mt6757-tphy", "mediatek,generic-tphy-v1";
+			reg = <0 0x11290000 0 0x800>;
+			#address-cells = <2>;
+			#size-cells = <2>;
+			ranges;
+			status = "disabled";
+	  
+			u2port0: usb-phy@11290800 {
+				reg = <0 0x11290800 0 0x100>;
+				clocks = <&clk26m>;
+				clock-names = "ref";
+				#phy-cells = <1>;
+			};
+
+			u3port0: usb-phy@11290900 {
+				reg = <0 0x11290900 0 0x700>;
+				clocks = <&clk26m>;
+				clock-names = "ref";
+				#phy-cells = <1>;
+			};
 		};
 	};
 };
