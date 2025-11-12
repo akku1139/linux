@@ -330,6 +330,12 @@
 			#clock-cells = <1>;
 		};
 
+		fhctl: clock-controller@1000ce00 {
+			compatible = "mediatek,mt6757-fhctl";
+			reg = <0 0x1000ce00 0 0x200>;
+			status = "disabled";
+		};
+
 		pwrap: pwrap@1000d000 {
 			compatible = "mediatek,mt6757-pwrap", "mediatek,mt6797-pwrap";
 			reg = <0 0x1000d000 0 0x1000>;
