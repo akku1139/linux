@@ -55,6 +55,12 @@ properties:
           - const: mediatek,mt6755
       - items:
           - enum:
+              - sony,xperia-xa1
+              - sony,xperia-xa1-plus
+              - sony,xperia-xa1-ultra
+          - const: mediatek,mt6757
+      - items:
+          - enum:
               - mediatek,mt6765-evb
           - const: mediatek,mt6765
       - items:
