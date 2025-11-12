@@ -5,6 +5,7 @@
 
 #include <dt-bindings/gpio/gpio.h>
 #include "mt6757.dtsi"
+#include "mt6351.dtsi"
 
 / {
 	aliases {
@@ -44,6 +45,10 @@
 			record-size = <0x10000>;
 		};
 	};
+};
+
+&mt6351_pmic {
+	interrupts-extended = <&pio 150 IRQ_TYPE_LEVEL_HIGH>;
 };
 
 &uart0 {
