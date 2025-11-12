@@ -47,6 +47,32 @@
 	};
 };
 
+&i2c1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c1_pins_default>;
+	clock-frequency = <400000>;
+
+	bq25896: charger@6b {
+		compatible = "ti,bq25896";
+		reg = <0x6b>;
+		interrupt-parent = <&pio>;
+		interrupts = <101 IRQ_TYPE_LEVEL_LOW>;
+		ti,battery-regulation-voltage = <4352000>;
+		ti,charge-current = <2048000>;
+		ti,termination-current = <128000>;
+		ti,precharge-current = <128000>;
+		ti,minimum-sys-voltage = <3500000>;
+		ti,boost-voltage = <4998000>;
+		ti,boost-max-current = <1400000>;
+		ti,use-ilim-pin;
+		ti,thermal-regulation-threshold = <120>;
+
+		bq25896_vbus: usb-otg-vbus { };
+		bq25896_vsys: vsys { };
+	};
+};
+
 &mt6351_pmic {
 	interrupts-extended = <&pio 150 IRQ_TYPE_LEVEL_HIGH>;
 };
@@ -58,6 +84,14 @@
 };
 
 &pio {
+	i2c1_pins_default: i2c1-pins {
+		pins-bus {
+			pinmux = <PINMUX_GPIO91__FUNC_SDA1>,
+				 <PINMUX_GPIO94__FUNC_SCL1>;
+			bias-disable;
+		};
+	};
+
 	uart0_pins_default: uart0-pins {
 		pins-rx {
 			pinmux = <PINMUX_GPIO105__FUNC_URXD0>;
