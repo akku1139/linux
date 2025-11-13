@@ -1,0 +1,57 @@
+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+
+#ifndef _DT_BINDINGS_CLK_MT6757_MMSYS_H
+#define _DT_BINDINGS_CLK_MT6757_MMSYS_H
+
+#define CLK_MM_SMI_COMMON		0
+#define CLK_MM_SMI_LARB0		1
+#define CLK_MM_SMI_LARB4		2
+#define CLK_MM_CAM_MDP			3
+#define CLK_MM_MDP_RDMA0		4
+#define CLK_MM_MDP_RDMA1		5
+#define CLK_MM_MDP_RSZ0			6
+#define CLK_MM_MDP_RSZ1			7
+#define CLK_MM_MDP_RSZ2			8
+#define CLK_MM_MDP_TDSHP		9
+#define CLK_MM_MDP_COLOR		10
+#define CLK_MM_MDP_WDMA			11
+#define CLK_MM_MDP_WROT0		12
+#define CLK_MM_MDP_WROT1		13
+#define CLK_MM_FAKE_ENG			14
+#define CLK_MM_DISP_OVL0		15
+#define CLK_MM_DISP_OVL1		16
+#define CLK_MM_DISP_OVL0_2L		17
+#define CLK_MM_DISP_OVL1_2L		18
+#define CLK_MM_DISP_RDMA0		19
+#define CLK_MM_DISP_RDMA1		20
+#define CLK_MM_DISP_RDMA2		21
+#define CLK_MM_DISP_WDMA0		22
+#define CLK_MM_DISP_WDMA1		23
+#define CLK_MM_DISP_COLOR0		24
+#define CLK_MM_DISP_COLOR1		25
+#define CLK_MM_DISP_CCORR0		26
+#define CLK_MM_DISP_CCORR1		27
+#define CLK_MM_DISP_AAL0		28
+#define CLK_MM_DISP_AAL1		29
+#define CLK_MM_DISP_GAMMA0		30
+#define CLK_MM_DISP_GAMMA1		31
+#define CLK_MM_DISP_OD			32
+#define CLK_MM_DISP_DITHER0		33
+#define CLK_MM_DISP_DITHER1		34
+#define CLK_MM_DISP_UFOE		35
+#define CLK_MM_DISP_DSC			36
+#define CLK_MM_DISP_SPLIT		37
+#define CLK_MM_DSI0_ENGINE		38
+#define CLK_MM_DSI0_DIGITAL		39
+#define CLK_MM_DSI1_ENGINE		40
+#define CLK_MM_DSI1_DIGITAL		41
+#define CLK_MM_DPI_ENGINE		42
+#define CLK_MM_DPI_PIXEL		43
+#define CLK_MM_LARB4_AXI_ASIF_MM	44
+#define CLK_MM_LARB4_AXI_ASIF_MJC	45
+#define CLK_MM_DISP_OVL0_MOUT		46
+#define CLK_MM_FAKE_ENG2		47
+#define CLK_MM_DFP			48
+#define CLK_MM_DFP_52M			49
+
+#endif /* _DT_BINDINGS_CLK_MT6757_MMSYS_H */
