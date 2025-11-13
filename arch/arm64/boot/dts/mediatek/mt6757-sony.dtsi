@@ -16,6 +16,28 @@
 		stdout-path = "serial0:115200n8";
 	};
 
+	gpio-keys {
+		compatible = "gpio-keys";
+		pinctrl-names = "default";
+		pinctrl-0 = <&gpio_keys_pins_default>;
+
+		button-volume-down {
+			label = "Volume Down";
+			linux,code = <KEY_VOLUMEDOWN>;
+			gpios = <&pio 104 GPIO_ACTIVE_LOW>;
+			wakeup-source;
+			debounce-interval = <100>;
+		};
+
+		button-camera {
+			label = "Camera";
+			linux,code = <KEY_CAMERA>;
+			gpios = <&pio 62 GPIO_ACTIVE_LOW>;
+			wakeup-source;
+			debounce-interval = <100>;
+		};
+	};
+
 	memory@40000000 {
 		device_type = "memory";
 		reg = <0 0x40000000 0 0x20000000>;
@@ -146,6 +168,14 @@
 			pinmux = <PINMUX_GPIO91__FUNC_SDA1>,
 				 <PINMUX_GPIO94__FUNC_SCL1>;
 			bias-disable;
+		};
+	};
+
+	gpio_keys_pins_default: gpio-keys-pins {
+		pins-keys {
+			pinmux = <PINMUX_GPIO104__FUNC_KPCOL1>,
+				     <PINMUX_GPIO62__FUNC_GPIO62>;
+			input-enable;
 		};
 	};
 
