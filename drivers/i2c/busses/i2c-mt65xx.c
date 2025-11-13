@@ -177,6 +177,7 @@ static const u16 mt_i2c_regs_v1[] = {
 	[OFFSET_TIMING] = 0x20,
 	[OFFSET_START] = 0x24,
 	[OFFSET_EXT_CONF] = 0x28,
+	[OFFSET_LTIMING] = 0x2c,
 	[OFFSET_FIFO_STAT] = 0x30,
 	[OFFSET_FIFO_THRESH] = 0x34,
 	[OFFSET_FIFO_ADDR_CLR] = 0x38,
@@ -402,6 +403,19 @@ static const struct mtk_i2c_compatible mt6589_compat = {
 	.max_dma_support = 32,
 };
 
+static const struct mtk_i2c_compatible mt6757_compat = {
+	.regs = mt_i2c_regs_v1,
+	.pmic_i2c = 0,
+	.dcm = 0,
+	.auto_restart = 1,
+	.aux_len_reg = 1,
+	.timing_adjust = 1,
+	.dma_sync = 1,
+	.ltiming_adjust = 1,
+	.apdma_sync = 0,
+	.max_dma_support = 33,
+};
+
 static const struct mtk_i2c_compatible mt7622_compat = {
 	.quirks = &mt7622_i2c_quirks,
 	.regs = mt_i2c_regs_v1,
@@ -525,6 +539,7 @@ static const struct of_device_id mtk_i2c_of_match[] = {
 	{ .compatible = "mediatek,mt2712-i2c", .data = &mt2712_compat },
 	{ .compatible = "mediatek,mt6577-i2c", .data = &mt6577_compat },
 	{ .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
+	{ .compatible = "mediatek,mt6757-i2c", .data = &mt6757_compat },
 	{ .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
 	{ .compatible = "mediatek,mt7981-i2c", .data = &mt7981_compat },
 	{ .compatible = "mediatek,mt7986-i2c", .data = &mt7986_compat },
