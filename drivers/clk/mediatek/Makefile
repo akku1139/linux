@@ -11,6 +11,7 @@ obj-$(CONFIG_COMMON_CLK_MT6757) += clk-mt6757-apmixedsys.o clk-mt6757-infracfg.o
 obj-$(CONFIG_COMMON_CLK_MT6757_CAMSYS) += clk-mt6757-camsys.o
 obj-$(CONFIG_COMMON_CLK_MT6757_IMGSYS) += clk-mt6757-imgsys.o
 obj-$(CONFIG_COMMON_CLK_MT6757_MFGCFG) += clk-mt6757-mfgcfg.o
+obj-$(CONFIG_COMMON_CLK_MT6757_MMSYS) += clk-mt6757-mm.o
 obj-$(CONFIG_COMMON_CLK_MT6757_VDECSYS) += clk-mt6757-vdecsys.o
 obj-$(CONFIG_COMMON_CLK_MT6757_VENCSYS) += clk-mt6757-vencsys.o
 obj-$(CONFIG_COMMON_CLK_MT6765) += clk-mt6765.o
