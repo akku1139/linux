@@ -10,6 +10,7 @@
 #include <dt-bindings/clock/mediatek,mt6757-infracfg.h>
 #include <dt-bindings/clock/mediatek,mt6757-pericfg.h>
 #include <dt-bindings/clock/mediatek,mt6757-topckgen.h>
+#include <dt-bindings/gce/mediatek,mt6757-gce.h>
 #include <dt-bindings/pinctrl/mt6757-pinfunc.h>
 #include <dt-bindings/power/mediatek,mt6757-power-controller.h>
 #include <dt-bindings/reset/mediatek,mt6757-infracfg.h>
@@ -362,6 +363,15 @@
 			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&clk13m>;
 			clock-names = "clk13m";
+		};
+
+		gce: mailbox@10212000 {
+			compatible = "mediatek,mt6757-gce", "mediatek,mt8173-gce";
+			reg = <0 0x10212000 0 0x1000>;
+			interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_LOW>;
+			clocks = <&infracfg CLK_INFRA_GCE>;
+			clock-names = "gce";
+			#mbox-cells = <2>;
 		};
 
 		auxadc: adc@11001000 {
