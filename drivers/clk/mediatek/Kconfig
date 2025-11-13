@@ -192,6 +192,13 @@ config COMMON_CLK_MT6757_MFGCFG
 	  This enables a driver for clocks and resets provided
 	  by mfgcfg on the MediaTek MT6757 SoC.
 
+config COMMON_CLK_MT6757_MMSYS
+	tristate "Clock driver for MediaTek MT6757 mmsys"
+	depends on COMMON_CLK_MT6757
+	help
+	  This enables a driver for clocks provided by mmsys
+	  on the MediaTek MT6757 SoC.
+
 config COMMON_CLK_MT6757_VDECSYS
 	tristate "Clock driver for MediaTek MT6757 vdecsys"
 	depends on COMMON_CLK_MT6757
