@@ -7,13 +7,18 @@
 #include <dt-bindings/phy/phy.h>
 
 #include <dt-bindings/clock/mediatek,mt6757-apmixedsys.h>
+#include <dt-bindings/clock/mediatek,mt6757-camsys.h>
+#include <dt-bindings/clock/mediatek,mt6757-imgsys.h>
 #include <dt-bindings/clock/mediatek,mt6757-infracfg.h>
 #include <dt-bindings/clock/mediatek,mt6757-pericfg.h>
 #include <dt-bindings/clock/mediatek,mt6757-topckgen.h>
+#include <dt-bindings/clock/mediatek,mt6757-vdecsys.h>
+#include <dt-bindings/clock/mediatek,mt6757-vencsys.h>
 #include <dt-bindings/gce/mediatek,mt6757-gce.h>
 #include <dt-bindings/pinctrl/mt6757-pinfunc.h>
 #include <dt-bindings/power/mediatek,mt6757-power-controller.h>
 #include <dt-bindings/reset/mediatek,mt6757-infracfg.h>
+#include <dt-bindings/reset/mediatek,mt6757-vdecsys.h>
 #include <dt-bindings/reset/mediatek,mt6757-wdt.h>
 
 / {
@@ -590,6 +595,31 @@
 				clock-names = "ref";
 				#phy-cells = <1>;
 			};
+		};
+
+		imgsys: clock-controller@15020000 {
+			compatible = "mediatek,mt6757-imgsys", "syscon";
+			reg = <0 0x15020000 0 0x1000>;
+			#clock-cells = <1>;
+		};
+
+		vdecsys: clock-controller@16000000 {
+			compatible = "mediatek,mt6757-vdecsys", "syscon";
+			reg = <0 0x16000000 0 0x1000>;
+			#clock-cells = <1>;
+			#reset-cells = <1>;
+		};
+
+		vencsys: clock-controller@17000000 {
+			compatible = "mediatek,mt6757-vencsys", "syscon";
+			reg = <0 0x17000000 0 0x1000>;
+			#clock-cells = <1>;
+		};
+
+		camsys: clock-controller@1a000000  {
+			compatible = "mediatek,mt6757-camsys", "syscon";
+			reg = <0 0x1a000000 0 0x1000>;
+			#clock-cells = <1>;
 		};
 	};
 };
