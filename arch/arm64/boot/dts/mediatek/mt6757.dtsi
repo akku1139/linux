@@ -10,6 +10,7 @@
 #include <dt-bindings/clock/mediatek,mt6757-camsys.h>
 #include <dt-bindings/clock/mediatek,mt6757-imgsys.h>
 #include <dt-bindings/clock/mediatek,mt6757-infracfg.h>
+#include <dt-bindings/clock/mediatek,mt6757-mmsys.h>
 #include <dt-bindings/clock/mediatek,mt6757-pericfg.h>
 #include <dt-bindings/clock/mediatek,mt6757-topckgen.h>
 #include <dt-bindings/clock/mediatek,mt6757-vdecsys.h>
@@ -18,6 +19,7 @@
 #include <dt-bindings/pinctrl/mt6757-pinfunc.h>
 #include <dt-bindings/power/mediatek,mt6757-power-controller.h>
 #include <dt-bindings/reset/mediatek,mt6757-infracfg.h>
+#include <dt-bindings/reset/mediatek,mt6757-mmsys.h>
 #include <dt-bindings/reset/mediatek,mt6757-vdecsys.h>
 #include <dt-bindings/reset/mediatek,mt6757-wdt.h>
 
@@ -595,6 +597,17 @@
 				clock-names = "ref";
 				#phy-cells = <1>;
 			};
+		};
+
+		mmsys: syscon@14000000 {
+			compatible = "mediatek,mt6757-mmsys", "syscon";
+			reg = <0 0x14000000 0 0x1000>;
+			power-domains = <&spm MT6757_POWER_DOMAIN_DISP>;
+			#clock-cells = <1>;
+			#reset-cells = <1>;
+			mboxes = <&gce 0 CMDQ_THR_PRIO_HIGHEST>,
+				 <&gce 1 CMDQ_THR_PRIO_HIGHEST>;
+			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0 0x1000>;
 		};
 
 		imgsys: clock-controller@15020000 {
