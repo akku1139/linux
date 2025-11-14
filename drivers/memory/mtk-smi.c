@@ -25,6 +25,8 @@
 
 #define SMI_L1_ARB			0x200
 #define SMI_BUS_SEL			0x220
+#define SMI_WRR_REG0			0x228
+#define SMI_WRR_REG1			0x22c
 #define SMI_BUS_LARB_SHIFT(larbid)	((larbid) << 1)
 /* All are MMU0 defaultly. Only specialize mmu1 here. */
 #define F_MMU1_LARB(larbid)		(0x1 << SMI_BUS_LARB_SHIFT(larbid))
@@ -283,6 +285,16 @@ static int mtk_smi_larb_config_port_gen2_general(struct device *dev)
 	return 0;
 }
 
+static const u8 mtk_smi_larb_mt6757_ostd[][SMI_LARB_PORT_NR_MAX] = {
+	[0] = {0x14, 0x10, 0x8, 0x8, 0x3, 0x1, 0xc, 0x1},
+	[1] = {0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1},
+	[2] = {0x1c, 0x14, 0x2, 0x2, 0x2, 0x2, 0x2, 0x4, 0x4, 0x4, 0x2, 0x2,
+	       0x2, 0x4, 0x2, 0x2, 0x2},
+	[3] = {0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1},
+	[4] = {0x14, 0x14, 0x8, 0x1, 0x8, 0x1, 0x1, 0x14, 0x3, 0xc, 0x1},
+	[5] = {0x1f, 0x1, 0x4, 0x4, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, 0x1},
+};
+
 static const u8 mtk_smi_larb_mt6893_ostd[][SMI_LARB_PORT_NR_MAX] = {
 	[0] = {0x2, 0x6, 0x2, 0x2, 0x2, 0x28, 0x18, 0x18, 0x1, 0x1, 0x1, 0x8,
 	       0x8, 0x1, 0x3f},
@@ -491,6 +503,11 @@ static const struct mtk_smi_larb_gen mtk_smi_larb_mt2712 = {
 	.larb_direct_to_common_mask = BIT(8) | BIT(9),      /* bdpsys */
 };
 
+static const struct mtk_smi_larb_gen mtk_smi_larb_mt6757 = {
+	.config_port = mtk_smi_larb_config_port_gen2_general,
+	.ostd	     = mtk_smi_larb_mt6757_ostd,
+};
+
 static const struct mtk_smi_larb_gen mtk_smi_larb_mt6779 = {
 	.config_port  = mtk_smi_larb_config_port_gen2_general,
 	.larb_direct_to_common_mask =
@@ -548,6 +565,7 @@ static const struct mtk_smi_larb_gen mtk_smi_larb_mt8195 = {
 static const struct of_device_id mtk_smi_larb_of_ids[] = {
 	{.compatible = "mediatek,mt2701-smi-larb", .data = &mtk_smi_larb_mt2701},
 	{.compatible = "mediatek,mt2712-smi-larb", .data = &mtk_smi_larb_mt2712},
+	{.compatible = "mediatek,mt6757-smi-larb", .data = &mtk_smi_larb_mt6757},
 	{.compatible = "mediatek,mt6779-smi-larb", .data = &mtk_smi_larb_mt6779},
 	{.compatible = "mediatek,mt6795-smi-larb", .data = &mtk_smi_larb_mt8173},
 	{.compatible = "mediatek,mt6893-smi-larb", .data = &mtk_smi_larb_mt6893},
@@ -734,6 +752,13 @@ static struct platform_driver mtk_smi_larb_driver = {
 	}
 };
 
+static const struct mtk_smi_reg_pair mtk_smi_common_mt6757_init[SMI_COMMON_INIT_REGS_NR] = {
+	{SMI_L1LEN, 0xb},
+	{SMI_WRR_REG0, 0xc30c30c},
+	{SMI_WRR_REG1, 0x30c},
+	{SMI_DCM, 0x3ff},
+};
+
 static const struct mtk_smi_reg_pair mtk_smi_common_mt6795_init[SMI_COMMON_INIT_REGS_NR] = {
 	{SMI_L1_ARB, 0x1b},
 	{SMI_M4U_TH, 0xce810c85},
@@ -756,6 +781,13 @@ static const struct mtk_smi_common_plat mtk_smi_common_gen1 = {
 
 static const struct mtk_smi_common_plat mtk_smi_common_gen2 = {
 	.type	  = MTK_SMI_GEN2,
+};
+
+static const struct mtk_smi_common_plat mtk_smi_common_mt6757 = {
+	.type	  = MTK_SMI_GEN2,
+	.bus_sel  = F_MMU1_LARB(1) | F_MMU1_LARB(2) | F_MMU1_LARB(3) |
+		    F_MMU1_LARB(5) | F_MMU1_LARB(6),
+	.init	  = mtk_smi_common_mt6757_init,
 };
 
 static const struct mtk_smi_common_plat mtk_smi_common_mt6779 = {
@@ -838,6 +870,7 @@ static const struct mtk_smi_common_plat mtk_smi_common_mt8365 = {
 static const struct of_device_id mtk_smi_common_of_ids[] = {
 	{.compatible = "mediatek,mt2701-smi-common", .data = &mtk_smi_common_gen1},
 	{.compatible = "mediatek,mt2712-smi-common", .data = &mtk_smi_common_gen2},
+	{.compatible = "mediatek,mt6757-smi-common", .data = &mtk_smi_common_mt6757},
 	{.compatible = "mediatek,mt6779-smi-common", .data = &mtk_smi_common_mt6779},
 	{.compatible = "mediatek,mt6795-smi-common", .data = &mtk_smi_common_mt6795},
 	{.compatible = "mediatek,mt6893-smi-common", .data = &mtk_smi_common_mt6893},
