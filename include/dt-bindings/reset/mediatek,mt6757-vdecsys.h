@@ -1,0 +1,9 @@
+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+
+#ifndef _DT_BINDINGS_RESET_MT6757_VDECSYS_H
+#define _DT_BINDINGS_RESET_MT6757_VDECSYS_H
+
+#define MT6757_VDEC_RST0_VDEC			0
+#define MT6757_VDEC_RST1_LARB			1
+
+#endif /* _DT_BINDINGS_RESET_MT6757_VDECSYS_H */
