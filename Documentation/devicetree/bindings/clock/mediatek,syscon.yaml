@@ -32,6 +32,11 @@ properties:
               - mediatek,mt6735-mfgcfg
               - mediatek,mt6735-vdecsys
               - mediatek,mt6735-vencsys
+              - mediatek,mt6757-camsys
+              - mediatek,mt6757-imgsys
+              - mediatek,mt6757-mfgcfg
+              - mediatek,mt6757-vdecsys
+              - mediatek,mt6757-vencsys
               - mediatek,mt6765-camsys
               - mediatek,mt6765-imgsys
               - mediatek,mt6765-mipi0a
