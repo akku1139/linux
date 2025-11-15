@@ -16,6 +16,7 @@
 #include <dt-bindings/clock/mediatek,mt6757-vdecsys.h>
 #include <dt-bindings/clock/mediatek,mt6757-vencsys.h>
 #include <dt-bindings/gce/mediatek,mt6757-gce.h>
+#include <dt-bindings/memory/mt6757-larb-port.h>
 #include <dt-bindings/pinctrl/mt6757-pinfunc.h>
 #include <dt-bindings/power/mediatek,mt6757-power-controller.h>
 #include <dt-bindings/reset/mediatek,mt6757-infracfg.h>
@@ -372,6 +373,15 @@
 			clock-names = "clk13m";
 		};
 
+		iommu: iommu@10205000 {
+			compatible = "mediatek,mt6757-m4u";
+			reg = <0 0x10205000 0 0x1000>;
+			interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_LOW>;
+			mediatek,larbs = <&larb0 &larb1 &larb2 &larb3 &larb4 &larb5>;
+			power-domains = <&spm MT6757_POWER_DOMAIN_DISP>;
+			#iommu-cells = <1>;
+		};
+
 		gce: mailbox@10212000 {
 			compatible = "mediatek,mt6757-gce", "mediatek,mt8173-gce";
 			reg = <0 0x10212000 0 0x1000>;
@@ -610,10 +620,48 @@
 			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0 0x1000>;
 		};
 
+		larb0: larb@14026000 {
+			compatible = "mediatek,mt6757-smi-larb";
+			reg = <0 0x14026000 0 0x1000>;
+			clocks = <&mmsys CLK_MM_SMI_COMMON>, <&mmsys CLK_MM_SMI_LARB0>;
+			clock-names = "apb", "smi";
+			mediatek,smi = <&smi_common>;
+			mediatek,larb-id = <0>;
+			power-domains = <&spm MT6757_POWER_DOMAIN_DISP>;
+		};
+
+		larb4: larb@14027000 {
+			compatible = "mediatek,mt6757-smi-larb";
+			reg = <0 0x14027000 0 0x1000>;
+			clocks = <&mmsys CLK_MM_SMI_COMMON>, <&mmsys CLK_MM_SMI_LARB4>;
+			clock-names = "apb", "smi";
+			mediatek,smi = <&smi_common>;
+			mediatek,larb-id = <4>;
+			power-domains = <&spm MT6757_POWER_DOMAIN_DISP>;
+		};
+
+		smi_common: smi@14028000 {
+			compatible = "mediatek,mt6757-smi-common";
+			reg = <0 0x14028000 0 0x1000>;
+			power-domains = <&spm MT6757_POWER_DOMAIN_DISP>;
+			clocks = <&mmsys CLK_MM_SMI_COMMON>, <&mmsys CLK_MM_SMI_LARB0>;
+			clock-names = "apb", "smi";
+		};
+
 		imgsys: clock-controller@15020000 {
 			compatible = "mediatek,mt6757-imgsys", "syscon";
 			reg = <0 0x15020000 0 0x1000>;
 			#clock-cells = <1>;
+		};
+
+		larb5: larb@15021000 {
+			compatible = "mediatek,mt6757-smi-larb";
+			reg = <0 0x15021000 0 0x1000>;
+			clocks = <&imgsys CLK_IMG_SMI_LARB5>, <&imgsys CLK_IMG_SMI_LARB5>;
+			clock-names = "apb", "smi";
+			mediatek,smi = <&smi_common>;
+			mediatek,larb-id = <5>;
+			power-domains = <&spm MT6757_POWER_DOMAIN_ISP>;
 		};
 
 		vdecsys: clock-controller@16000000 {
@@ -623,16 +671,46 @@
 			#reset-cells = <1>;
 		};
 
+		larb1: larb@16010000 {
+			compatible = "mediatek,mt6757-smi-larb";
+			reg = <0 0x16010000 0 0x10000>;
+			clocks = <&vdecsys CLK_VDEC_VDEC>, <&vdecsys CLK_VDEC_SMI_LARB1>;
+			clock-names = "apb", "smi";
+			mediatek,smi = <&smi_common>;
+			mediatek,larb-id = <1>;
+			power-domains = <&spm MT6757_POWER_DOMAIN_VDE>;
+		};
+
 		vencsys: clock-controller@17000000 {
 			compatible = "mediatek,mt6757-vencsys", "syscon";
 			reg = <0 0x17000000 0 0x1000>;
 			#clock-cells = <1>;
 		};
 
+		larb3: larb@17001000 {
+			compatible = "mediatek,mt6757-smi-larb";
+			reg = <0 0x17001000 0 0x1000>;
+			clocks = <&vdecsys CLK_VENC_VENC>, <&vdecsys CLK_VENC_SMI_LARB3>;
+			clock-names = "apb", "smi";
+			mediatek,smi = <&smi_common>;
+			mediatek,larb-id = <3>;
+			power-domains = <&spm MT6757_POWER_DOMAIN_VEN>;
+		};
+
 		camsys: clock-controller@1a000000  {
 			compatible = "mediatek,mt6757-camsys", "syscon";
 			reg = <0 0x1a000000 0 0x1000>;
 			#clock-cells = <1>;
+		};
+
+		larb2: larb@1a001000 {
+			compatible = "mediatek,mt6757-smi-larb";
+			reg = <0 0x1a001000 0 0x1000>;
+			clocks = <&camsys CLK_CAM_CAM>, <&camsys CLK_CAM_SMI_LARB2>;
+			clock-names = "apb", "smi";
+			mediatek,smi = <&smi_common>;
+			mediatek,larb-id = <2>;
+			power-domains = <&spm MT6757_POWER_DOMAIN_CAM>;
 		};
 	};
 };
