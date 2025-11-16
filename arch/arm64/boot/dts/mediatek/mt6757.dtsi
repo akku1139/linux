@@ -661,6 +661,7 @@
 			clocks = <&mmsys CLK_MM_DISP_OVL0>;
 			iommus = <&iommu M4U_PORT_DISP_OVL0>;
 			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xb000 0x1000>;
+			resets = <&mmsys MT6757_MMSYS_SW0_RST_B_DISP_OVL0>;
 		};
 
 		ovl0_2l: ovl@1400d000 {
@@ -672,6 +673,7 @@
 			/* LARB can be changed by MMSYS_SMI_LARB_SEL */
 			iommus = <&iommu M4U_PORT_DISP_2L_OVL0_LARB4>;
 			mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0xd000 0x1000>;
+			resets = <&mmsys MT6757_MMSYS_SW0_RST_B_DISP_OVL0_2L>;
 		};
 
 		rdma0: rdma@1400f000 {
