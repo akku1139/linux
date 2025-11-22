@@ -55,6 +55,7 @@ properties:
           - const: arm,mali-t860
       - items:
           - enum:
+              - mediatek,mt6757-mali
               - samsung,exynos8890-mali
           - const: arm,mali-t880
 
