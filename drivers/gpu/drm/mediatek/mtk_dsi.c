@@ -106,7 +106,9 @@
 #define DSI_RACK		0x84
 #define RACK				BIT(0)
 
+#define DSI_PHY_PCPAT		0x100
 #define DSI_PHY_LCCON		0x104
+#define EARLY_HS_POE		GENMASK(20, 16)
 #define LC_HS_TX_EN			BIT(0)
 #define LC_ULPM_EN			BIT(1)
 #define LC_WAKEUP_EN			BIT(2)
@@ -344,9 +346,12 @@ static bool mtk_dsi_clk_hs_state(struct mtk_dsi *dsi)
 
 static void mtk_dsi_clk_hs_mode(struct mtk_dsi *dsi, bool enter)
 {
-	if (enter && !mtk_dsi_clk_hs_state(dsi))
+	if (enter && !mtk_dsi_clk_hs_state(dsi)) {
+		/* Olympus must set this */
+		writel(0x55, dsi->regs + DSI_PHY_PCPAT);
+		mtk_dsi_mask(dsi, DSI_PHY_LCCON, EARLY_HS_POE, 0);
 		mtk_dsi_mask(dsi, DSI_PHY_LCCON, LC_HS_TX_EN, LC_HS_TX_EN);
-	else if (!enter && mtk_dsi_clk_hs_state(dsi))
+	} else if (!enter && mtk_dsi_clk_hs_state(dsi))
 		mtk_dsi_mask(dsi, DSI_PHY_LCCON, LC_HS_TX_EN, 0);
 }
 
