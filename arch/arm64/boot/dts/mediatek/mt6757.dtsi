@@ -10,6 +10,7 @@
 #include <dt-bindings/clock/mediatek,mt6757-camsys.h>
 #include <dt-bindings/clock/mediatek,mt6757-imgsys.h>
 #include <dt-bindings/clock/mediatek,mt6757-infracfg.h>
+#include <dt-bindings/clock/mediatek,mt6757-mfgcfg.h>
 #include <dt-bindings/clock/mediatek,mt6757-mmsys.h>
 #include <dt-bindings/clock/mediatek,mt6757-pericfg.h>
 #include <dt-bindings/clock/mediatek,mt6757-topckgen.h>
@@ -20,6 +21,7 @@
 #include <dt-bindings/pinctrl/mt6757-pinfunc.h>
 #include <dt-bindings/power/mediatek,mt6757-power-controller.h>
 #include <dt-bindings/reset/mediatek,mt6757-infracfg.h>
+#include <dt-bindings/reset/mediatek,mt6757-mfgcfg.h>
 #include <dt-bindings/reset/mediatek,mt6757-mmsys.h>
 #include <dt-bindings/reset/mediatek,mt6757-vdecsys.h>
 #include <dt-bindings/reset/mediatek,mt6757-wdt.h>
@@ -640,6 +642,28 @@
 				clock-names = "ref";
 				#phy-cells = <1>;
 			};
+		};
+
+		mfgcfg: clock-controller@13000000 {
+			compatible = "mediatek,mt6757-mfgcfg", "syscon";
+			reg = <0 0x13000000 0 0x1000>;
+			power-domains = <&spm MT6757_POWER_DOMAIN_MFG_ASYNC>;
+			#clock-cells = <1>;
+			#reset-cells = <1>;
+		};
+
+		gpu: gpu@13040000 {
+			compatible = "mediatek,mt6757-mali", "arm,mali-t880";
+			reg = <0 0x13040000 0 0x4000>;
+			interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_LOW>,
+				     <GIC_SPI 246 IRQ_TYPE_LEVEL_LOW>,
+				     <GIC_SPI 245 IRQ_TYPE_LEVEL_LOW>;
+			interrupt-names = "job", "mmu", "gpu";
+			clocks = <&mfgcfg CLK_MFG_BG3D>;
+			resets = <&mfgcfg MT6757_MFG_RST0_AXI>,
+				 <&mfgcfg MT6757_MFG_RST0_G3D>;
+			power-domains = <&spm MT6757_POWER_DOMAIN_MFG>;
+			status = "disabled";
 		};
 
 		mmsys: syscon@14000000 {
