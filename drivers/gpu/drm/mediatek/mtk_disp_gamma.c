@@ -26,6 +26,8 @@
 #define DISP_GAMMA_SIZE				0x0030
 #define DISP_GAMMA_SIZE_HSIZE				GENMASK(28, 16)
 #define DISP_GAMMA_SIZE_VSIZE				GENMASK(12, 0)
+#define DISP_GAMMA_DEBUG			0x0034
+#define GAMMA_FORCE_COMMIT			BIT(0)
 #define DISP_GAMMA_BANK				0x0100
 #define DISP_GAMMA_BANK_BANK				GENMASK(1, 0)
 #define DISP_GAMMA_BANK_DATA_MODE			BIT(2)
@@ -226,6 +228,7 @@ void mtk_gamma_start(struct device *dev)
 {
 	struct mtk_disp_gamma *gamma = dev_get_drvdata(dev);
 
+	writel(GAMMA_FORCE_COMMIT, gamma->regs + DISP_GAMMA_DEBUG);
 	writel(GAMMA_EN, gamma->regs + DISP_GAMMA_EN);
 }
 

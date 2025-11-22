@@ -28,6 +28,8 @@
 #define DISP_CCORR_COEF_2			0x0088
 #define DISP_CCORR_COEF_3			0x008C
 #define DISP_CCORR_COEF_4			0x0090
+#define DISP_CCORR_SHADOW			0x00c0
+#define CCORR_FORCE_COMMIT			BIT(1)
 
 struct mtk_disp_ccorr_data {
 	u32 matrix_bits;
@@ -70,6 +72,7 @@ void mtk_ccorr_start(struct device *dev)
 {
 	struct mtk_disp_ccorr *ccorr = dev_get_drvdata(dev);
 
+	writel(CCORR_FORCE_COMMIT, ccorr->regs + DISP_CCORR_SHADOW);
 	writel(CCORR_EN, ccorr->regs + DISP_CCORR_EN);
 }
 
