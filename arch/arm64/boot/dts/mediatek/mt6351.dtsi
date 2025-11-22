@@ -339,7 +339,7 @@
 				wakeup-source;
 			};
 
-			key-home {
+			mt6351_home: key-home {
 				linux,keycodes = <KEY_HOME>;
 				wakeup-source;
 			};
