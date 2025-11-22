@@ -16,6 +16,15 @@
 		stdout-path = "serial0:115200n8";
 	};
 
+	disp_backlight: display-backlight {
+		compatible = "pwm-backlight";
+		pwms = <&pwm0 0 500000>;
+		brightness-levels = <0 1023>;
+		num-interpolated-steps = <1023>;
+		default-brightness-level = <512>;
+		enable-gpios = <&pio 102 GPIO_ACTIVE_HIGH>;
+	};
+
 	gpio-keys {
 		compatible = "gpio-keys";
 		pinctrl-names = "default";
@@ -180,6 +189,10 @@
 	mediatek,eye-src = <1>;
 	mediatek,pre-emphasis = <1>;
 	mediatek,discth = <15>;
+};
+
+&pwm0 {
+	status = "okay";
 };
 
 &pio {
