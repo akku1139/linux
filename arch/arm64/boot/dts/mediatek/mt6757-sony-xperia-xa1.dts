@@ -10,4 +10,64 @@
 	model = "Sony Xperia XA1";
 	compatible = "sony,xperia-xa1", "mediatek,mt6757";
 	chassis-type = "handset";
+
+	disp_vsp: regulator-disp-vsp {
+		compatible = "regulator-fixed";
+		regulator-name = "disp_vsp";
+		regulator-min-microvolt = <5500000>;
+		regulator-max-microvolt = <5500000>;
+		gpio = <&pio 24 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
+	disp_vsn: regulator-disp-vsn {
+		compatible = "regulator-fixed";
+		regulator-name = "disp_vsn";
+		regulator-min-microvolt = <5500000>;
+		regulator-max-microvolt = <5500000>;
+		gpio = <&pio 12 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+};
+
+&dsi0 {
+	status = "okay";
+
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	panel: panel@0 {
+		compatible = "sony,ft8607f-dsi-vdo-truly";
+		reg = <0>;
+
+		backlight = <&disp_backlight>;
+
+		vddio-supply = <&mt6351_vldo28_reg>;
+		vsp-supply = <&disp_vsp>;
+		vsn-supply = <&disp_vsn>;
+
+		reset-gpios = <&pio 158 GPIO_ACTIVE_LOW>;
+		id-gpios = <&pio 54 GPIO_ACTIVE_HIGH>;
+
+		port {
+			panel_in: endpoint {
+				remote-endpoint = <&dsi_out>;
+			};
+		};
+	};
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port {
+			dsi_out: endpoint {
+				remote-endpoint = <&panel_in>;
+			};
+		};
+	};
+};
+
+&mipi_tx0 {
+	status = "okay";
 };
