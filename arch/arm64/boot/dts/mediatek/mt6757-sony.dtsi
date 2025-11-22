@@ -78,6 +78,11 @@
 	};
 };
 
+&gpu {
+	status = "okay";
+	mali-supply = <&mt6351_vgpu_reg>;
+};
+
 &i2c1 {
 	status = "okay";
 	pinctrl-names = "default";
