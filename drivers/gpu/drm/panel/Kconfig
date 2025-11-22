@@ -974,6 +974,16 @@ config DRM_PANEL_SONY_TULIP_TRULY_NT35521
 	  NT35521 1280x720 video mode panel as found on Sony Xperia M4
 	  Aqua phone.
 
+config DRM_PANEL_FT8607F_DSI_VDO_TRULY
+	tristate "Sony ft8607f-dsi-vdo-truly panel"
+	depends on GPIOLIB && OF
+	depends on DRM_MIPI_DSI
+	depends on BACKLIGHT_CLASS_DEVICE
+	help
+	  Say Y here if you want to enable support for the Sony
+	  ft8607f-dsi-vdo-truly 1280x720 video mode panel as found
+	  on the Sony Xperia XA1
+
 config DRM_PANEL_STARTEK_KD070FHFID015
 	tristate "STARTEK KD070FHFID015 panel"
 	depends on OF
