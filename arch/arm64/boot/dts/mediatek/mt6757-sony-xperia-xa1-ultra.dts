@@ -11,3 +11,82 @@
 	compatible = "sony,xperia-xa1-ultra", "mediatek,mt6757";
 	chassis-type = "handset";
 };
+
+&i2c0 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c0_pins_default>;
+	clock-frequency = <400000>;
+
+	rt4801@3e {
+		compatible = "richtek,rt4801";
+		reg = <0x3e>;
+
+		dsvp: DSVP {
+			regulator-name = "rt4801,dsvp";
+			regulator-min-microvolt = <5500000>;
+			regulator-max-microvolt = <5500000>;
+			regulator-boot-on;
+			enable-gpios = <&pio 24 GPIO_ACTIVE_HIGH>;
+		};
+
+		dsvn: DSVN {
+			regulator-name = "rt4801,dsvn";
+			regulator-min-microvolt = <5500000>;
+			regulator-max-microvolt = <5500000>;
+			regulator-boot-on;
+			enable-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
+		};
+	};
+};
+
+&dsi0 {
+	status = "okay";
+
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	panel: panel@0 {
+		compatible = "sony,td4322-innolux";
+		reg = <0>;
+
+		backlight = <&disp_backlight>;
+
+		vsp-supply = <&dsvp>;
+		vsn-supply = <&dsvn>;
+
+		reset-gpios = <&pio 158 GPIO_ACTIVE_LOW>;
+		te-gpios = <&pio 44 GPIO_ACTIVE_HIGH>;
+
+		port {
+			panel_in: endpoint {
+				remote-endpoint = <&dsi_out>;
+			};
+		};
+	};
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port {
+			dsi_out: endpoint {
+				remote-endpoint = <&panel_in>;
+			};
+		};
+	};
+};
+
+&mipi_tx0 {
+	status = "okay";
+};
+
+&pio {
+	i2c0_pins_default: i2c0-pins-default {
+		pins-bus {
+			pinmux = <PINMUX_GPIO92__FUNC_SDA0>,
+				     <PINMUX_GPIO93__FUNC_SCL0>;
+			bias-disable;
+		};
+	};
+};
