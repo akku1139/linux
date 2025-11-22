@@ -19,12 +19,14 @@
 #define DISP_COLOR_START_MT2701			0x0f00
 #define DISP_COLOR_START_MT8167			0x0400
 #define DISP_COLOR_START_MT8173			0x0c00
+#define DISP_COLOR_SHADOW_CTRL			0x0cb0
 #define DISP_COLOR_START(comp)			((comp)->data->color_offset)
 #define DISP_COLOR_WIDTH(comp)			(DISP_COLOR_START(comp) + 0x50)
 #define DISP_COLOR_HEIGHT(comp)			(DISP_COLOR_START(comp) + 0x54)
 
 #define COLOR_BYPASS_ALL			BIT(7)
 #define COLOR_SEQ_SEL				BIT(13)
+#define COLOR_FORCE_COMMIT			BIT(1)
 
 struct mtk_disp_color_data {
 	unsigned int color_offset;
@@ -71,6 +73,7 @@ void mtk_color_start(struct device *dev)
 {
 	struct mtk_disp_color *color = dev_get_drvdata(dev);
 
+	writel(COLOR_FORCE_COMMIT, color->regs + DISP_COLOR_SHADOW_CTRL);
 	writel(COLOR_BYPASS_ALL | COLOR_SEQ_SEL,
 	       color->regs + DISP_COLOR_CFG_MAIN);
 	writel(0x1, color->regs + DISP_COLOR_START(color));

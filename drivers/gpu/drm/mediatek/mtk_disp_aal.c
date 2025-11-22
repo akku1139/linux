@@ -24,6 +24,8 @@
 #define DISP_AAL_SIZE				0x0030
 #define DISP_AAL_SIZE_HSIZE				GENMASK(28, 16)
 #define DISP_AAL_SIZE_VSIZE				GENMASK(12, 0)
+#define DISP_AAL_SHADOW_CTRL			0x00b0
+#define AAL_FORCE_COMMIT				BIT(1)
 #define DISP_AAL_OUTPUT_SIZE			0x04d8
 #define DISP_AAL_GAMMA_LUT			0x0700
 #define DISP_AAL_GAMMA_LUT_R				GENMASK(29, 20)
@@ -138,6 +140,7 @@ void mtk_aal_start(struct device *dev)
 {
 	struct mtk_disp_aal *aal = dev_get_drvdata(dev);
 
+	writel(AAL_FORCE_COMMIT, aal->regs + DISP_AAL_SHADOW_CTRL);
 	writel(AAL_EN, aal->regs + DISP_AAL_EN);
 }
 

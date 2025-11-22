@@ -52,6 +52,9 @@
 #define RDMA_FIFO_SIZE(rdma)			((rdma)->data->fifo_size)
 #define DISP_RDMA_MEM_START_ADDR		0x0f00
 
+#define DISP_REG_RDMA_SHADOW_UPDATE		0x00b8
+#define DISP_RDMA_FORCE_COMMIT			BIT(0)
+
 #define RDMA_MEM_GMC				0x40402020
 
 static const u32 mt8173_formats[] = {
@@ -172,6 +175,8 @@ void mtk_rdma_clk_disable(struct device *dev)
 
 void mtk_rdma_start(struct device *dev)
 {
+	rdma_update_bits(dev, DISP_REG_RDMA_SHADOW_UPDATE,
+			 DISP_RDMA_FORCE_COMMIT, DISP_RDMA_FORCE_COMMIT);
 	rdma_update_bits(dev, DISP_REG_RDMA_GLOBAL_CON, RDMA_ENGINE_EN,
 			 RDMA_ENGINE_EN);
 }
