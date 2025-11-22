@@ -38,6 +38,28 @@
 			enable-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
 		};
 	};
+
+	touchscreen@70 {
+		compatible = "syna,rmi4-i2c";
+		reg = <0x70>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		interrupts-extended = <&pio 1 IRQ_TYPE_EDGE_FALLING>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&ts_pins>;
+		syna,startup-delay-ms = <1000>;
+		syna,reset-delay-ms = <220>;
+
+		rmi4-f01@1 {
+			reg = <0x1>;
+			syna,nosleep-mode = <1>;
+		};
+
+		rmi4-f12@12 {
+			reg = <0x12>;
+			syna,sensor-type = <1>;
+		};
+	};
 };
 
 &dsi0 {
@@ -87,6 +109,19 @@
 			pinmux = <PINMUX_GPIO92__FUNC_SDA0>,
 				     <PINMUX_GPIO93__FUNC_SCL0>;
 			bias-disable;
+		};
+	};
+
+	ts_pins: touchscreen-pins {
+		pins-irq {
+			pinmux = <PINMUX_GPIO1__FUNC_GPIO1>;
+			bias-pull-up;
+			input-enable;
+		};
+
+		pins-rst {
+			pinmux = <PINMUX_GPIO10__FUNC_GPIO10>;
+			output-high;
 		};
 	};
 };
