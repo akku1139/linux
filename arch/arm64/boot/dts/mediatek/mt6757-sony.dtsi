@@ -162,6 +162,10 @@
 	interrupts-extended = <&pio 150 IRQ_TYPE_LEVEL_HIGH>;
 };
 
+&mt6351_home {
+	linux,keycodes = <KEY_VOLUMEUP>;
+};
+
 &ssusb {
 	status = "okay";
 	dr_mode = "otg";
