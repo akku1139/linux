@@ -448,6 +448,7 @@ struct mtk_mmc_compatible {
 	bool use_internal_cd;
 	bool support_new_tx;
 	bool support_new_rx;
+	bool old_path_for_tx;
 };
 
 struct msdc_tune_para {
@@ -549,6 +550,20 @@ static const struct mtk_mmc_compatible mt2712_compat = {
 	.stop_dly_sel = 3,
 	.enhance_rx = true,
 	.support_64g = true,
+};
+
+static const struct mtk_mmc_compatible mt6757_compat = {
+	.clk_div_bits = 12,
+	.recheck_sdio_irq = true,
+	.hs400_tune = false,
+	.pad_tune_reg = MSDC_PAD_TUNE0,
+	.async_fifo = true,
+	.data_tune = true,
+	.busy_check = true,
+	.stop_clk_fix = true,
+	.stop_dly_sel = 3,
+	.pop_en_cnt = 8,
+	.old_path_for_tx = true,
 };
 
 static const struct mtk_mmc_compatible mt6779_compat = {
@@ -694,6 +709,7 @@ static const struct mtk_mmc_compatible mt8196_compat = {
 static const struct of_device_id msdc_of_ids[] = {
 	{ .compatible = "mediatek,mt2701-mmc", .data = &mt2701_compat},
 	{ .compatible = "mediatek,mt2712-mmc", .data = &mt2712_compat},
+	{ .compatible = "mediatek,mt6757-mmc", .data = &mt6757_compat},
 	{ .compatible = "mediatek,mt6779-mmc", .data = &mt6779_compat},
 	{ .compatible = "mediatek,mt6795-mmc", .data = &mt6795_compat},
 	{ .compatible = "mediatek,mt7620-mmc", .data = &mt7620_compat},
@@ -1456,6 +1472,18 @@ static void msdc_start_command(struct msdc_host *host,
 
 	cmd->error = 0;
 	rawcmd = msdc_cmd_prepare_raw_cmd(host, mrq, cmd);
+
+	if (host->dev_comp->old_path_for_tx && rawcmd & (3 << 11)) {
+		if (rawcmd & (1 << 13)) {
+			/* set old path for write */
+			sdr_set_bits(host->base + SDC_FIFO_CFG, SDC_FIFO_CFG_WRVALIDSEL);
+			sdr_set_bits(host->base + SDC_FIFO_CFG, SDC_FIFO_CFG_RDVALIDSEL);
+		} else {
+			/* set new path for read */
+			sdr_clr_bits(host->base + SDC_FIFO_CFG, SDC_FIFO_CFG_WRVALIDSEL);
+			sdr_clr_bits(host->base + SDC_FIFO_CFG, SDC_FIFO_CFG_RDVALIDSEL);
+		}
+	}
 
 	spin_lock_irqsave(&host->lock, flags);
 	sdr_set_bits(host->base + MSDC_INTEN, cmd_ints_mask);
