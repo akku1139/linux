@@ -337,5 +337,9 @@
 				wakeup-source;
 			};
 		};
+
+		mt6351_pwrc: power-controller {
+			compatible = "mediatek,mt6323-pwrc";
+		};
 	};
 };
