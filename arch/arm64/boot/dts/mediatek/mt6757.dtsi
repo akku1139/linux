@@ -418,6 +418,10 @@
 			reg = <0 0x10206000 0 0x1000>;
 			#address-cells = <1>;
 			#size-cells = <1>;
+
+			auxadc_calibration: calib@198 {
+				reg = <0x198 0x4>;
+			};
 		};
 
 		gce: mailbox@10212000 {
@@ -445,6 +449,8 @@
 			clocks = <&infracfg CLK_INFRA_AUXADC>;
 			clock-names = "main";
 			#io-channel-cells = <1>;
+			nvmem-cells = <&auxadc_calibration>;
+			nvmem-cell-names = "calibration-data";
 			status = "disabled";
 		};
 
