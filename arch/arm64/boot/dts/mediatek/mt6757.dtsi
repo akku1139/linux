@@ -147,6 +147,7 @@
 	psci {
 		compatible = "arm,psci-0.2";
 		method = "smc";
+		arm,atf-broken-poweroff;
 	};
 
 	clk13m: oscillator-13m {
@@ -188,6 +189,20 @@
 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
 		clock-frequency = <13000000>;
 		arm,no-tick-in-suspend;
+	};
+
+	/*
+	 * This is to be used in combination with a PMIC based
+	 * power-off handler like mt6323-poweroff, since if the PMIC
+	 * detects that a charger is plugged in, it will wait until
+	 * the charger is plugged out to power down the device after
+	 * the power down sequence is written to the registers.
+	 *
+	 * Should this time out, then restart-poweroff will work as a
+	 * fallback to reset the device which mimics downstream.
+	 */
+	restart_poweroff {
+		compatible = "restart-poweroff";
 	};
 
 	soc {
