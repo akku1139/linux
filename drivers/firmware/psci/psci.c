@@ -655,6 +655,8 @@ static void __init psci_init_smccc(void)
 
 }
 
+static bool atf_has_broken_poweroff;
+
 static void __init psci_0_2_set_functions(void)
 {
 	pr_info("Using standard PSCI v0.2 function IDs\n");
@@ -669,9 +671,11 @@ static void __init psci_0_2_set_functions(void)
 		.migrate_info_type = psci_migrate_info_type,
 	};
 
-	register_restart_handler(&psci_sys_reset_nb);
-
-	pm_power_off = psci_sys_poweroff;
+	if (!atf_has_broken_poweroff) {
+		register_restart_handler(&psci_sys_reset_nb);
+		pm_power_off = psci_sys_poweroff;
+	} else
+		pr_info("ATF has broken power-off / restart\n");
 }
 
 /*
@@ -720,6 +724,8 @@ static int __init psci_0_2_init(const struct device_node *np)
 	err = get_set_conduit_method(np);
 	if (err)
 		return err;
+
+	atf_has_broken_poweroff = of_property_read_bool(np, "arm,atf-broken-poweroff");
 
 	/*
 	 * Starting with v0.2, the PSCI specification introduced a call
