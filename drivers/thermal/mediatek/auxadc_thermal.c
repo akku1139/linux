@@ -303,6 +303,28 @@ enum mtk_thermal_version {
 #define MT8365_TS2 1
 #define MT8365_TS3 2
 
+/* MT6757 thermal sensors */
+#define MT6757_TS1	0
+#define MT6757_TS2	1
+#define MT6757_TS3	2
+#define MT6757_TS4	3
+#define MT6757_TS5	4
+
+/* AUXADC channel 11 is used for the temperature sensors */
+#define MT6757_TEMP_AUXADC_CHANNEL	11
+
+/* The total number of temperature sensors in the MT6757 */
+#define MT6757_NUM_SENSORS		5
+
+/* The number of banks in the MT6757 */
+#define MT6757_NUM_ZONES		4
+
+/* The number of sensing points per bank */
+#define MT6757_NUM_SENSORS_PER_ZONE	4
+
+/* The number of controller in the MT6757 */
+#define MT6757_NUM_CONTROLLER		1
+
 struct mtk_thermal;
 
 struct thermal_bank_cfg {
@@ -332,6 +354,7 @@ struct mtk_thermal_data {
 	u32 apmixed_buffer_ctl_reg;
 	u32 apmixed_buffer_ctl_mask;
 	u32 apmixed_buffer_ctl_set;
+	u32 core_sel_bits;
 };
 
 struct mtk_thermal {
@@ -474,6 +497,29 @@ static const int mt8365_mux_values[MT8365_NUM_SENSORS] = { 0, 1, 2 };
 static const int mt8365_tc_offset[MT8365_NUM_CONTROLLER] = { 0 };
 
 static const int mt8365_vts_index[MT8365_NUM_SENSORS] = { VTS1, VTS2, VTS3 };
+
+/* MT6757 thermal sensor data */
+static const int mt6757_bank_data[MT6757_NUM_ZONES][3] = {
+	{ MT6757_TS1 },
+	{ MT6757_TS2 },
+	{ MT6757_TS1, MT6757_TS2 },
+	{ MT6757_TS3, MT6757_TS4, MT6757_TS5 },
+};
+
+static const int mt6757_msr[MT6757_NUM_SENSORS_PER_ZONE] = {
+	TEMP_MSR0, TEMP_MSR1, TEMP_MSR2, TEMP_MSR3
+};
+
+static const int mt6757_adcpnp[MT6757_NUM_SENSORS_PER_ZONE] = {
+	TEMP_ADCPNP0, TEMP_ADCPNP1, TEMP_ADCPNP2, TEMP_ADCPNP3
+};
+
+static const int mt6757_mux_values[MT6757_NUM_SENSORS] = { 0, 1, 2, 3, 4 };
+static const int mt6757_tc_offset[MT6757_NUM_CONTROLLER] = { 0x0, };
+
+static const int mt6757_vts_index[MT6757_NUM_SENSORS] = {
+	VTS1, VTS2, VTS3, VTS4, VTS5
+};
 
 /*
  * The MT8173 thermal controller has four banks. Each bank can read up to
@@ -702,6 +748,45 @@ static const struct mtk_thermal_data mt7986_thermal_data = {
 	.apmixed_buffer_ctl_set = BIT(0),
 };
 
+/*
+ * The MT6757 thermal controller has four banks. Each bank can read up to
+ * four temperature sensors simultaneously. The MT6757 has a total of 5
+ * temperature sensors. We use each bank to measure a certain area of the
+ * SoC.
+ */
+static const struct mtk_thermal_data mt6757_thermal_data = {
+	.auxadc_channel = MT6757_TEMP_AUXADC_CHANNEL,
+	.num_banks = MT6757_NUM_ZONES,
+	.num_sensors = MT6757_NUM_SENSORS,
+	.vts_index = mt6757_vts_index,
+	.num_controller = MT6757_NUM_CONTROLLER,
+	.controller_offset = mt6757_tc_offset,
+	.need_switch_bank = true,
+	.bank_data = {
+		{
+			.num_sensors = 1,
+			.sensors = mt6757_bank_data[0],
+		}, {
+			.num_sensors = 1,
+			.sensors = mt6757_bank_data[1],
+		}, {
+			.num_sensors = 2,
+			.sensors = mt6757_bank_data[2],
+		}, {
+			.num_sensors = 3,
+			.sensors = mt6757_bank_data[3],
+		},
+	},
+	.msr = mt6757_msr,
+	.adcpnp = mt6757_adcpnp,
+	.sensor_mux_values = mt6757_mux_values,
+	.version = MTK_THERMAL_V1_5,
+	.apmixed_buffer_ctl_reg = APMIXED_SYS_TS_CON1,
+	.apmixed_buffer_ctl_mask = (u32) ~GENMASK(5, 4),
+	.apmixed_buffer_ctl_set = 0,
+	.core_sel_bits = GENMASK(19, 16),
+};
+
 static bool mtk_thermal_temp_is_valid(int temp)
 {
 	return (temp >= MT8173_TEMP_MIN) && (temp <= MT8173_TEMP_MAX);
@@ -825,7 +910,7 @@ static void mtk_thermal_get_bank(struct mtk_thermal_bank *bank)
 
 		val = readl(mt->thermal_base + PTPCORESEL);
 		val &= ~0xf;
-		val |= bank->id;
+		val |= (mt->conf->core_sel_bits | bank->id);
 		writel(val, mt->thermal_base + PTPCORESEL);
 	}
 }
@@ -1230,6 +1315,10 @@ static const struct of_device_id mtk_thermal_of_match[] = {
 	{
 		.compatible = "mediatek,mt2712-thermal",
 		.data = (void *)&mt2712_thermal_data,
+	},
+	{
+		.compatible = "mediatek,mt6757-thermal",
+		.data = (void *)&mt6757_thermal_data,
 	},
 	{
 		.compatible = "mediatek,mt7622-thermal",
