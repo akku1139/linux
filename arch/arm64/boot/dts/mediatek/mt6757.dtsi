@@ -413,6 +413,13 @@
 			#iommu-cells = <1>;
 		};
 
+		efuse: efuse@10206000 {
+			compatible = "mediatek,mt6757-efuse", "mediatek,efuse";
+			reg = <0 0x10206000 0 0x1000>;
+			#address-cells = <1>;
+			#size-cells = <1>;
+		};
+
 		gce: mailbox@10212000 {
 			compatible = "mediatek,mt6757-gce", "mediatek,mt8173-gce";
 			reg = <0 0x10212000 0 0x1000>;
