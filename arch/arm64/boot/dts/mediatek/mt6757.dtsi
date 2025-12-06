@@ -191,6 +191,36 @@
 		arm,no-tick-in-suspend;
 	};
 
+	thermal-zones {
+		cpu_little_thermal: cpu-little-thermal {
+			polling-delay-passive = <100>;
+			polling-delay = <500>;
+			thermal-sensors = <&thermal 0>;
+			sustainable-power = <5000>;
+		};
+
+		cpu_big_thermal: cpu-big-thermal {
+			polling-delay-passive = <100>;
+			polling-delay = <500>;
+			thermal-sensors = <&thermal 1>;
+			sustainable-power = <5000>;
+		};
+
+		cci_thermal: cci-thermal {
+			polling-delay-passive = <100>;
+			polling-delay = <500>;
+			thermal-sensors = <&thermal 2>;
+			sustainable-power = <5000>;
+		};
+
+		gpu_thermal: gpu-thermal {
+			polling-delay-passive = <250>;
+			polling-delay = <1000>;
+			thermal-sensors = <&thermal 3>;
+			sustainable-power = <5000>;
+		};
+	};
+
 	/*
 	 * This is to be used in combination with a PMIC based
 	 * power-off handler like mt6323-poweroff, since if the PMIC
