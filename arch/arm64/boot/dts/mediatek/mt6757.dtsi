@@ -419,6 +419,10 @@
 			#address-cells = <1>;
 			#size-cells = <1>;
 
+			thermal_calibration: calib@180 {
+				reg = <0x180 0xc>;
+			};
+
 			auxadc_calibration: calib@198 {
 				reg = <0x198 0x4>;
 			};
@@ -530,6 +534,20 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 			status = "disabled";
+		};
+
+		thermal: thermal-sensor@1100b000 {
+			#thermal-sensor-cells = <1>;
+			compatible = "mediatek,mt6757-thermal";
+			reg = <0 0x1100b000 0 0x1000>;
+			clocks = <&infracfg CLK_INFRA_THERM>, <&infracfg CLK_INFRA_AUXADC>;
+			clock-names = "therm", "auxadc";
+			resets = <&infracfg MT6757_INFRA_RST0_THERM_CTRL>;
+			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_LOW>;
+			mediatek,auxadc = <&auxadc>;
+			mediatek,apmixedsys = <&apmixed>;
+			nvmem-cells = <&thermal_calibration>;
+			nvmem-cell-names = "calibration-data";
 		};
 
 		pwm0: pwm@1100e000 {
