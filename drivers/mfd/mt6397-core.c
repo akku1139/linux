@@ -16,6 +16,7 @@
 #include <linux/mfd/mt6328/core.h>
 #include <linux/mfd/mt6331/core.h>
 #include <linux/mfd/mt6351/core.h>
+#include <linux/mfd/mt6355/core.h>
 #include <linux/mfd/mt6357/core.h>
 #include <linux/mfd/mt6358/core.h>
 #include <linux/mfd/mt6359/core.h>
@@ -24,6 +25,7 @@
 #include <linux/mfd/mt6328/registers.h>
 #include <linux/mfd/mt6331/registers.h>
 #include <linux/mfd/mt6351/registers.h>
+#include <linux/mfd/mt6355/registers.h>
 #include <linux/mfd/mt6357/registers.h>
 #include <linux/mfd/mt6358/registers.h>
 #include <linux/mfd/mt6359/registers.h>
@@ -85,6 +87,13 @@ static const struct resource mt6351_keys_resources[] = {
 	DEFINE_RES_IRQ_NAMED(MT6351_IRQ_STATUS_HOMEKEY, "homekey"),
 	DEFINE_RES_IRQ_NAMED(MT6351_IRQ_STATUS_PWRKEY_R, "powerkey_r"),
 	DEFINE_RES_IRQ_NAMED(MT6351_IRQ_STATUS_HOMEKEY_R, "homekey_r"),
+};
+
+static const struct resource mt6355_keys_resources[] = {
+	DEFINE_RES_IRQ_NAMED(MT6355_INT_STATUS_PWRKEY, "powerkey"),
+	DEFINE_RES_IRQ_NAMED(MT6355_INT_STATUS_HOMEKEY, "homekey"),
+	DEFINE_RES_IRQ_NAMED(MT6355_INT_STATUS_PWRKEY_R, "powerkey_r"),
+	DEFINE_RES_IRQ_NAMED(MT6355_INT_STATUS_HOMEKEY_R, "homekey_r"),
 };
 
 static const struct resource mt6358_keys_resources[] = {
@@ -299,6 +308,18 @@ static const struct mfd_cell mt6351_devs[] = {
 	},
 };
 
+static const struct mfd_cell mt6355_devs[] = {
+	{
+		.name = "mt6355-regulator",
+		.of_compatible = "mediatek,mt6355-regulator"
+	}, {
+		.name = "mt6355-keys",
+		.num_resources = ARRAY_SIZE(mt6355_keys_resources),
+		.resources = mt6355_keys_resources,
+		.of_compatible = "mediatek,mt6392-keys"
+	},
+};
+
 static const struct mfd_cell mt6397_devs[] = {
 	{
 		.name = "mt6397-rtc",
@@ -354,6 +375,14 @@ static const struct chip_data mt6351_core = {
 	.cid_shift = 8,
 	.cells = mt6351_devs,
 	.cell_size = ARRAY_SIZE(mt6351_devs),
+	.irq_init = mt6397_irq_init,
+};
+
+static const struct chip_data mt6355_core = {
+	.cid_addr = MT6355_HWCID,
+	.cid_shift = 8,
+	.cells = mt6355_devs,
+	.cell_size = ARRAY_SIZE(mt6355_devs),
 	.irq_init = mt6397_irq_init,
 };
 
