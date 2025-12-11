@@ -71,7 +71,7 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x0>;
-			enable-method = "psci";
+			enable-method = "mt-psci";
 			clocks = <&infracfg CLK_INFRA_CA53SEL>,
 				 <&topckgen CLK_TOP_ARMPLL_DIVIDER_PLL1_EN>;
 			clock-names = "cpu", "intermediate";
@@ -90,7 +90,7 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x1>;
-			enable-method = "psci";
+			enable-method = "mt-psci";
 			clocks = <&infracfg CLK_INFRA_CA53SEL>,
 				 <&topckgen CLK_TOP_ARMPLL_DIVIDER_PLL1_EN>;
 			clock-names = "cpu", "intermediate";
@@ -109,7 +109,7 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x2>;
-			enable-method = "psci";
+			enable-method = "mt-psci";
 			clocks = <&infracfg CLK_INFRA_CA53SEL>,
 				 <&topckgen CLK_TOP_ARMPLL_DIVIDER_PLL1_EN>;
 			clock-names = "cpu", "intermediate";
@@ -128,7 +128,7 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x3>;
-			enable-method = "psci";
+			enable-method = "mt-psci";
 			clocks = <&infracfg CLK_INFRA_CA53SEL>,
 				 <&topckgen CLK_TOP_ARMPLL_DIVIDER_PLL1_EN>;
 			clock-names = "cpu", "intermediate";
