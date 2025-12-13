@@ -18,6 +18,14 @@
 	/* Needed by stock bootloader */
 	version = "pvt";
 
+	simple-framebuffer-params {
+		compatible = "simple-framebuffer-params";
+		width = <800>;
+		height = <1280>;
+		stride = <(800 * 4)>; /* 4 bytes per pixel */
+		format = "a8b8g8r8";
+	};
+
 	gpio-keys {
 		compatible = "gpio-keys";
 		pinctrl-names = "default";
