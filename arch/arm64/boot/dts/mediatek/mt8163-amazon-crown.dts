@@ -43,6 +43,36 @@
 	};
 };
 
+&i2c2 {
+	clock-frequency = <400000>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c2_pins_default>;
+	status = "okay";
+
+	touchscreen@38 {
+		compatible = "edt,edt-ft5406";
+		reg = <0x38>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&touch_pins_default>;
+		interrupt-parent = <&pio>;
+		interrupts = <123 IRQ_TYPE_EDGE_FALLING>; /* GPIO E */
+		reset-gpios = <&pio 123 GPIO_ACTIVE_LOW>;
+		vcc-supply = <&mt6323_vmch_reg>;
+		iovcc-supply = <&mt6323_vio18_reg>;
+		
+		touchscreen-size-x = <1280>;
+		touchscreen-size-y = <800>;
+		
+		/* 
+		 * TODO: Remove these cheats when we have panel properly rotated
+		 * Crown's true panel orientation is portrait,
+		 * while touch is landscape
+		*/
+		touchscreen-inverted-y;
+		touchscreen-swapped-x-y;
+	};
+};
+
 &mt6323_vusb_reg {
 	regulator-always-on;
 };
@@ -67,4 +97,26 @@
 			input-enable;
 		};
 	};
+
+	i2c2_pins_default: i2c2-pins-default {
+		pins {
+			pinmux = <MT8163_PIN_77_SDA2__FUNC_SDA2_0>,
+				 <MT8163_PIN_78_SCL2__FUNC_SCL2_0>;
+			bias-disable;
+		};
+	};
+
+	touch_pins_default: touch-pins-default {
+		pins-irq {
+			pinmux = <MT8163_PIN_122_MSDC1_CLK__FUNC_GPIO122>;
+			bias-pull-up;
+			input-enable;
+		};
+
+		pins-rst {
+			pinmux = <MT8163_PIN_123_MSDC1_DAT0__FUNC_GPIO123>;
+			output-high;
+		};
+	};
+
 };
