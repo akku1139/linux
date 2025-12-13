@@ -10,4 +10,12 @@
 	model = "Amazon Fire HD 8 (2017)";
 	compatible = "amazon,douglas", "mediatek,mt8163";
 	chassis-type = "tablet";
+
+	simple-framebuffer-params {
+		compatible = "simple-framebuffer-params";
+		width = <800>;
+		height = <1280>;
+		stride = <(800 * 4)>; /* 4 bytes per pixel */
+		format = "a8b8g8r8";
+	};
 };
