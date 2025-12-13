@@ -176,6 +176,7 @@
 	psci {
 		compatible = "arm,psci-0.2";
 		method = "smc";
+		arm,atf-broken-poweroff;
 	};
 
 	clocks {
