@@ -220,6 +220,16 @@
 		arm,no-tick-in-suspend;
 	};
 
+	thermal-zones {
+		cpu_thermal: cpu-thermal {
+			polling-delay-passive = <1000>; /* milliseconds */
+			polling-delay = <1000>; /* milliseconds */
+
+			thermal-sensors = <&thermal>;
+			sustainable-power = <1500>; /* milliwatts */
+		};
+	};
+
 	soc {
 		compatible = "simple-bus";
 		#address-cells = <2>;
@@ -365,6 +375,17 @@
 			interrupt-controller;
 		};
 
+		efuse: efuse@10206000 {
+			compatible = "mediatek,mt8163-efuse", "mediatek,efuse";
+			reg = <0 0x10206000 0 0x1000>;
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			thermal_calibration: calib@100 {
+				reg = <0x100 0xc>;
+			};
+		};
+
 		gic: interrupt-controller@10221000 {
 			compatible = "arm,gic-400";
 			reg = <0 0x10221000 0 0x1000>,
@@ -501,6 +522,20 @@
 			assigned-clocks = <&infracfg CLK_INFRA_SPI_SEL>;
 			assigned-clock-parents = <&topckgen CLK_TOP_SPI_SEL>;
 			status = "disabled";
+		};
+
+		thermal: thermal@1100b000 {
+			#thermal-sensor-cells = <0>;
+			compatible = "mediatek,mt8163-thermal";
+			reg = <0 0x1100b000 0 0x1000>;
+			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_LOW>;
+			clocks = <&infracfg CLK_INFRA_THERM>, <&infracfg CLK_INFRA_AUXADC>;
+			clock-names = "therm", "auxadc";
+			resets = <&infracfg MT8163_INFRA_RST0_THERM_CTRL>;
+			mediatek,auxadc = <&auxadc>;
+			mediatek,apmixedsys = <&apmixedsys>;
+			nvmem-cells = <&thermal_calibration>;
+			nvmem-cell-names = "calibration-data";
 		};
 
 		usb0: usb@11200000 {
