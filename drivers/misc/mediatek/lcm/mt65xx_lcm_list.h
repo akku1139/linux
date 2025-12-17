@@ -339,6 +339,11 @@ extern struct LCM_DRIVER jd936x_wxga_dsi_vdo_crown_st_proto_kd_inx_lcm_drv;
 extern struct LCM_DRIVER jd936x_wxga_dsi_vdo_crown_st_proto_kd_hsd_lcm_drv;
 extern struct LCM_DRIVER ili9881c_wxga_dsi_vdo_crown_hsd_lcm_drv;
 extern struct LCM_DRIVER ili9881c_wxga_dsi_vdo_crown_boe_lcm_drv;
+extern struct LCM_DRIVER st7701s_wsvga_dsi_vdo_cronos_st_truly_lcm_drv;
+extern struct LCM_DRIVER st7701s_wsvga_dsi_vdo_cronos_st_kd_inx_lcm_drv;
+extern struct LCM_DRIVER st7701s_wsvga_dsi_vdo_cronos_st_kd_hsd_lcm_drv;
+extern struct LCM_DRIVER st7701s_wsvga_dsi_vdo_cronos_st_kd_boe_lcm_drv;
+extern struct LCM_DRIVER gc9503np_wsvga_dsi_vdo_cronos_gc_kd_boe_lcm_drv;
 
 #ifdef BUILD_LK
 extern void mdelay(unsigned long msec);
