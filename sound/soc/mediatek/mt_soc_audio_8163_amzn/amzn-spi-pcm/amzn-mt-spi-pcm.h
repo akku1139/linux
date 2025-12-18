@@ -7,6 +7,13 @@
 
 #define FIRMWARE_MAX_BYTES     (10*4096)
 #define FPGA_FIRMWARE_REV       30
+
+#ifdef CONFIG_CRONOS
+/* Compatible new/old fpga */
+#define NEW_FPGA_FIRMWARE      "i2s_to_spi_4ch_v208.bin"
+#define OLD_FPGA_FIRMWARE      "i2s_to_spi_4ch_v193.bin"
+#endif
+
 #define FPGA_FIRMWARE_NAME      CONFIG_EXTRA_FIRMWARE
 
 #define SPI_SPEED_HZ            50000000 /* Maximum speed 50 MHz */

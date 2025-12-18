@@ -345,10 +345,17 @@ static int mtk_pcm_dl2_i2s0_start(struct snd_pcm_substream *substream)
 	SetMemoryPathEnable(Soc_Aud_Digital_Block_MEM_DL2, true);
 
 	/* here to set interrupt */
+#ifdef CONFIG_CRONOS
+	SetIrqMcuCounter(Soc_Aud_IRQ_MCU_MODE_IRQ7_MCU_MODE,
+			 runtime->period_size);
+	SetIrqMcuSampleRate(Soc_Aud_IRQ_MCU_MODE_IRQ7_MCU_MODE, runtime->rate);
+	SetIrqEnable(Soc_Aud_IRQ_MCU_MODE_IRQ7_MCU_MODE, true);
+#else
 	SetIrqMcuCounter(Soc_Aud_IRQ_MCU_MODE_IRQ1_MCU_MODE,
 			 runtime->period_size);
 	SetIrqMcuSampleRate(Soc_Aud_IRQ_MCU_MODE_IRQ1_MCU_MODE, runtime->rate);
 	SetIrqEnable(Soc_Aud_IRQ_MCU_MODE_IRQ1_MCU_MODE, true);
+#endif
 
 	EnableAfe(true);
 

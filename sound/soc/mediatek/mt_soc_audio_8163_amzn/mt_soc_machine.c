@@ -79,10 +79,13 @@
 #include <sound/jack.h>
 #include <linux/debugfs.h>
 #include <linux/notifier.h>
+#ifdef CONFIG_GATING
 #include <misc/gating.h>
+#endif
 #include "mt_soc_codec_63xx.h"
 #include "mt_amzn_mclk.h"
 #include "../../codecs/tlv320aic3101.h"
+#include "../../codecs/rt5616e.h"
 #include "../../codecs/rt5616.h"
 
 static int mt_soc_lowjitter_control;
@@ -91,6 +94,34 @@ static struct dentry *mt_sco_audio_debugfs;
 
 #define DEBUG_FS_NAME "mtksocaudio"
 #define DEBUG_ANA_FS_NAME "mtksocanaaudio"
+
+#ifdef CONFIG_CRONOS
+/* DACs PRQ compatible */
+#define IDME_DAC_BOARD_ID "/idme/board_id"
+#define BOARD_ID_LEN 16
+#define DAC_MAX98396_BOARD_IDS 1
+#define DAC_TAS5805M_BOARD_IDS 3
+#define DAC_RT5616E_BOARD_IDS 6
+
+static char cronos_idme_max98396_bdid[DAC_MAX98396_BOARD_IDS][BOARD_ID_LEN+1] = {
+"01E0001430020020",
+};
+
+static char cronos_idme_tas5805m_bdid[DAC_TAS5805M_BOARD_IDS][BOARD_ID_LEN+1] = {
+"01E0001310020020",
+"01E0001330020020",
+"01E0001410020020",
+};
+
+static char cronos_idme_rt5616e_bdid[DAC_RT5616E_BOARD_IDS][BOARD_ID_LEN+1] = {
+"01E0000000020020",
+"01E0000100020020",
+"01E0000110020020",
+"01E0001200020020",
+"01E0001300020020",
+"01E0001400020020",
+};
+#endif
 
 static int mt_soc_channel_type;
 static unsigned int mt_soc_mclk_freq = AIC31XX_FREQ_9600000;
@@ -105,6 +136,7 @@ static int use_mclk_source_en = 0;
 /* gating mode enable*/
 static int gating_mode_callback_en = 0;
 
+#ifdef CONFIG_GATING
 /* gating mode mic callback function*/
 static int gating_mode_mic_callback(struct notifier_block *nb,
 	unsigned long event,
@@ -116,6 +148,7 @@ static struct notifier_block mic_notifier = {
 	.next = NULL,
 	.priority = 0,
 };
+#endif // CONFIG_GATING
 
 /* IRQ value for gpio pin*/
 static int amp_fault_irq;
@@ -131,6 +164,136 @@ static struct delayed_work amp_fault_work;
 /* AMP switch */
 static struct switch_dev amp_fault_switch;
 
+#if defined CONFIG_SND_SOC_TAS5805M
+/* IRQ value for TI amp fault gpio pin*/
+static int ti_amp_fault_irq ;
+/* GPIO pin to detect TI amp faults */
+static int ti_amp_fault_gpiopin = -1;
+/* Interrupt Debounce for amp fault GPIO pin*/
+static int ti_amp_fault_debounce;
+/* Woofer error reporting enabled */
+static int ti_error_reporting_enabled = true;
+
+struct ti_priv {
+	struct snd_soc_card *card;
+	struct workqueue_struct *error_detect_wq; /* TI amp fault work queue */
+	struct work_struct error_detect_work;     /* TI amp fault handler */
+};
+
+struct ti_priv *cronos_card_data;
+
+extern void tas5805m_process_fault(struct snd_soc_codec *codec);
+
+static char *tas5805m_driver_name = "tas5805m";
+
+/***********************************************************************
+ * cronos_get_codec
+ * Helper function to get the codec information
+ * *********************************************************************/
+static struct snd_soc_codec *cronos_get_codec(struct snd_soc_card *card, char *codec_name)
+{
+	struct snd_soc_codec *codec = NULL;
+	struct snd_soc_component *component;
+
+	list_for_each_entry(codec, &card->codec_dev_list, card_list) {
+		component = &(codec->component);
+		if (component && component->name && strstr(component->name, codec_name)) {
+			pr_info("%s: codec found : %s\n", __func__, component->name);
+			return codec;
+		}
+	}
+	return NULL;
+}
+
+/***********************************************************************
+ * cronos_error_detect_handler
+ * Handle Woofer error reporting for AMP fault/Brown out detection
+ * *********************************************************************/
+static void cronos_error_detect_handler(struct work_struct *work)
+{
+	int amp_fault_status = 0;
+	struct ti_priv *card_data = container_of(work, struct ti_priv, error_detect_work);
+
+	if (!ti_error_reporting_enabled) {
+		pr_err("%s:ti_error_reporting_enabled - not enabled!\n", __func__);
+		return;
+	}
+
+	amp_fault_status = gpio_get_value(ti_amp_fault_gpiopin);
+
+	if (amp_fault_status == 0) {
+		pr_err("%s: TAS5805M AMP fault detected !\n",  __func__);
+		/* Process fault with TI 5805M */
+		tas5805m_process_fault(cronos_get_codec(card_data->card, tas5805m_driver_name));
+	}
+
+	enable_irq(ti_amp_fault_gpiopin);
+}
+
+/***********************************************************************
+ * cronos_error_detect_irq_cb
+ * Interrupt callback for Woofer AMP fault/Brown out detection
+ * *********************************************************************/
+static irqreturn_t cronos_error_detect_irq_cb(int irq, void *dev)
+{
+	struct ti_priv *card_data;
+
+	if (!ti_error_reporting_enabled || ti_amp_fault_gpiopin < 0) {
+		pr_err("%s: ti_error_reporting_enabled=%d ti_amp_fault_gpiopin=%d Cannot proceed!\n",
+				__func__, ti_error_reporting_enabled, ti_amp_fault_gpiopin);
+		return IRQ_HANDLED;
+	}
+
+	card_data = snd_soc_card_get_drvdata((struct snd_soc_card *)dev);
+
+	if (card_data->error_detect_wq) {
+		disable_irq_nosync(ti_amp_fault_gpiopin);
+		queue_work(card_data->error_detect_wq, &(card_data->error_detect_work));
+	} else {
+		pr_err("%s: amp fault workqueue not initialized ", __func__);
+	}
+
+	return IRQ_HANDLED;
+}
+
+static int cronos_irq_probe(struct snd_soc_card *card)
+{
+	struct ti_priv *card_data;
+	int ret = 0;
+
+	pr_info("%s enter\n", __func__);
+
+	card_data = snd_soc_card_get_drvdata(card);
+
+	ti_amp_fault_irq = gpio_to_irq(ti_amp_fault_gpiopin);
+
+	ret = request_irq(ti_amp_fault_irq, cronos_error_detect_irq_cb, IRQF_TRIGGER_FALLING,
+			"ti-amp-fault-eint", card);
+
+	if (ret) {
+		pr_err("%s: ti-amp-fault-eint request_irq failed. Error=%d\n", __func__, ret);
+		return ret;
+	}
+
+	pr_info("%s: ti_amp_fault_gpiopin pin=%d irq=%d, deb=%d\n", __func__, ti_amp_fault_gpiopin, ti_amp_fault_irq,
+			ti_amp_fault_debounce);
+
+	/* Setup error reporting workqueue */
+	card_data->error_detect_wq = alloc_workqueue("cronos_error_and_fault_reporting_wq", WQ_MEM_RECLAIM, 0);
+	if (card_data->error_detect_wq == NULL) {
+		pr_err("%s:Couldn't allocate TI WQ for amp faults\n", __func__);
+		return -ENOMEM;
+	}
+
+	INIT_WORK(&(card_data->error_detect_work), cronos_error_detect_handler);
+
+	pr_info("%s: AMP fault detect handlers setup done\n", __func__);
+
+	return ret;
+}
+#endif
+
+#ifdef CONFIG_GATING
 /***********************************************************************
  * gating_mode_mic_callback
  * mic callback function for gating mode
@@ -154,6 +317,7 @@ static int gating_mode_mic_callback(struct notifier_block *nb, unsigned long eve
 
 	return NOTIFY_OK;
 }
+#endif // CONFIG_GATING
 
 /***********************************************************************
  * amp_switch_work
@@ -229,6 +393,29 @@ static int mt_soc_get_dts_data(void)
 			pr_warn("%s: No mclk source enable in dts.\n",
 				__func__);
 		}
+
+#if defined CONFIG_SND_SOC_TAS5805M
+		/* Setup TI Amp fault if gpio is provided */
+		ti_amp_fault_gpiopin = of_get_named_gpio(node, "ti-amp-fault-gpio",
+					0);
+		if (ti_amp_fault_gpiopin < 0) {
+			pr_info("%s: ti_amp_fault pin info not found!\n",
+				__func__);
+		} else {
+			of_property_read_u32(node, "ti-amp-fault-debounce",
+				&ti_amp_fault_debounce);
+
+			ret = gpio_request(ti_amp_fault_gpiopin, "ti-amp-fault-gpio");
+			if (ret) {
+				pr_err("%s: ti_amp_fault pin=%d. gpio_request failed. Error=%d\n",
+					__func__, ti_amp_fault_gpiopin, ret);
+				return ret;
+			}
+			gpio_direction_input(ti_amp_fault_gpiopin);
+			gpio_set_debounce(ti_amp_fault_gpiopin, ti_amp_fault_debounce);
+		}
+#endif
+
 		/* Setup Amp fault if gpio is provided */
 		amp_fault_gpiopin = of_get_named_gpio(node, "amp-fault-gpio",
 					0);
@@ -543,6 +730,9 @@ static int mt_soc_audio_init_rt(struct snd_soc_pcm_runtime *rtd)
 	SetCLkMclk(Soc_Aud_I2S1, 48000);
 	EnableI2SDivPower(AUDIO_APLL12_DIV2, true);
 	SetSampleRate(Soc_Aud_Digital_Block_MEM_I2S, 48000);
+#ifdef CONFIG_CRONOS
+	SetMemoryPathEnable(Soc_Aud_Digital_Block_I2S_OUT_DAC,true);
+#endif
 	SetI2SDacOut(48000,1, Soc_Aud_I2S_WLEN_WLEN_16BITS);
 	SetI2SDacEnable(true);
 
@@ -610,6 +800,116 @@ static struct snd_soc_ops rt5616_machine_ops = {
 	.startup = mtmachine_startup,
 	.prepare = mtmachine_prepare,
 	.hw_params = rt5616_hw_params,
+};
+#endif
+
+#ifdef CONFIG_CRONOS
+static int rt5616e_hw_params(struct snd_pcm_substream *substream,
+				struct snd_pcm_hw_params *params)
+{
+	struct snd_soc_pcm_runtime *rtd;
+	struct snd_soc_dai *codec_dai;
+	int ret;
+
+	if (substream == NULL) {
+		pr_err("%s: invalid stream parameter\n", __func__);
+		return -EINVAL;
+	}
+
+	rtd = substream->private_data;
+	if (rtd == NULL) {
+		pr_err("%s: invalid runtime parameter\n", __func__);
+		return -EINVAL;
+	}
+
+	codec_dai = rtd->codec_dai;
+	if (codec_dai == NULL) {
+		pr_err("%s: invalid dai parameter\n", __func__);
+		return -EINVAL;
+	}
+
+	/* set codec DAI configuration */
+	if (snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S |
+		SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBS_CFS))
+		pr_err("Failed to set fmt for %s\n", codec_dai->name);
+
+	if (use_mclk_source_en) {
+		if (snd_soc_dai_set_sysclk(codec_dai, RT5616e_SCLK_S_MCLK, mt_soc_mclk_freq
+			, SND_SOC_CLOCK_OUT))
+			pr_err("%s: Fail to set mclk as sysclk for %s\n", __func__,
+			codec_dai->name);
+	} else {
+		ret = snd_soc_dai_set_pll(codec_dai, 0, RT5616e_PLL1_S_BCLK,
+					  params_rate(params) * RT5616e_FREQ_IN_BCK_MULTIPLIER,
+					  params_rate(params) * RT5616e_FREQ_OUT_BCK_MULTIPLIER);
+		if (ret < 0) {
+			pr_err("%s: Failed to set pll\n", __func__);
+			return ret;
+		}
+		ret = snd_soc_dai_set_sysclk(codec_dai, RT5616e_SCLK_S_PLL1,
+					     params_rate(params) * RT5616e_FREQ_OUT_BCK_MULTIPLIER,
+					     SND_SOC_CLOCK_IN);
+		if (ret < 0) {
+			pr_err("%s: Failed to set sysclk\n", __func__);
+			return ret;
+		}
+	}
+	return 0;
+}
+
+#if defined CONFIG_SND_SOC_TAS5805M
+
+static void cronos_bclk_on(struct ti_priv *priv) {
+	Afe_Set_Reg(AFE_I2S_CON1, 0x1, 0x1);
+	/* re-enable fault intr as it is now safe to do so */
+	if (ti_amp_fault_gpiopin >= 0) {
+	/*TODO fix IRQ handling properly with enable_irq(irq), not gpio */
+		enable_irq(ti_amp_fault_gpiopin);
+	}
+}
+
+static void cronos_bclk_off(void) {
+	/* disable fault IRQ, following bclk off will trigger it */
+	if (ti_amp_fault_gpiopin >= 0) {
+		disable_irq_nosync(ti_amp_fault_gpiopin);
+	}
+	Afe_Set_Reg(AFE_I2S_CON1, 0x0, 0x1);
+}
+
+static int cronos_tas5805m_hw_params(struct snd_pcm_substream *substream,
+				struct snd_pcm_hw_params *params) {
+	struct snd_soc_pcm_runtime *rtd;
+	struct ti_priv *priv;
+
+	rtd = substream->private_data;
+	priv = snd_soc_card_get_drvdata(rtd->card);
+	cronos_bclk_on(priv);
+	pr_info("%s(): start \n", __FUNCTION__);
+
+	return 0;
+}
+
+
+
+static int cronos_hw_free(struct snd_pcm_substream * substream) {
+	/* Turn off bclk for TI workaround */
+	cronos_bclk_off();
+	pr_info("%s() \n", __FUNCTION__);
+
+	return 0;
+}
+
+static struct snd_soc_ops tas5805m_machine_ops = {
+	.hw_params = cronos_tas5805m_hw_params,
+	.hw_free = cronos_hw_free,
+};
+
+#endif
+
+static struct snd_soc_ops rt5616e_machine_ops = {
+	.startup = mtmachine_startup,
+	.prepare = mtmachine_prepare,
+	.hw_params = rt5616e_hw_params,
 };
 #endif
 
@@ -1526,6 +1826,14 @@ static int __init mt_soc_snd_init(void)
 {
 	int ret;
 	struct snd_soc_card *card = &snd_soc_card_mt;
+#ifdef CONFIG_CRONOS
+	int i = 0;
+	struct device_node *ap = NULL;
+	const char *board_dac_id = NULL;
+#if defined CONFIG_SND_SOC_TAS5805M
+	struct ti_priv *card_data;
+#endif
+#endif
 
 	pr_info("mt_soc_snd_init card addr = %p\n", card);
 
@@ -1534,6 +1842,62 @@ static int __init mt_soc_snd_init(void)
 		pr_err("mt6589_probe  platform_device_alloc fail\n");
 		return -ENOMEM;
 	}
+
+	ret = mt_soc_get_dts_data();
+	if (ret != 0) {
+		pr_err("mt_soc_snd_init failed to load dts data\n");
+		goto put_device;
+	}
+
+#ifdef CONFIG_CRONOS
+	/* DACs PRQ compatible */
+	ap = of_find_node_by_path(IDME_DAC_BOARD_ID);
+	if (ap) {
+		board_dac_id = (const char *)of_get_property(ap, "value", NULL);
+		pr_debug("check board id num = %s\n", board_dac_id);
+	} else
+		pr_err("of_find_node_by_path failed\n");
+
+	for (i = 0; i < DAC_MAX98396_BOARD_IDS; i++) {
+		if (strncmp(board_dac_id, cronos_idme_max98396_bdid[i], BOARD_ID_LEN) == 0) {
+			mt_soc_dai_common[23].name = "MAX98396_Playback";
+			mt_soc_dai_common[23].stream_name = MT_SOC_MAXIM_PLAYBACK_STREAM_NAME;
+			mt_soc_dai_common[23].codec_dai_name = "max98396-aif1-a";
+			mt_soc_dai_common[23].codec_name = "max98396.2-003d";
+			mt_soc_dai_common[23].init = NULL;
+			mt_soc_dai_common[23].ops = NULL;
+			mt_soc_dai_common[23].dai_fmt = SND_SOC_DAIFMT_I2S
+					| SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBS_CFS;
+		}
+	}
+
+	for (i = 0; i < DAC_TAS5805M_BOARD_IDS; i++) {
+		if (strncmp(board_dac_id, cronos_idme_tas5805m_bdid[i], BOARD_ID_LEN) == 0) {
+			mt_soc_dai_common[23].name = "TAS5805m_Playback";
+			mt_soc_dai_common[23].stream_name = MT_SOC_TI_PLAYBACK_STREAM_NAME;
+			mt_soc_dai_common[23].codec_dai_name = "tas5805m-amplifier-a";
+			mt_soc_dai_common[23].codec_name = "tas5805m.2-002c";
+			mt_soc_dai_common[23].init = NULL;
+#if defined CONFIG_SND_SOC_TAS5805M
+			mt_soc_dai_common[23].ops = &tas5805m_machine_ops;
+#endif
+			mt_soc_dai_common[23].ignore_pmdown_time = 0;
+			mt_soc_dai_common[23].dai_fmt = SND_SOC_DAIFMT_I2S
+					| SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBS_CFS;
+		}
+	}
+
+	for (i = 0; i < DAC_RT5616E_BOARD_IDS; i++) {
+		if (strncmp(board_dac_id, cronos_idme_rt5616e_bdid[i], BOARD_ID_LEN) == 0) {
+			mt_soc_dai_common[23].name = "RT5616E_Playback";
+			mt_soc_dai_common[23].stream_name = MT_SOC_RT_RT5616E_PLAYBACK_STREAM_NAME;
+			mt_soc_dai_common[23].codec_dai_name = "rt5616e-aif1";
+			mt_soc_dai_common[23].codec_name = "rt5616e.2-001b";
+			mt_soc_dai_common[23].ops = &rt5616e_machine_ops;
+		}
+	}
+#endif
+
 	platform_set_drvdata(mt_snd_device, &snd_soc_card_mt);
 	ret = platform_device_add(mt_snd_device);
 
@@ -1541,6 +1905,25 @@ static int __init mt_soc_snd_init(void)
 		pr_err("mt_soc_snd_init goto put_device fail\n");
 		goto put_device;
 	}
+
+#if defined CONFIG_SND_SOC_TAS5805M
+	card_data = devm_kzalloc(&mt_snd_device->dev, sizeof(struct ti_priv), GFP_KERNEL);
+	if (!card_data) {
+		ret = -ENOMEM;
+		dev_err(&mt_snd_device->dev, "%s allocate card private data fail %d\n", __func__, ret);
+		return ret;
+	}
+
+	snd_soc_card_set_drvdata(card, card_data);
+
+	card_data->card = card;
+
+	ret = cronos_irq_probe(card);
+	if (ret) {
+		dev_err(&mt_snd_device->dev, "%s cronos_irq_probe failed %d\n", __func__, ret);
+		return ret;
+	}
+#endif
 
 	pr_info("mt_soc_snd_init dai_link = %p\n", snd_soc_card_mt.dai_link);
 
@@ -1556,11 +1939,6 @@ static int __init mt_soc_snd_init(void)
 						   S_IFREG | S_IRUGO, NULL,
 						   (void *)DEBUG_ANA_FS_NAME,
 						   &mtaudio_ana_debug_ops);
-	ret = mt_soc_get_dts_data();
-	if (ret != 0) {
-		pr_err("mt_soc_snd_init failed to load dts data\n");
-		goto put_device;
-	}
 
 	if (amp_fault_gpiopin >= 0) {
 		amp_fault_switch.name = "amp_fault";
@@ -1575,6 +1953,7 @@ static int __init mt_soc_snd_init(void)
 			gpio_get_value(amp_fault_gpiopin));
 	}
 
+#ifdef CONFIG_GATING
 	/* register MIC callback for pricavy mode in abc123*/
 	if (gating_mode_callback_en) {
 		int ret = 0;
@@ -1582,6 +1961,7 @@ static int __init mt_soc_snd_init(void)
 		if (ret != 0)
 			pr_err("%s: register gating mode callback fail\n",__func__);
 	}
+#endif // CONFIG_GATING
 
 	return 0;
 put_device:
