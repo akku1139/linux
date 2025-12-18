@@ -16,8 +16,13 @@ config DOUGLAS
 	isolate amazon Douglas changes for MTK Platform
 
 config CROWN
-	bool "Douglas MTK platform project"
+	bool "Crown MTK platform project"
 	help
 	isolate amazon Crown changes for MTK Platform
+
+config CRONOS
+	bool "Cronos MTK platform project"
+	help
+	isolate amazon Cronos changes for MTK Platform
 
 endmenu
