@@ -636,7 +636,11 @@ static int mtk_pcm_I2S0dl1_close(struct snd_pcm_substream *substream)
 				false)
 				Afe_Set_Reg(AFE_I2S_CON3, 0x0, 0x1);
 #endif
-		}
+#ifdef CONFIG_CRONOS
+		} else {
+        		SetMemoryPathEnable(Soc_Aud_Digital_Block_I2S_OUT_DAC, false);
+#endif
+			}
 		RemoveMemifSubStream(Soc_Aud_Digital_Block_MEM_DL1, substream);
 
 		/* here stop digital part */

@@ -1180,7 +1180,11 @@ bool SetChannels(uint32 Memory_Interface, uint32 channel)
 			break;
 		}
 	case Soc_Aud_Digital_Block_MEM_DL2:{
+#ifdef CONFIG_CRONOS
+			Afe_Set_Reg(AFE_DAC_CON1, bMono << 22, 1 << 22);
+#else
 			Afe_Set_Reg(AFE_DAC_CON0, bMono << 22, 1 << 22);
+#endif
 			break;
 		}
 	default:
@@ -1488,7 +1492,9 @@ bool EnableSideGenHw(uint32 connection, bool direction, bool Enable)
 			break;
 		case Soc_Aud_InterConnectionInput_I21:
 		case Soc_Aud_InterConnectionInput_I22:
+#ifndef CONFIG_CRONOS
 			Afe_Set_Reg(AFE_SGEN_CON0, 0xc46C2662, 0xffffffff);
+#endif
 			break;
 		default:
 			break;

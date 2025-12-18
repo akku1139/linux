@@ -83,6 +83,7 @@ config SND_SOC_ALL_CODECS
 	select SND_SOC_MAX98095 if I2C
 	select SND_SOC_MAX98357A if GPIOLIB
 	select SND_SOC_MAX98371 if I2C
+	select SND_SOC_MAX98396 if I2C
 	select SND_SOC_MAX9867 if I2C
 	select SND_SOC_MAX98925 if I2C
 	select SND_SOC_MAX98926 if I2C
@@ -110,6 +111,7 @@ config SND_SOC_ALL_CODECS
 	select SND_SOC_RT551X_SPI if SPI_MASTER
 	select SND_SOC_RT5514 if I2C
 	select SND_SOC_RT5616 if I2C
+	select SND_SOC_RT5616E if I2C
 	select SND_SOC_RT5631 if I2C
 	select SND_SOC_RT5640 if I2C
 	select SND_SOC_RT5645 if I2C
@@ -137,6 +139,7 @@ config SND_SOC_ALL_CODECS
 	select SND_SOC_TAS5086 if I2C
 	select SND_SOC_TAS571X if I2C
 	select SND_SOC_TAS5720 if I2C
+	select SND_SOC_TAS5805M if I2C
 	select SND_SOC_TFA9879 if I2C
 	select SND_SOC_TLV320AIC23_I2C if I2C
 	select SND_SOC_TLV320AIC23_SPI if SPI_MASTER
@@ -563,6 +566,15 @@ config SND_SOC_MAX98357A
 config SND_SOC_MAX98371
        tristate
 
+config SND_SOC_MAX98396
+	tristate "Maxim MAX98396 Stereo Audio amplifier"
+	depends on I2C
+	help
+	  This adds support for codec driver of MAXIM MAX98396.
+	  MAX98396 is a stereo Audio amplifier.
+	  Select Y if you have such device.
+	  If unsure select "N".
+
 config SND_SOC_MAX98504
 	tristate "Maxim MAX98504 speaker amplifier"
 	depends on I2C
@@ -650,6 +662,7 @@ config SND_SOC_RL6231
 	tristate
 	default y if SND_SOC_RT5514=y
 	default y if SND_SOC_RT5616=y
+	default y if SND_SOC_RT5616E=y
 	default y if SND_SOC_RT5640=y
 	default y if SND_SOC_RT5645=y
 	default y if SND_SOC_RT5651=y
@@ -660,6 +673,7 @@ config SND_SOC_RL6231
 	default y if SND_SOC_RT5677=y
 	default m if SND_SOC_RT5514=m
 	default m if SND_SOC_RT5616=m
+	default m if SND_SOC_RT5616E=m
 	default m if SND_SOC_RT5640=m
 	default m if SND_SOC_RT5645=m
 	default m if SND_SOC_RT5651=m
@@ -704,6 +718,10 @@ config SND_SOC_RT551X_TEST_ONLY
 
 config SND_SOC_RT5616
 	tristate "Realtek RT5616 CODEC"
+	depends on I2C
+
+config SND_SOC_RT5616E
+	tristate "Realtek RT5616E CODEC"
 	depends on I2C
 
 config SND_SOC_RT5631
@@ -828,6 +846,12 @@ config SND_SOC_TAS5720
 	help
 	  Enable support for Texas Instruments TAS5720L/M high-efficiency mono
 	  Class-D audio power amplifiers.
+
+config SND_SOC_TAS5805M
+	tristate "Texas Instruments TAS5805M CODEC"
+	depends on I2C
+	help
+		This add support for TAS5805M codec chips.
 
 config SND_SOC_TFA9879
 	tristate "NXP Semiconductors TFA9879 amplifier"

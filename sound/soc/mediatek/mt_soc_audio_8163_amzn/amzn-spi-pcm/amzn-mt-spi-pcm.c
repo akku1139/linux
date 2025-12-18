@@ -28,6 +28,11 @@
 #include <linux/regulator/consumer.h>
 #include <linux/of_device.h>
 
+#ifdef CONFIG_CRONOS
+/* Compatible new/old fpga */
+#define IDME_OF_BOARD_ID "/idme/board_id"
+#define BOARDID_LEN 16
+#endif
 
 #include "dough.h"
 #include "amzn-mt-spi-pcm.h"
@@ -59,6 +64,12 @@
 
 #define SPI_SETUP_BUF_SIZE 32
 #define FPGA_VCC_DELAY_MS 10
+
+#ifdef CONFIG_CRONOS
+/* Compatible new/old fpga */
+#define exception_num 2
+#endif
+
 /* Module data structure */
 struct amzn_spi_priv {
 	struct workqueue_struct *spi_wq;
@@ -81,6 +92,14 @@ struct amzn_spi_priv {
 #endif
 };
 
+#ifdef CONFIG_CRONOS
+/* Compatible new/old fpga */
+char old_fpga_bdid[exception_num][BOARDID_LEN+1]={
+"01E0000000020020",
+"01E0000100020020",
+};
+#endif
+
 static void spi_data_read(struct work_struct *work);
 
 /* Disable timestamp transfer by default */
@@ -88,6 +107,10 @@ static int transfer_timestamps_enab = SPI_HEADER_DISABLE;
 
 /* TODO(DEE-30199): Remove global decalartaion */
 static struct amzn_spi_priv spi_data;
+#ifdef CONFIG_CRONOS
+/* Compatible new/old fpga */
+static int fpga_compatible_old = 0;
+#endif
 
 static const char * const spi_functions[] = { "Off", "On"};
 
@@ -794,6 +817,54 @@ static const struct snd_soc_component_driver amzn_mt_spi_cpu_dai_component = {
 	.name = "amzn-mt-spi-cpu-dai",
 };
 
+#ifdef CONFIG_CRONOS
+static int amzn_mt_spi_tlv_reset(struct spi_device *spi)
+{
+	int ret = 0;
+	int reset_gpio = 0;
+	int reset_flag = 0;
+
+	ret = of_property_read_u32(spi->dev.of_node, "control_reset", &reset_flag);
+	if (ret < 0) {
+		pr_err("Failed to parse dts control_reset\n");
+		reset_flag = 0;
+	}
+
+	if (reset_flag == 1) {
+		reset_gpio = of_get_named_gpio(spi->dev.of_node, "reset-gpio", 0);
+		if (reset_gpio < 0) {
+			pr_info("%s: Failed to parse dts reset_gpio\n",__func__);
+		}
+
+		ret = gpio_request(reset_gpio, "rst_gpio");
+		if(ret){
+			pr_info("%s: gpio %d request failed!,ret:%d\n", __func__, reset_gpio, ret);
+			goto err_gpio;
+		}
+
+		ret = gpio_direction_output(reset_gpio, 0);
+		if(ret){
+			pr_info("%s: gpio %d unable to set as output!\n", __func__, reset_gpio);
+			goto err_free_gpio;
+		}
+
+		mdelay(10);
+
+		ret = gpio_direction_output(reset_gpio, 1);
+		if(ret){
+			pr_info("%s: gpio %d unable to set as output!\n", __func__, reset_gpio);
+			goto err_free_gpio;
+		}
+	}
+	return 0;
+err_free_gpio:
+	if (gpio_is_valid(reset_gpio))
+		gpio_free(reset_gpio);
+err_gpio:
+	return ret;
+}
+#endif
+
 static int amzn_mt_spi_probe(struct spi_device *spi)
 {
 	int rc, rst_gpio;
@@ -803,6 +874,13 @@ static int amzn_mt_spi_probe(struct spi_device *spi)
 	struct dough_frame *tx_df, *rx_df;
 	size_t bytes;
 	void *fw_buf;
+#ifdef CONFIG_CRONOS
+/* Compatible new/old fpga */
+	struct device_node *ap = NULL;
+	const char *board_id = NULL;
+	bool old_fpga_flag = 0;
+	int i, ret = 0;
+#endif
 	/* TODO: Enable it for all products */
 #if defined CONFIG_ROOK || defined CONFIG_rbc123 || defined CONFIG_FPGA_POWER_SEQUENCE
 	struct regulator *reg = NULL;
@@ -810,6 +888,14 @@ static int amzn_mt_spi_probe(struct spi_device *spi)
 #endif
 
 	pr_info("%s\n", __func__);
+
+#ifdef CONFIG_CRONOS
+/* Compatible new/old fpga */
+	ret = of_property_read_u32(spi->dev.of_node, "fpga-compatible-old", &fpga_compatible_old);
+	if (ret < 0) {
+		pr_err("Failed to parse dts fpga-old-compatible value\n");
+	}
+#endif
 
 #if defined CONFIG_ROOK || defined CONFIG_rbc123 || defined CONFIG_FPGA_POWER_SEQUENCE
 	/* VCCIO2 Enabled */
@@ -830,6 +916,10 @@ static int amzn_mt_spi_probe(struct spi_device *spi)
 		reg_status_before, reg_status_after, volt);
 
 	msleep(FPGA_VCC_DELAY_MS);
+
+#ifdef CONFIG_CRONOS
+	amzn_mt_spi_tlv_reset(spi);
+#endif
 
 	/* VCCIO0 Enabled */
 #if defined CONFIG_ROOK || defined CONFIG_rbc123
@@ -944,12 +1034,55 @@ static int amzn_mt_spi_probe(struct spi_device *spi)
 	gpio_set_value(rst_gpio, 1);
 	msleep(FPGA_DELAY_MS);
 
+#ifdef CONFIG_CRONOS
+/* Compatible new/old fpga */
+	if (fpga_compatible_old) {
+		ap = of_find_node_by_path(IDME_OF_BOARD_ID);
+		if (ap)
+			board_id = (const char *)of_get_property(ap, "value", NULL);
+		else
+			pr_err("of_find_node_by_path failed\n");
+
+		for (i = 0; i < exception_num; i++) {
+			if (strncmp(board_id, old_fpga_bdid[i], BOARDID_LEN) == 0) {
+				pr_info("check old fpga board id, board_id = %s\n", board_id);
+
+				/* Now load the actual firmware */
+				rc = request_firmware(&fw_entry, OLD_FPGA_FIRMWARE, &spi->dev);
+				if (rc) {
+					pr_err("%s: FPGA Firmware couldn't be requested\n", __func__);
+					goto free_gpio;
+				}
+				old_fpga_flag = true;
+			}
+		}
+
+		if (!old_fpga_flag) {
+			pr_info("check new fpga board id, board_id = %s\n", board_id);
+
+			/* Now load the actual firmware */
+			rc = request_firmware(&fw_entry, NEW_FPGA_FIRMWARE, &spi->dev);
+			if (rc) {
+				pr_err("%s: FPGA Firmware couldn't be requested\n", __func__);
+				goto free_gpio;
+			}
+		}
+	} else {
+		/* Now load the actual firmware */
+		rc = request_firmware(&fw_entry, FPGA_FIRMWARE_NAME, &spi->dev);
+		if (rc) {
+			pr_err("%s: FPGA Firmware couldn't be requested\n", __func__);
+			goto free_gpio;
+		}
+	}
+#else
 	/* Now load the actual firmware */
 	rc = request_firmware(&fw_entry, FPGA_FIRMWARE_NAME, &spi->dev);
 	if (rc) {
 		pr_err("%s: FPGA Firmware couldn't be requested\n", __func__);
 		goto free_gpio;
 	}
+#endif
 
 	bytes = roundup(fw_entry->size, 1024) + 1024;
 	if (bytes > FIRMWARE_MAX_BYTES) {
