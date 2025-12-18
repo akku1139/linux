@@ -17,6 +17,10 @@
 	version = "evt";
 };
 
+&gpu {
+	status = "disabled";
+};
+
 &i2c0 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c0_pins_default>;
@@ -247,8 +251,20 @@
 	};
 };
 
+&imgsys {
+	status = "disabled";
+};
+
+&mfgcfg {
+	status = "disabled";
+};
+
 &mt6323_vusb_reg {
 	regulator-always-on;
+};
+
+&thermal {
+	status = "disabled";
 };
 
 &u2phy0 {
@@ -259,6 +275,14 @@
 	/* No 5V supply for OTG support. */
 	dr_mode = "peripheral";
 	status = "okay";
+};
+
+&vdecsys {
+	status = "disabled";
+};
+
+&vencsys {
+	status = "disabled";
 };
 
 &pio {
