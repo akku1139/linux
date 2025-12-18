@@ -88,6 +88,7 @@ enum DDP_IOCTL_NAME {
 	DDP_DSI_IDLE_CLK_OPEN = 6,
 	DDP_DSI_VFP_LP = 7,
 	DDP_CABC_MODE = 8,
+	DDP_DSI_HFP_LP = 9,
 };
 
 /* path handle */

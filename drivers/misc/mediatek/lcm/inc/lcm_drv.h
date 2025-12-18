@@ -618,6 +618,7 @@ struct LCM_DSI_PARAMS {
 		lane_swap[MIPITX_PHY_PORT_NUM][MIPITX_PHY_LANE_NUM];
 
 	unsigned int vertical_vfp_lp;
+	unsigned int horizontal_hfp_lp;
 	unsigned int PLL_CLOCK_lp;
 	unsigned int ulps_sw_enable;
 	unsigned int null_packet_en;
