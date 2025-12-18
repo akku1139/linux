@@ -4005,6 +4005,27 @@ int ddp_dsi_ioctl(enum DISP_MODULE_ENUM module, void *cmdq_handle,
 		}
 		break;
 	}
+        case DDP_DSI_HFP_LP: {
+                unsigned int horizontal_frontporch = *((unsigned int *)params);
+                unsigned int dsiTmpBufBpp;
+                unsigned int horizontal_frontporch_byte = 0;
+
+                if (_dsi_context[0].dsi_params.data_format.format == LCM_DSI_FORMAT_RGB565)
+                        dsiTmpBufBpp = 2;
+                else
+                        dsiTmpBufBpp = 3;
+
+                ASSERT(horizontal_frontporch * dsiTmpBufBpp > 11);
+                horizontal_frontporch_byte =
+                        (horizontal_frontporch * dsiTmpBufBpp - 12);
+
+                DDPMSG("horizontal_frontporch=%d.\n", horizontal_frontporch)
+                if (module == DISP_MODULE_DSI0) {
+                        DSI_OUTREG32(cmdq_handle, &DSI_REG[0]->DSI_HFP_WC,
+                                horizontal_frontporch_byte);
+                }
+                break;
+        }
 	case DDP_DPI_FACTORY_TEST: {
 		break;
 	}

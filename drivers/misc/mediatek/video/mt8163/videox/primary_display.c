@@ -452,6 +452,73 @@ int _disp_primary_path_set_vfp(int enter)
 	return ret;
 }
 
+int _disp_primary_path_set_hfp(int enter)
+{
+        int ret = 0;
+
+        if (primary_display_is_video_mode()) {
+                struct LCM_PARAMS *lcm_param = disp_lcm_get_params(pgc->plcm);
+                struct cmdqRecStruct *cmdq_handle_hfp = NULL;
+
+                if (lcm_param->dsi.horizontal_hfp_lp == 0)
+                        return 0;
+
+                ret = cmdqRecCreate(CMDQ_SCENARIO_PRIMARY_DISP,
+                                    &cmdq_handle_hfp);
+                if (ret != 0) {
+                        DISPCHECK(
+                                "fail to create primary cmdq handle for set hfp\n"
+                                );
+                        return -1;
+                }
+                DISPCHECK("primary set hfp, handle=%p\n", cmdq_handle_hfp);
+                cmdqRecReset(cmdq_handle_hfp);
+                _cmdq_insert_wait_frame_done_token_mira(cmdq_handle_hfp);
+                if (enter) {
+                        dpmgr_path_ioctl(
+                                pgc->dpmgr_handle, cmdq_handle_hfp,
+                                DDP_DSI_HFP_LP,
+                                (unsigned long *)&(
+                                        lcm_param->dsi.horizontal_hfp_lp));
+                } else {
+                        dpmgr_path_ioctl(
+                                pgc->dpmgr_handle, cmdq_handle_hfp,
+                                DDP_DSI_HFP_LP,
+                                (unsigned long *)&(
+                                        lcm_param->dsi.horizontal_frontporch));
+                }
+                mmprofile_log_ex(ddp_mmp_get_events()->dal_clean,
+                                 MMPROFILE_FLAG_PULSE, 0, enter);
+
+                _cmdq_flush_config_handle_mira(cmdq_handle_hfp, 1);
+                DISPCHECK("[HFP]cmdq_handle_hfp ret=%d\n", ret);
+                cmdqRecDestroy(cmdq_handle_hfp);
+                cmdq_handle_hfp = NULL;
+        } else {
+                DISPCHECK("CMD mode don't set hfp for lows\n");
+        }
+
+        return ret;
+}
+
+int _disp_primary_path_set_porch(int enter)
+{
+        int ret = 0;
+
+        if (primary_display_is_video_mode()) {
+                struct LCM_PARAMS *lcm_param = disp_lcm_get_params(pgc->plcm);
+
+                if (lcm_param->dsi.vertical_vfp_lp != 0)
+                        ret = _disp_primary_path_set_vfp(enter);
+                else if (lcm_param->dsi.horizontal_hfp_lp != 0)   /*for hfp*/
+                        ret = _disp_primary_path_set_hfp(enter);
+        } else {
+                DISPCHECK("CMD mode don't set vfp for lows\n");
+        }
+
+        return ret;
+}
+
 /* extern void clk_stat_bug(void); */
 unsigned int isIdlePowerOff;
 int primary_display_save_power_for_idle(int enter,
@@ -517,7 +584,7 @@ int primary_display_save_power_for_idle(int enter,
 		}
 #else
 		if (primary_display_is_video_mode() == 1)
-			_disp_primary_path_set_vfp(enter);
+			_disp_primary_path_set_porch(enter);
 #endif
 	}
 
