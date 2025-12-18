@@ -380,6 +380,7 @@
 #define SENSOR_DRVNAME_0V9726_RAW               "ov9726_raw"
 #define SENSOR_DRVNAME_OV9726_MIPI_RAW          "ov9726_mipi_raw"
 #define SENSOR_DRVNAME_OV9734_MIPI_RAW          "ov9734_mipi_raw"
+#define SENSOR_DRVNAME_OV02B_MIPI_RAW           "ov02b10_mipi_raw"
 #define SENSOR_DRVNAME_OV8865_MIPI_RAW          "ov8865_mipi_raw"
 #define SENSOR_DRVNAME_OV8858_MIPI_RAW          "ov8858_mipi_raw"
 #define SENSOR_DRVNAME_OV8858S_MIPI_RAW         "ov8858s_mipi_raw"
