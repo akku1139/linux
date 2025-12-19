@@ -558,6 +558,8 @@ struct aic31xx_priv {
 	u8 dsp_a_val;
 	unsigned int tdm_rx_mask;
 	int tdm_slot_width;
+	/* disable_reset=1,reset will control by FPGA/SPI */
+	int disable_reset;
 };
 
 /*
