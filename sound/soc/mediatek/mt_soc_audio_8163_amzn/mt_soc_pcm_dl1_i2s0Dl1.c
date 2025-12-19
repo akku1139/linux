@@ -70,6 +70,63 @@ static const struct soc_enum Audio_I2S0dl1_Enum[] = {
 	SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(I2S0dl1_HD_output), I2S0dl1_HD_output),
 };
 
+static unsigned long long mtkpcm_underflow;
+
+static int mtk_pcm_proc_show(struct seq_file *m, void *v)
+{
+        seq_printf(m, "PCMUnderflowcount: %llu\n", mtkpcm_underflow);
+
+        return 0;
+}
+
+static int mtk_pcm_proc_open(struct inode *inode, struct file *file)
+{
+        return single_open(file, mtk_pcm_proc_show, NULL);
+}
+
+static const struct file_operations mtk_pcm_proc_fops = {
+        .open       = mtk_pcm_proc_open,
+        .read       = seq_read,
+        .release    = single_release
+};
+
+int mtk_I2S0dl1_clock_on(void)
+{
+        pr_warn("%s\n", __func__);
+        AudDrv_ANA_Clk_On();
+        AudDrv_Clk_On();
+        EnableApll(48000, true);
+        EnableApllTuner(48000, true);
+        SetCLkMclk(Soc_Aud_I2S1, 48000);
+        SetSampleRate(Soc_Aud_Digital_Block_MEM_I2S, 48000);
+        SetI2SDacOut(48000,1, Soc_Aud_I2S_WLEN_WLEN_16BITS);
+        SetI2SDacEnable(true);
+        SetMemoryPathEnable(Soc_Aud_Digital_Block_I2S_OUT_DAC, true);
+
+        Afe_Set_Reg(AFE_I2S_CON1, 1<<12, 1<<12);
+        Afe_Set_Reg(AFE_I2S_CON1, 1, 1);        /* enable I2S1 port */
+
+        EnableAfe(true);
+
+        return 0;
+}
+EXPORT_SYMBOL(mtk_I2S0dl1_clock_on);
+
+int mtk_I2S0dl1_clock_off(void)
+{
+        pr_warn("%s\n", __func__);
+        AudDrv_ANA_Clk_Off();
+        AudDrv_Clk_Off();
+        DisableALLbySampleRate(48000);
+        //DisableAPLLTunerbySampleRate(48000);
+        SetI2SDacEnable(false);
+        SetMemoryPathEnable(Soc_Aud_Digital_Block_I2S_OUT_DAC, false);
+        EnableAfe(false);
+
+        return 0;
+}
+EXPORT_SYMBOL(mtk_I2S0dl1_clock_off);
+
 static int Audio_I2S0dl1_timestamp_Get(struct snd_kcontrol *kcontrol,
 					struct snd_ctl_elem_value *ucontrol)
 {
