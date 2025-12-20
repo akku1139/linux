@@ -566,8 +566,7 @@ static void tsl2540_setup(struct tsl2540_chip *chip)
 		tsl2540_configure_als_mode(chip, 1);
 }
 
-static int tsl2540_probe(struct i2c_client *client,
-	const struct i2c_device_id *idp)
+static int tsl2540_probe(struct i2c_client *client)
 {
 	int i, ret;
 	u8 id, rev, auxid;
@@ -885,7 +884,7 @@ static SIMPLE_DEV_PM_OPS(tsl2540_pm_ops, tsl2540_suspend, tsl2540_resume);
 #endif /* CONFIG_PM_SLEEP */
 
 
-static int tsl2540_remove(struct i2c_client *client)
+static void tsl2540_remove(struct i2c_client *client)
 {
 	struct tsl2540_chip *chip = i2c_get_clientdata(client);
 
@@ -902,7 +901,6 @@ static int tsl2540_remove(struct i2c_client *client)
 	kfree(chip->pdata);
 #endif
 	kfree(chip);
-	return 0;
 }
 
 static struct i2c_device_id tsl2540_idtable[] = {
