@@ -1236,6 +1236,7 @@ static int taos_probe(struct i2c_client *clientp,
 {
 	int i, ret;
 	unsigned char buf[TSL258X_MAX_DEVICE_REGS];
+	const char *dev_name;
 	struct tsl258x_chip *chip;
 	struct iio_dev *indio_dev;
 
@@ -1298,10 +1299,16 @@ static int taos_probe(struct i2c_client *clientp,
 		goto fail2;
 	}
 
+	ret = of_property_read_string(clientp->dev.of_node, "als_name", &dev_name);
+	if (ret) {
+		dev_warn(&clientp->dev, "No name specified in DT, falling back to default.\n");
+		dev_name = chip->client->name;
+	}
+
 	indio_dev->info = &tsl258x_info;
 	indio_dev->dev.parent = &clientp->dev;
 	indio_dev->modes = INDIO_DIRECT_MODE;
-	indio_dev->name = chip->client->name;
+	indio_dev->name = dev_name;
 	ret = iio_device_register(indio_dev);
 	if (ret) {
 		dev_err(&clientp->dev, "iio registration failed\n");
