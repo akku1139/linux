@@ -314,20 +314,6 @@ static ssize_t tsl2540_regs_get(struct tsl2540_chip *chip, char *buf,
 
 }
 
-void tsl2540_reg_log(struct tsl2540_chip *chip)
-{
-	char *buf;
-
-	buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-	if (buf) {
-		tsl2540_regs_get(chip, &buf[0], PAGE_SIZE);
-		pr_err("%s", buf);
-		kfree(buf);
-	} else {
-		dev_err(&chip->client->dev, "%s: out of memory!\n", __func__);
-	}
-}
-
 static ssize_t tsl2540_regs_dump(
 	struct device *dev, struct device_attribute *attr, char *buf)
 {
