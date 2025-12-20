@@ -185,6 +185,8 @@ enum tsl2540_ctrl_reg {
 #define TSL2540_MAX_ALS_VALUE	0xffff
 #define TSL2540_MIN_ALS_VALUE	10
 
+#define CONFIG_AMS_ADJUST_WITH_BASELINE
+
 struct tsl2540_lux_segment {
 	u32 ch0_coef;
 	u32 ch1_coef;
