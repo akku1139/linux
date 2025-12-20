@@ -1257,7 +1257,7 @@ static int taos_probe(struct i2c_client *clientp)
 	if (indio_dev == NULL) {
 		ret = -ENOMEM;
 		dev_err(&clientp->dev, "iio allocation failed\n");
-		goto fail1;
+		goto fail2;
 	}
 	chip = iio_priv(indio_dev);
 	chip->client = clientp;
@@ -1273,14 +1273,14 @@ static int taos_probe(struct i2c_client *clientp)
 		if (ret < 0) {
 			dev_err(&clientp->dev, "i2c_smbus_write_bytes() to cmd "
 				"reg failed in taos_probe(), err = %d\n", ret);
-			goto fail2;
+			goto fail1;
 		}
 		ret = i2c_smbus_read_byte(clientp);
 		if (ret < 0) {
 			dev_err(&clientp->dev, "i2c_smbus_read_byte from "
 				"reg failed in taos_probe(), err = %d\n", ret);
 
-			goto fail2;
+			goto fail1;
 		}
 		buf[i] = ret;
 	}
@@ -1288,7 +1288,7 @@ static int taos_probe(struct i2c_client *clientp)
 	if (!taos_tsl258x_device(buf)) {
 		dev_info(&clientp->dev, "i2c device found but does not match "
 			"expected id in taos_probe()\n");
-		goto fail2;
+		goto fail1;
 	}
 
 	chip->id = taos_tsl258x_chip_id(buf);
@@ -1297,7 +1297,7 @@ static int taos_probe(struct i2c_client *clientp)
 	if (ret < 0) {
 		dev_err(&clientp->dev, "i2c_smbus_write_byte() to cmd reg "
 			"failed in taos_probe(), err = %d\n", ret);
-		goto fail2;
+		goto fail1;
 	}
 
 	ret = of_property_read_string(clientp->dev.of_node, "als_name", &dev_name);
@@ -1313,7 +1313,7 @@ static int taos_probe(struct i2c_client *clientp)
 	ret = iio_device_register(indio_dev);
 	if (ret) {
 		dev_err(&clientp->dev, "iio registration failed\n");
-		goto fail2;
+		goto fail1;
 	}
 
 #ifdef CONFIG_ALS_TSL2584_AUTOZERO
