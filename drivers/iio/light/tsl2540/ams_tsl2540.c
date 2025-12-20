@@ -376,32 +376,6 @@ static const struct attribute_group tsl2540_attr_group = {
 
 #endif /* #ifdef ABI_SET_GET_REGISTERS */
 
-
-static int tsl2540_add_sysfs_interfaces(struct device *dev,
-	struct device_attribute *a, int size)
-{
-	int i;
-
-	for (i = 0; i < size; i++)
-		if (device_create_file(dev, a + i))
-			goto undo;
-	return 0;
-undo:
-	for (; i >= 0 ; i--)
-		device_remove_file(dev, a + i);
-	dev_err(dev, "%s: failed to create sysfs interface\n", __func__);
-	return -ENODEV;
-}
-
-static void tsl2540_remove_sysfs_interfaces(struct device *dev,
-	struct device_attribute *a, int size)
-{
-	int i;
-
-	for (i = 0; i < size; i++)
-		device_remove_file(dev, a + i);
-}
-
 static int tsl2540_get_id(struct tsl2540_chip *chip, u8 *id, u8 *rev, u8 *auxid)
 {
 	ams_i2c_read(chip->client, TSL2540_REG_AUXID, auxid);
