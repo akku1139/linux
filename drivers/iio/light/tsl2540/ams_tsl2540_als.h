@@ -26,4 +26,27 @@ extern int tsl2540_get_lux(struct tsl2540_chip *chip);
 extern int tsl2540_read_als(struct tsl2540_chip *chip);
 extern void tsl2540_report_als(struct tsl2540_chip *chip);
 
+#ifdef CONFIG_AMZN_AMS_ALS
+#define ALS_MAX_LUX 400
+#define ALS_MIN_LUX 0
+
+static inline int als_get_calibrated_lux(struct tsl2540_chip *chip)
+{
+	struct tsl2540_i2c_platform_data *pdata = chip->pdata;
+	int lux = chip->als_inf.lux;
+	int coeff = pdata->lux400_lux;
+	int calibrated_lux;
+
+	calibrated_lux = ALS_MAX_LUX * lux / coeff;
+
+	if (calibrated_lux > ALS_MAX_LUX)
+		calibrated_lux = ALS_MAX_LUX;
+
+	if (calibrated_lux < ALS_MIN_LUX)
+		calibrated_lux = ALS_MIN_LUX;
+
+	return lux;
+}
+#endif
+
 #endif /* __AMS_TSL2540_ALS_H */

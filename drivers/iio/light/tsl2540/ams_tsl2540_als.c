@@ -885,35 +885,12 @@ static DEVICE_ATTR(als_adc, S_IWUSR | S_IRUGO, tsl2540_als_adc_show,
 #endif /* #ifdef LUX_DBG */
 
 #ifdef CONFIG_AMZN_AMS_ALS
-#define ALS_MAX_LUX 400
-#define ALS_MIN_LUX 0
-
 static ssize_t als_calibrated_lux_show(struct device *dev,
 	struct device_attribute *attr, char *buf)
 {
 	struct tsl2540_chip *chip = dev_get_drvdata(dev);
-	struct tsl2540_i2c_platform_data *pdata = chip->pdata;
-	int coeff = pdata->lux400_lux;
-	int lux = 0;
-	int calibrated_lux = 0;
 
-	AMS_MUTEX_LOCK(&chip->lock);
-
-	tsl2540_read_als(chip);
-	tsl2540_get_lux(chip);
-
-	AMS_MUTEX_UNLOCK(&chip->lock);
-
-	lux = chip->als_inf.lux;
-
-	calibrated_lux = ALS_MAX_LUX * lux / coeff;
-
-	if (calibrated_lux > ALS_MAX_LUX)
-		calibrated_lux = ALS_MAX_LUX;
-
-	if (calibrated_lux < ALS_MIN_LUX)
-		calibrated_lux = ALS_MIN_LUX;
-	return snprintf(buf, PAGE_SIZE, "%d\n", calibrated_lux);
+	return snprintf(buf, PAGE_SIZE, "%d\n", als_get_calibrated_lux(chip));
 }
 
 static DEVICE_ATTR(als_calibrated_lux, S_IRUGO, als_calibrated_lux_show, NULL);

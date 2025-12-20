@@ -46,6 +46,7 @@
 #include "ams_tsl2540.h"
 #include "ams_i2c.h"
 #include "ams_tsl2540_als.h"
+#include "ams_tsl2540_iio.h"
 
 /* TSL2540 Identifiers */
 static u8 const tsl2540_ids[] = {
@@ -511,7 +512,6 @@ MODULE_DEVICE_TABLE(of, tsl2540_i2c_dt_ids);
 
 static void tsl2540_get_calibration(struct tsl2540_chip *chip)
 {
-	struct device *dev = &chip->client->dev;
 	struct tsl2540_i2c_platform_data *pdata = chip->pdata;
 	struct device_node *ap = NULL;
 	char *alscal_idme = NULL;
@@ -575,7 +575,7 @@ static int tsl2540_probe(struct i2c_client *client)
 	struct tsl2540_i2c_platform_data *pdata = dev->platform_data;
 	bool powered = 0;
 
-	pr_info("\nTSL2540: probe()\n");
+	pr_info("TSL2540: probe()\n");
 
 #ifdef CONFIG_OF
 	if (!pdata) {
@@ -689,6 +689,13 @@ static int tsl2540_probe(struct i2c_client *client)
 
 	if (!pdata->als_name)
 		goto bypass_als_idev;
+
+	ret = tsl2540_initialize_iio(chip, pdata->als_name);
+	if (ret) {
+		dev_err(dev, "%s: failed to register indio device: %d.\n",
+			    __func__, ret);
+		goto input_d_alloc_failed;
+	}
 
 #ifdef TSL2540_ENABLE_INPUT
 	chip->a_idev = input_allocate_device();
@@ -833,7 +840,7 @@ static int tsl2540_suspend(struct device *dev)
 {
 	struct tsl2540_chip *chip = dev_get_drvdata(dev);
 
-	pr_info("\nTSL2540: suspend()\n");
+	pr_info("TSL2540: suspend()\n");
 	dev_info(dev, "%s\n", __func__);
 	AMS_MUTEX_LOCK(&chip->lock);
 	chip->in_suspend = 1;
@@ -888,7 +895,7 @@ static void tsl2540_remove(struct i2c_client *client)
 {
 	struct tsl2540_chip *chip = i2c_get_clientdata(client);
 
-	pr_info("\nTSL2540: REMOVE()\n");
+	pr_info("TSL2540: REMOVE()\n");
 #ifdef TSL2540_ENABLE_INTERRUPT
 	free_irq(client->irq, chip);
 #endif /* TSL2540_ENABLE_INTERRUPT */
@@ -923,7 +930,7 @@ static int __init tsl2540_init(void)
 {
 	int rc;
 
-	pr_info("\nTSL2540: INIT()\n");
+	pr_info("TSL2540: INIT()\n");
 
 	rc = i2c_add_driver(&tsl2540_driver);
 	return rc;
@@ -931,7 +938,7 @@ static int __init tsl2540_init(void)
 
 static void __exit tsl2540_exit(void)
 {
-	pr_info("\nTSL2540: exit()\n");
+	pr_info("TSL2540: exit()\n");
 	i2c_del_driver(&tsl2540_driver);
 }
 

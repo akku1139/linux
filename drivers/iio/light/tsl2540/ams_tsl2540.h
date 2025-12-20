@@ -186,6 +186,7 @@ enum tsl2540_ctrl_reg {
 #define TSL2540_MIN_ALS_VALUE	10
 
 #define CONFIG_AMS_ADJUST_WITH_BASELINE
+#define CONFIG_AMZN_AMS_ALS
 
 struct tsl2540_lux_segment {
 	u32 ch0_coef;
@@ -228,6 +229,7 @@ struct tsl2540_chip {
 #ifdef ABI_SET_GET_REGISTERS
 	struct input_dev *d_idev;
 #endif /* #ifdef ABI_SET_GET_REGISTERS */
+	struct iio_dev *indio_dev;
 
 	int in_suspend;
 	int wake_irq;
