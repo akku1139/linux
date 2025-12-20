@@ -19,7 +19,7 @@
 #ifndef __AMS_TSL2540_ALS_H
 #define __AMS_TSL2540_ALS_H
 
-extern struct attribute_group tsl2540_als_attr_group;
+extern const struct attribute_group tsl2540_als_attr_group;
 
 extern int tsl2540_configure_als_mode(struct tsl2540_chip *chip, u8 state);
 extern int tsl2540_get_lux(struct tsl2540_chip *chip);
