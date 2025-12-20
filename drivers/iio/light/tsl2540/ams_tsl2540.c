@@ -458,7 +458,7 @@ static void tsl2540_als_idev_close(struct input_dev *idev)
 #endif /* TSL2540_ENABLE_INPUT */
 
 #ifdef CONFIG_OF
-int tsl2540_init_dt(struct tsl2540_i2c_platform_data *pdata)
+static int tsl2540_init_dt(struct tsl2540_i2c_platform_data *pdata)
 {
 	struct device_node *np = pdata->of_node;
 	const char *str;
