@@ -604,6 +604,14 @@ config TCS3472
 	  This driver can also be built as a module.  If so, the module
 	  will be called tcs3472.
 
+config ALS_TSL2584TSV
+	tristate "TAOS TSL2584TSV light-to-digital converters"
+	depends on I2C
+	help
+		Provides support for the TAOS tsl2584tsv device.
+
+		Access ALS data via iio, sysfs.
+
 config SENSORS_TSL2540
 	tristate "TAOS TSL2540 ambient light sensors"
 	depends on I2C
