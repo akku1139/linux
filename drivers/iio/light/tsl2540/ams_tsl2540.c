@@ -163,6 +163,7 @@ static int tsl2540_update_enable_reg(struct tsl2540_chip *chip)
 			chip->shadow[TSL2540_REG_ENABLE]);
 }
 
+#ifdef TSL2540_ENABLE_INPUT
 static int tsl2540_pltf_power_on(struct tsl2540_chip *chip)
 {
 	int rc = 0;
@@ -177,6 +178,7 @@ static int tsl2540_pltf_power_on(struct tsl2540_chip *chip)
 			chip->unpowered);
 	return rc;
 }
+#endif
 
 static int tsl2540_pltf_power_off(struct tsl2540_chip *chip)
 {
@@ -409,6 +411,7 @@ static int tsl2540_get_id(struct tsl2540_chip *chip, u8 *id, u8 *rev, u8 *auxid)
 	return 0;
 }
 
+#ifdef TSL2540_ENABLE_INPUT
 static int tsl2540_power_on(struct tsl2540_chip *chip)
 {
 	int rc;
@@ -421,7 +424,6 @@ static int tsl2540_power_on(struct tsl2540_chip *chip)
 	return tsl2540_flush_regs(chip);
 }
 
-#ifdef TSL2540_ENABLE_INPUT
 static int tsl2540_als_idev_open(struct input_dev *idev)
 {
 	struct tsl2540_chip *chip = dev_get_drvdata(&idev->dev);
