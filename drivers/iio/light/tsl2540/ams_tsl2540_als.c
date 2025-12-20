@@ -343,10 +343,10 @@ int tsl2540_get_lux(struct tsl2540_chip *chip)
 
 	if (!chip->als_gain_auto) {
 		if (ch0 <= TSL2540_MIN_ALS_VALUE) {
-			dev_info(&chip->client->dev, "%s: darkness (%d <= %d)\n",
+			dev_info(&chip->client->dev, "%s: darkness (%ld <= %d)\n",
 				__func__, ch0, TSL2540_MIN_ALS_VALUE);
 		} else if (ch0 >= chip->als_inf.saturation) {
-			dev_info(&chip->client->dev, "%s: saturation (%d >= %d\n",
+			dev_info(&chip->client->dev, "%s: saturation (%ld >= %d\n",
 				__func__, ch0, chip->als_inf.saturation);
 		}
 	} else {
