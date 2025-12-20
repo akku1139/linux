@@ -27,6 +27,7 @@
 #include <linux/slab.h>
 
 #include "ams_tsl2540.h"
+#include "ams_tsl2540_als.h"
 #include "ams_i2c.h"
 
 #undef LUX_DBG
