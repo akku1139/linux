@@ -839,6 +839,7 @@ static ssize_t taos_als_cal_target_store(struct device *dev,
 	return len;
 }
 
+#ifndef CONFIG_AMZN_AMS_ALS
 static ssize_t taos_lux_show(struct device *dev, struct device_attribute *attr,
 	char *buf)
 {
@@ -852,6 +853,7 @@ static ssize_t taos_lux_show(struct device *dev, struct device_attribute *attr,
 	return sprintf(buf, "%d\n",
 		       lux);
 }
+#endif
 
 static ssize_t taos_do_calibrate(struct device *dev,
 	struct device_attribute *attr, const char *buf, size_t len)
@@ -1082,7 +1084,6 @@ static DEVICE_ATTR(illuminance0_calibbias, S_IRUGO | S_IWUSR,
 static DEVICE_ATTR(illuminance0_input_target, S_IRUGO | S_IWUSR,
 		taos_als_cal_target_show, taos_als_cal_target_store);
 
-static DEVICE_ATTR(illuminance0_input, S_IRUGO, taos_lux_show, NULL);
 static DEVICE_ATTR(illuminance0_calibrate, S_IWUSR, NULL, taos_do_calibrate);
 static DEVICE_ATTR(illuminance0_lux_table, S_IRUGO | S_IWUSR,
 		taos_luxtable_show, taos_luxtable_store);
@@ -1090,6 +1091,9 @@ static DEVICE_ATTR(channel_1_raw, S_IRUGO, taos_channel1_show, NULL);
 static DEVICE_ATTR(channel_2_raw, S_IRUGO, taos_channel2_show, NULL);
 #ifdef CONFIG_AMZN_AMS_ALS
 static DEVICE_ATTR(calibrated_lux, (S_IRUGO), taos_calibrated_lux_show, NULL);
+static DEVICE_ATTR(illuminance0_input, S_IRUGO, taos_calibrated_lux_show, NULL);
+#else
+static DEVICE_ATTR(illuminance0_input, S_IRUGO, taos_lux_show, NULL);
 #endif
 
 static struct attribute *sysfs_attrs_ctrl[] = {
