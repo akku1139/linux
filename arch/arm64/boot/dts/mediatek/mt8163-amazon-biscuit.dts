@@ -44,6 +44,13 @@
 	clock-frequency = <100000>;
 	status = "okay";
 
+	tsl2584tsv@29 {
+		compatible = "amstaos,tsl2584tsv";
+		reg = <0x29>;
+		als_name = "taos_als";
+		autozero-period-ms = <300000>;
+	};
+
 	tsl2540@39 {
 		compatible = "amstaos,tsl2540";
 		reg = <0x39>;
