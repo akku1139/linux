@@ -366,7 +366,7 @@ int tsl2540_get_lux(struct tsl2540_chip *chip)
 	return 0;
 }
 
-int tsl2540_update_als_thres(struct tsl2540_chip *chip, bool on_enable)
+static int tsl2540_update_als_thres(struct tsl2540_chip *chip, bool on_enable)
 {
 	s32 ret;
 	u16 deltap = chip->params.als_deltap;
