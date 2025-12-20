@@ -43,6 +43,25 @@
 	pinctrl-0 = <&i2c0_pins_default>;
 	clock-frequency = <100000>;
 	status = "okay";
+
+	tsl2540@39 {
+		compatible = "amstaos,tsl2540";
+		reg = <0x39>;
+		als_name = "taos_als";
+		persist = <18>;
+		als_gain = <3>;
+		als_gain_factor = <1>;
+		als_deltap = <10>;
+		als_time = <123>;
+		d_factor = <47540>;
+		ch0_coef0 = <1000>;
+		ch1_coef0 = <305>;
+		ch0_coef1 = <118>;
+		ch1_coef1 = <21>;
+		az_iterations = <126>;
+		als_can_wake = <0>;
+		boot-on;
+	};
 };
 
 &imgsys {
