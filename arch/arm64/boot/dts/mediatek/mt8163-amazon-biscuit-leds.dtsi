@@ -1,0 +1,329 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Copyright (c) 2025-2026 Ben Grisdale <bengris32@protonmail.ch>
+ */
+
+#include <dt-bindings/leds/common.h>
+
+/ {
+	multi-led-ring0 {
+		compatible = "leds-group-multicolor";
+		label = "ring_rgb:0";
+		color = <LED_COLOR_ID_RGB>;
+		function = LED_FUNCTION_INDICATOR;
+		leds = <&ring_red0>, <&ring_green0>, <&ring_blue0>;
+	};
+
+	multi-led-ring1 {
+		compatible = "leds-group-multicolor";
+		label = "ring_rgb:1";
+		color = <LED_COLOR_ID_RGB>;
+		function = LED_FUNCTION_INDICATOR;
+		leds = <&ring_red1>, <&ring_green1>, <&ring_blue1>;
+	};
+
+	multi-led-ring2 {
+		compatible = "leds-group-multicolor";
+		label = "ring_rgb:2";
+		color = <LED_COLOR_ID_RGB>;
+		function = LED_FUNCTION_INDICATOR;
+		leds = <&ring_red2>, <&ring_green2>, <&ring_blue2>;
+	};
+
+	multi-led-ring3 {
+		compatible = "leds-group-multicolor";
+		label = "ring_rgb:3";
+		color = <LED_COLOR_ID_RGB>;
+		function = LED_FUNCTION_INDICATOR;
+		leds = <&ring_red3>, <&ring_green3>, <&ring_blue3>;
+	};
+
+	multi-led-ring4 {
+		compatible = "leds-group-multicolor";
+		label = "ring_rgb:4";
+		color = <LED_COLOR_ID_RGB>;
+		function = LED_FUNCTION_INDICATOR;
+		leds = <&ring_red4>, <&ring_green4>, <&ring_blue4>;
+	};
+
+	multi-led-ring5 {
+		compatible = "leds-group-multicolor";
+		label = "ring_rgb:5";
+		color = <LED_COLOR_ID_RGB>;
+		function = LED_FUNCTION_INDICATOR;
+		leds = <&ring_red5>, <&ring_green5>, <&ring_blue5>;
+	};
+
+	multi-led-ring6 {
+		compatible = "leds-group-multicolor";
+		label = "ring_rgb:6";
+		color = <LED_COLOR_ID_RGB>;
+		function = LED_FUNCTION_INDICATOR;
+		leds = <&ring_red6>, <&ring_green6>, <&ring_blue6>;
+	};
+
+	multi-led-ring7 {
+		compatible = "leds-group-multicolor";
+		label = "ring_rgb:7";
+		color = <LED_COLOR_ID_RGB>;
+		function = LED_FUNCTION_INDICATOR;
+		leds = <&ring_red7>, <&ring_green7>, <&ring_blue7>;
+	};
+
+	multi-led-ring8 {
+		compatible = "leds-group-multicolor";
+		label = "ring_rgb:8";
+		color = <LED_COLOR_ID_RGB>;
+		function = LED_FUNCTION_INDICATOR;
+		leds = <&ring_red8>, <&ring_green8>, <&ring_blue8>;
+	};
+
+	multi-led-ring9 {
+		compatible = "leds-group-multicolor";
+		label = "ring_rgb:9";
+		color = <LED_COLOR_ID_RGB>;
+		function = LED_FUNCTION_INDICATOR;
+		leds = <&ring_red9>, <&ring_green9>, <&ring_blue9>;
+	};
+
+	multi-led-ring10 {
+		compatible = "leds-group-multicolor";
+		label = "ring_rgb:10";
+		color = <LED_COLOR_ID_RGB>;
+		function = LED_FUNCTION_INDICATOR;
+		leds = <&ring_red10>, <&ring_green10>, <&ring_blue10>;
+	};
+
+	multi-led-ring11 {
+		compatible = "leds-group-multicolor";
+		label = "ring_rgb:11";
+		color = <LED_COLOR_ID_RGB>;
+		function = LED_FUNCTION_INDICATOR;
+		leds = <&ring_red11>, <&ring_green11>, <&ring_blue11>;
+	};
+};
+
+&i2c0 {
+	led-controller@3f {
+		compatible = "issi,is31fl3236";
+		reg = <0x3f>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		ring_red0: led@1 {
+			reg = <1>;
+			label = "ring:red:0";
+			color = <LED_COLOR_ID_RED>;
+		};
+
+		ring_green0: led@2 {
+			reg = <2>;
+			label = "ring:green:0";
+			color = <LED_COLOR_ID_GREEN>;
+		};
+
+		ring_blue0: led@3 {
+			reg = <3>;
+			label = "ring:blue:0";
+			color = <LED_COLOR_ID_BLUE>;
+		};
+
+		ring_red1: led@4 {
+			reg = <4>;
+			label = "ring:red:1";
+			color = <LED_COLOR_ID_RED>;
+		};
+
+		ring_green1: led@5 {
+			reg = <5>;
+			label = "ring:green:1";
+			color = <LED_COLOR_ID_GREEN>;
+		};
+
+		ring_blue1: led@6 {
+			reg = <6>;
+			label = "ring:blue:1";
+			color = <LED_COLOR_ID_BLUE>;
+		};
+
+		ring_red2: led@7 {
+			reg = <7>;
+			label = "ring:red:2";
+			color = <LED_COLOR_ID_RED>;
+		};
+
+		ring_green2: led@8 {
+			reg = <8>;
+			label = "ring:green:2";
+			color = <LED_COLOR_ID_GREEN>;
+		};
+
+		ring_blue2: led@9 {
+			reg = <9>;
+			label = "ring:blue:2";
+			color = <LED_COLOR_ID_BLUE>;
+		};
+
+		ring_red3: led@10 {
+			reg = <10>;
+			label = "ring:red:3";
+			color = <LED_COLOR_ID_RED>;
+		};
+
+		ring_green3: led@11 {
+			reg = <11>;
+			label = "ring:green:3";
+			color = <LED_COLOR_ID_GREEN>;
+		};
+
+		ring_blue3: led@12 {
+			reg = <12>;
+			label = "ring:blue:3";
+			color = <LED_COLOR_ID_BLUE>;
+		};
+
+		ring_red4: led@13 {
+			reg = <13>;
+			label = "ring:red:4";
+			color = <LED_COLOR_ID_RED>;
+		};
+
+		ring_green4: led@14 {
+			reg = <14>;
+			label = "ring:green:4";
+			color = <LED_COLOR_ID_GREEN>;
+		};
+
+		ring_blue4: led@15 {
+			reg = <15>;
+			label = "ring:blue:4";
+			color = <LED_COLOR_ID_BLUE>;
+		};
+
+		ring_red5: led@16 {
+			reg = <16>;
+			label = "ring:red:5";
+			color = <LED_COLOR_ID_RED>;
+		};
+
+		ring_green5: led@17 {
+			reg = <17>;
+			label = "ring:green:5";
+			color = <LED_COLOR_ID_GREEN>;
+		};
+
+		ring_blue5: led@18 {
+			reg = <18>;
+			label = "ring:blue:5";
+			color = <LED_COLOR_ID_BLUE>;
+		};
+
+		ring_red6: led@19 {
+			reg = <19>;
+			label = "ring:red:6";
+			color = <LED_COLOR_ID_RED>;
+		};
+
+		ring_green6: led@20 {
+			reg = <20>;
+			label = "ring:green:6";
+			color = <LED_COLOR_ID_GREEN>;
+		};
+
+		ring_blue6: led@21 {
+			reg = <21>;
+			label = "ring:blue:6";
+			color = <LED_COLOR_ID_BLUE>;
+		};
+
+		ring_red7: led@22 {
+			reg = <22>;
+			label = "ring:red:7";
+			color = <LED_COLOR_ID_RED>;
+		};
+
+		ring_green7: led@23 {
+			reg = <23>;
+			label = "ring:green:7";
+			color = <LED_COLOR_ID_GREEN>;
+		};
+
+		ring_blue7: led@24 {
+			reg = <24>;
+			label = "ring:blue:7";
+			color = <LED_COLOR_ID_BLUE>;
+		};
+
+		ring_red8: led@25 {
+			reg = <25>;
+			label = "ring:red:8";
+			color = <LED_COLOR_ID_RED>;
+		};
+
+		ring_green8: led@26 {
+			reg = <26>;
+			label = "ring:green:8";
+			color = <LED_COLOR_ID_GREEN>;
+		};
+
+		ring_blue8: led@27 {
+			reg = <27>;
+			label = "ring:blue:8";
+			color = <LED_COLOR_ID_BLUE>;
+		};
+
+		ring_red9: led@28 {
+			reg = <28>;
+			label = "ring:red:9";
+			color = <LED_COLOR_ID_RED>;
+		};
+
+		ring_green9: led@29 {
+			reg = <29>;
+			label = "ring:green:9";
+			color = <LED_COLOR_ID_GREEN>;
+		};
+
+		ring_blue9: led@30 {
+			reg = <30>;
+			label = "ring:blue:9";
+			color = <LED_COLOR_ID_BLUE>;
+		};
+
+		ring_red10: led@31 {
+			reg = <31>;
+			label = "ring:red:10";
+			color = <LED_COLOR_ID_RED>;
+		};
+
+		ring_green10: led@32 {
+			reg = <32>;
+			label = "ring:green:10";
+			color = <LED_COLOR_ID_GREEN>;
+		};
+
+		ring_blue10: led@33 {
+			reg = <33>;
+			label = "ring:blue:10";
+			color = <LED_COLOR_ID_BLUE>;
+		};
+
+		ring_red11: led@34 {
+			reg = <34>;
+			label = "ring:red:11";
+			color = <LED_COLOR_ID_RED>;
+		};
+
+		ring_green11: led@35 {
+			reg = <35>;
+			label = "ring:green:11";
+			color = <LED_COLOR_ID_GREEN>;
+		};
+
+		ring_blue11: led@36 {
+			reg = <36>;
+			label = "ring:blue:11";
+			color = <LED_COLOR_ID_BLUE>;
+		};
+	};
+};
