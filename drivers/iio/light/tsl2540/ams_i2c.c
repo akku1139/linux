@@ -19,6 +19,8 @@
 #include <linux/i2c.h>
 #include <linux/delay.h>
 
+#include "ams_i2c.h"
+
 int ams_i2c_blk_read(struct i2c_client *client, u8 reg, u8 *val, int size)
 {
 	s32 ret;
