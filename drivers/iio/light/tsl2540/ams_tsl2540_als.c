@@ -213,7 +213,7 @@ static int tsl2540_set_als_gain(struct tsl2540_chip *chip, int gain)
 
 	if (rc >= 0) {
 		chip->params.als_gain = chip->shadow[TSL2540_REG_CFG1];
-		dev_info(&chip->client->dev, "%s: new als gain %d\n",
+		dev_dbg(&chip->client->dev, "%s: new als gain %d\n",
 				__func__, ctrl_reg);
 	}
 
@@ -318,7 +318,7 @@ int tsl2540_get_lux(struct tsl2540_chip *chip)
 	lux = min(TSL2540_MAX_LUX, max(0, lux));
 
 #ifdef LUX_DBG
-	dev_info(&chip->client->dev,
+	dev_dbg(&chip->client->dev,
 		"%s: lux:%d [%d, %d, %d, %d] %d [%d %d] [%d %d] %d [%d, ((%d*%d) / 1000)] (sat:%d)\n",
 		__func__, lux,
 		ch0, ch1, lux1, lux2,
@@ -334,7 +334,7 @@ int tsl2540_get_lux(struct tsl2540_chip *chip)
 #endif /* #ifdef LUX_DBG */
 
 	if (lux < 0) {
-		dev_info(&chip->client->dev,
+		dev_dbg(&chip->client->dev,
 				"%s: lux < 0 use prev.\n", __func__);
 		return chip->als_inf.lux; /* use previous value */
 	}
@@ -343,20 +343,20 @@ int tsl2540_get_lux(struct tsl2540_chip *chip)
 
 	if (!chip->als_gain_auto) {
 		if (ch0 <= TSL2540_MIN_ALS_VALUE) {
-			dev_info(&chip->client->dev, "%s: darkness (%ld <= %d)\n",
+			dev_dbg(&chip->client->dev, "%s: darkness (%ld <= %d)\n",
 				__func__, ch0, TSL2540_MIN_ALS_VALUE);
 		} else if (ch0 >= chip->als_inf.saturation) {
-			dev_info(&chip->client->dev, "%s: saturation (%ld >= %d\n",
+			dev_dbg(&chip->client->dev, "%s: saturation (%ld >= %d\n",
 				__func__, ch0, chip->als_inf.saturation);
 		}
 	} else {
 		if (ch0 < 100) {
-			dev_info(&chip->client->dev,
+			dev_dbg(&chip->client->dev,
 					"%s: AUTOGAIN INC\n", __func__);
 			tsl2540_inc_gain(chip);
 			tsl2540_flush_als_regs(chip);
 		} else if (ch0 > tsl2540_max_als_value(chip)) {
-			dev_info(&chip->client->dev,
+			dev_dbg(&chip->client->dev,
 					"%s: AUTOGAIN DEC\n", __func__);
 			tsl2540_dec_gain(chip);
 			tsl2540_flush_als_regs(chip);
@@ -397,7 +397,7 @@ static int tsl2540_update_als_thres(struct tsl2540_chip *chip, bool on_enable)
 	*((__le16 *) &chip->shadow[TSL2540_REG_AILT]) = cpu_to_le16(from);
 	*((__le16 *) &chip->shadow[TSL2540_REG_AIHT]) = cpu_to_le16(to);
 
-	dev_info(&chip->client->dev,
+	dev_dbg(&chip->client->dev,
 			"%s: low:0x%x  hi:0x%x, oe:%d cur:%d deltap:%d (%d) sat:%d\n",
 			__func__, from, to, on_enable, cur, deltap,
 			chip->params.als_deltap, saturation);

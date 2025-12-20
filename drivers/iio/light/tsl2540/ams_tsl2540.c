@@ -126,7 +126,7 @@ static irqreturn_t tsl2540_irq(int irq, void *handle)
 	int ret;
 
 	if (chip->in_suspend) {
-		dev_info(dev, "%s: in suspend\n", __func__);
+		dev_dbg(dev, "%s: in suspend\n", __func__);
 		chip->irq_pending = 1;
 		ret = 0;
 		goto bypass;
@@ -207,7 +207,7 @@ static void tsl2540_set_defaults(struct tsl2540_chip *chip)
 
 	/* If there is platform data use it */
 	if (chip->pdata) {
-		dev_info(dev, "%s: Loading pltform data\n", __func__);
+		dev_dbg(dev, "%s: Loading pltform data\n", __func__);
 		chip->params.persist = chip->pdata->parameters.persist;
 		chip->params.als_gain = chip->pdata->parameters.als_gain;
 		chip->params.als_gain_factor =
@@ -226,7 +226,7 @@ static void tsl2540_set_defaults(struct tsl2540_chip *chip)
 		chip->params.az_iterations =
 				chip->pdata->parameters.az_iterations;
 	} else {
-		dev_info(dev, "%s: use defaults\n", __func__);
+		dev_dbg(dev, "%s: use defaults\n", __func__);
 		chip->params.persist = ALS_PERSIST(2);
 		chip->params.als_gain = AGAIN_16;
 		chip->params.als_gain_factor = 0;
@@ -394,7 +394,7 @@ static int tsl2540_power_on(struct tsl2540_chip *chip)
 	rc = tsl2540_pltf_power_on(chip);
 	if (rc)
 		return rc;
-	dev_info(&chip->client->dev, "%s: chip was off, restoring regs\n",
+	dev_dbg(&chip->client->dev, "%s: chip was off, restoring regs\n",
 			__func__);
 	return tsl2540_flush_regs(chip);
 }
@@ -405,7 +405,7 @@ static int tsl2540_als_idev_open(struct input_dev *idev)
 	bool als = chip->p_idev && chip->p_idev->users;
 	int rc = 0;
 
-	dev_info(&idev->dev, "%s\n", __func__);
+	dev_dbg(&idev->dev, "%s\n", __func__);
 	AMS_MUTEX_LOCK(&chip->lock);
 	if (chip->unpowered) {
 		rc = tsl2540_power_on(chip);
@@ -424,7 +424,7 @@ static void tsl2540_als_idev_close(struct input_dev *idev)
 {
 	struct tsl2540_chip *chip = dev_get_drvdata(&idev->dev);
 
-	dev_info(&idev->dev, "%s\n", __func__);
+	dev_dbg(&idev->dev, "%s\n", __func__);
 
 	AMS_MUTEX_LOCK(&chip->lock);
 	tsl2540_configure_als_mode(chip, 0);
@@ -513,6 +513,7 @@ MODULE_DEVICE_TABLE(of, tsl2540_i2c_dt_ids);
 static void tsl2540_get_calibration(struct tsl2540_chip *chip)
 {
 	struct tsl2540_i2c_platform_data *pdata = chip->pdata;
+	struct device *dev = &chip->client->dev;
 	struct device_node *ap = NULL;
 	char *alscal_idme = NULL;
 	char *ptr;
@@ -522,35 +523,35 @@ static void tsl2540_get_calibration(struct tsl2540_chip *chip)
 	if (ap)
 		alscal_idme = (char *)of_get_property(ap, "value", NULL);
 	else {
-		pr_warn("ALSCAL: could not get alscal idme entry\n");
+		dev_warn(dev, "ALSCAL: could not get alscal idme entry\n");
 		goto failed;
 	}
 
 	/* search for signature andskip the leading spaces */
 	ptr = strstr(alscal_idme, "ams_0_0");
 	if (NULL == ptr) {
-		pr_warn("ALSCAL: unable to find calibration\n");
+		dev_warn(dev, "ALSCAL: unable to find calibration\n");
 		goto failed;
 	}
 
 	n = sscanf(ptr, ALS_CAL_FORMAT, &ch0, &dummy, &ch1, &dummy, &lux);
 
 	if (n != 5) {
-		pr_warn("ALSCAL: alscal format incorrect\n");
+		dev_warn(dev, "ALSCAL: alscal format incorrect\n");
 		goto failed;
 	}
 
 	pdata->lux0_ch0 = ch0;
 	pdata->lux0_ch1 = ch1;
 	pdata->lux400_lux = lux;
-	pr_info("ALSCAL: alscal ch0=%d ch1=%d lux=%d\n", ch0, ch1, lux);
+	dev_dbg(dev, "ALSCAL: alscal ch0=%d ch1=%d lux=%d\n", ch0, ch1, lux);
 	return;
 failed:
 	/* calibration data is not available */
 	pdata->lux0_ch0 = 0;
 	pdata->lux0_ch1 = 0;
 	pdata->lux400_lux = ALS_LUX_400;
-	pr_info("ALSCAL: alscal default used - ch0=0 ch1=0 lux=400\n");
+	dev_dbg(dev, "ALSCAL: alscal default used - ch0=0 ch1=0 lux=400\n");
 }
 #endif
 
@@ -575,8 +576,6 @@ static int tsl2540_probe(struct i2c_client *client)
 	struct tsl2540_i2c_platform_data *pdata = dev->platform_data;
 	bool powered = 0;
 
-	pr_info("TSL2540: probe()\n");
-
 #ifdef CONFIG_OF
 	if (!pdata) {
 		pdata = kzalloc(sizeof(struct tsl2540_i2c_platform_data),
@@ -597,21 +596,20 @@ static int tsl2540_probe(struct i2c_client *client)
 	 * Validate bus and device registration
 	 */
 
-	dev_info(dev, "%s: client->irq = %d\n", __func__, client->irq);
 	if (!i2c_check_functionality(client->adapter,
 			I2C_FUNC_SMBUS_BYTE_DATA)) {
-		dev_err(dev, "%s: i2c smbus byte data unsupported\n", __func__);
+		dev_err(dev, "i2c smbus byte data unsupported\n");
 		ret = -EOPNOTSUPP;
 		goto init_failed;
 	}
 	if (!pdata) {
-		dev_err(dev, "%s: platform data required\n", __func__);
+		dev_err(dev, "platform data required\n");
 		ret = -EINVAL;
 		goto init_failed;
 	}
 
 	if (!(pdata->als_name) || client->irq < 0) {
-		dev_err(dev, "%s: no reason to run.\n", __func__);
+		dev_err(dev, "no reason to run.\n");
 		ret = -EINVAL;
 		goto init_failed;
 	}
@@ -624,7 +622,7 @@ static int tsl2540_probe(struct i2c_client *client)
 	if (pdata->platform_power) {
 		ret = pdata->platform_power(dev, POWER_ON);
 		if (ret) {
-			dev_err(dev, "%s: pltf power on failed\n", __func__);
+			dev_err(dev, "pltf power on failed\n");
 			goto pon_failed;
 		}
 		powered = true;
@@ -648,7 +646,7 @@ static int tsl2540_probe(struct i2c_client *client)
 
 	ret = tsl2540_get_id(chip, &id, &rev, &auxid);
 
-	dev_info(dev, "%s: device id:%02x device aux id:%02x device rev:%02x\n",
+	dev_dbg(dev, "%s: device id:%02x device aux id:%02x device rev:%02x\n",
 			__func__, id, auxid, rev);
 
 	id &= 0xfc; /* clear the 2 LSbits, they indicate the bus voltage */
@@ -660,11 +658,11 @@ static int tsl2540_probe(struct i2c_client *client)
 					break;
 	}
 	if (i < ARRAY_SIZE(tsl2540_names)) {
-		dev_info(dev, "%s: '%s rev. 0x%x' detected\n", __func__,
+		dev_info(dev, "%s rev. 0x%x detected\n",
 			tsl2540_names[i], rev);
 		chip->device_index = i;
 	} else {
-		dev_err(dev, "%s: not supported chip id\n", __func__);
+		dev_err(dev, "Chip id not supported\n");
 		ret = -EOPNOTSUPP;
 		goto id_failed;
 	}
@@ -692,16 +690,16 @@ static int tsl2540_probe(struct i2c_client *client)
 
 	ret = tsl2540_initialize_iio(chip, pdata->als_name);
 	if (ret) {
-		dev_err(dev, "%s: failed to register indio device: %d.\n",
-			    __func__, ret);
+		dev_err(dev, "failed to register indio device: %d.\n",
+			    ret);
 		goto input_d_alloc_failed;
 	}
 
 #ifdef TSL2540_ENABLE_INPUT
 	chip->a_idev = input_allocate_device();
 	if (!chip->a_idev) {
-		dev_err(dev, "%s: no memory for input_dev '%s'\n",
-				__func__, pdata->als_name);
+		dev_err(dev, "no memory for input_dev '%s'\n",
+				pdata->als_name);
 		ret = -ENODEV;
 		goto input_a_alloc_failed;
 	}
@@ -716,8 +714,8 @@ static int tsl2540_probe(struct i2c_client *client)
 	ret = input_register_device(chip->a_idev);
 	if (ret) {
 		input_free_device(chip->a_idev);
-		dev_err(dev, "%s: cant register input '%s'\n",
-				__func__, pdata->als_name);
+		dev_err(dev, "cant register input '%s'\n",
+				pdata->als_name);
 		goto input_a_alloc_failed;
 	}
 #endif /* TSL2540_ENABLE_INPUT */
@@ -730,8 +728,8 @@ bypass_als_idev:
 	 */
 	chip->d_idev = input_allocate_device();
 	if (!chip->d_idev) {
-		dev_err(dev, "%s: no memory for input_dev '%s'\n",
-				__func__, tsl2540_names[chip->device_index]);
+		dev_err(dev, "no memory for input_dev '%s'\n",
+				tsl2540_names[chip->device_index]);
 		ret = -ENODEV;
 		goto input_d_alloc_failed;
 	}
@@ -745,8 +743,8 @@ bypass_als_idev:
 	ret = input_register_device(chip->d_idev);
 	if (ret) {
 		input_free_device(chip->d_idev);
-		dev_err(dev, "%s: cant register input '%s'\n",
-				__func__, tsl2540_names[chip->device_index]);
+		dev_err(dev, "cant register input '%s'\n",
+				tsl2540_names[chip->device_index]);
 		goto input_d_alloc_failed;
 	}
 #endif /* TSL2540_ENABLE_INPUT */
@@ -781,7 +779,7 @@ bypass_als_idev:
 
 	tsl2540_setup(chip);
 
-	dev_info(dev, "Probe ok.\n");
+	dev_dbg(dev, "Probe ok.\n");
 	return 0;
 
 	/*
@@ -831,7 +829,7 @@ pon_failed:
 	if (pdata->platform_teardown)
 		pdata->platform_teardown(dev);
 init_failed:
-	dev_err(dev, "Probe failed.\n");
+	dev_dbg(dev, "Probe failed.\n");
 	return ret;
 }
 
@@ -840,15 +838,14 @@ static int tsl2540_suspend(struct device *dev)
 {
 	struct tsl2540_chip *chip = dev_get_drvdata(dev);
 
-	pr_info("TSL2540: suspend()\n");
-	dev_info(dev, "%s\n", __func__);
+	dev_dbg(dev, "%s\n", __func__);
 	AMS_MUTEX_LOCK(&chip->lock);
 	chip->in_suspend = 1;
 
 	if (chip->wake_irq) {
 		irq_set_irq_wake(chip->client->irq, 1);
 	} else if (!chip->unpowered) {
-		dev_info(dev, "powering off\n");
+		dev_dbg(dev, "powering off\n");
 		tsl2540_pltf_power_off(chip);
 	}
 	AMS_MUTEX_UNLOCK(&chip->lock);
@@ -862,11 +859,10 @@ static int tsl2540_resume(struct device *dev)
 	bool als_on;
 
 	return 0;
-	pr_info("\nTSL2540: resume()\n");
 	AMS_MUTEX_LOCK(&chip->lock);
 	chip->in_suspend = 0;
 
-	dev_info(dev, "%s: powerd %d, als: needed %d  enabled %d",
+	dev_dbg(dev, "%s: powerd %d, als: needed %d  enabled %d",
 			__func__, !chip->unpowered, als_on,
 			chip->als_enabled);
 
@@ -895,7 +891,7 @@ static void tsl2540_remove(struct i2c_client *client)
 {
 	struct tsl2540_chip *chip = i2c_get_clientdata(client);
 
-	pr_info("TSL2540: REMOVE()\n");
+	dev_dbg(&client->dev, "TSL2540: REMOVE()\n");
 #ifdef TSL2540_ENABLE_INTERRUPT
 	free_irq(client->irq, chip);
 #endif /* TSL2540_ENABLE_INTERRUPT */
@@ -930,7 +926,7 @@ static int __init tsl2540_init(void)
 {
 	int rc;
 
-	pr_info("TSL2540: INIT()\n");
+	pr_debug("TSL2540: INIT()\n");
 
 	rc = i2c_add_driver(&tsl2540_driver);
 	return rc;
@@ -938,7 +934,7 @@ static int __init tsl2540_init(void)
 
 static void __exit tsl2540_exit(void)
 {
-	pr_info("TSL2540: exit()\n");
+	pr_debug("TSL2540: exit()\n");
 	i2c_del_driver(&tsl2540_driver);
 }
 
