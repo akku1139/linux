@@ -812,7 +812,9 @@ base_sysfs_failed:
 	sysfs_remove_group(&chip->client->dev.kobj, &tsl2540_attr_group);
 #endif /* ABI_SET_GET_REGISTERS */
 
+#ifdef TSL2540_ENABLE_INTERRUPT
 irq_register_fail:
+#endif
 	sysfs_remove_group(&chip->client->dev.kobj, &tsl2540_als_attr_group);
 
 #ifdef ABI_SET_GET_REGISTERS
