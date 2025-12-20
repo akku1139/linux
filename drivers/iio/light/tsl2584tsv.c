@@ -29,6 +29,7 @@
 #include <linux/slab.h>
 #include <linux/module.h>
 #include <linux/iio/iio.h>
+#include <linux/pm_runtime.h>
 
 #define ID_UNKNOWN		0
 #define ID_TSL2580		1 /* the TSL2580 is SMBus version of TSL2581 */
@@ -123,6 +124,10 @@
 #endif /* CONFIG_sbc123 */
 #define NOISE_THRESHOLD 6
 /*end TSL2584TSV lux equation defines*/
+
+#define CONFIG_ALS_TSL2584_AUTOZERO
+#define CONFIG_AMZN_AMS_ALS
+#define CONFIG_AMS_ADJUST_WITH_BASELINE
 
 enum {
 	TSL258X_CHIP_UNKNOWN = 0,
@@ -224,8 +229,6 @@ static const struct autozero_reg_config autozero_regs[] = {
 
 static void perform_autozero(struct tsl258x_chip *chip);
 #endif
-
-static char *tsl2583x_get_name(struct tsl258x_chip *chip);
 
 /*
  * Provides initial operational parameter defaults.
@@ -330,7 +333,7 @@ static int get_baseline(int *ch0_baseline, int *ch1_baseline)
 	}
 
 	if (sscanf(ptr, "%d", ch0_baseline) != 1) {
-		pr_err("ALSCAL: unable to parse ch0 baseline from idme string\n", ptr);
+		pr_err("ALSCAL: unable to parse ch0 baseline from idme string\n");
 		goto fail;
 	}
 
@@ -384,7 +387,7 @@ static int taos_get_lux(struct iio_dev *indio_dev, int *calculated_lux)
 #endif
 
 	if (mutex_trylock(&chip->als_mutex) == 0) {
-		dev_info(&chip->client->dev, "taos_get_lux device is busy\n");
+		dev_dbg(&chip->client->dev, "taos_get_lux device is busy\n");
 		return chip->als_cur_info.lux; /* busy, so return LAST VALUE */
 	}
 
@@ -576,7 +579,7 @@ static int taos_chip_on(struct iio_dev *indio_dev)
 	/* and make sure we're not already on */
 	if (chip->taos_chip_status == TSL258X_CHIP_WORKING) {
 		/* if forcing a register update - turn off, then on */
-		dev_info(&chip->client->dev, "device is already enabled\n");
+		dev_dbg(&chip->client->dev, "device is already enabled\n");
 		return -EINVAL;
 	}
 
@@ -942,7 +945,7 @@ static ssize_t taos_luxtable_store(struct device *dev,
 }
 static ssize_t taos_channel1_show(struct device *dev,
 								  struct device_attribute *attr,
-								  const char *buf)
+								  char *buf)
 {
 	struct iio_dev *indio_dev = dev_get_drvdata(dev);
 	struct tsl258x_chip *chip = iio_priv(indio_dev);
@@ -970,7 +973,7 @@ fail:
 
 static ssize_t taos_channel2_show(struct device *dev,
 								  struct device_attribute *attr,
-								  const char *buf)
+								  char *buf)
 {
 	struct iio_dev *indio_dev = dev_get_drvdata(dev);
 	struct tsl258x_chip *chip = iio_priv(indio_dev);
@@ -1025,7 +1028,7 @@ static int parse_alscal_idme(int *coeff)
 	strsep(&alscal, " ");
 	strsep(&alscal, " ");
 	if (sscanf(alscal, "ams_400_0=%d,%d", &dummy, coeff) != 2) {
-		pr_err("ALSCAL: unable to parse alscal idme string\n", alscal);
+		pr_err("ALSCAL: unable to parse alscal idme string\n");
 		kfree(alscal_dup);
 		return -1;
 	}
@@ -1036,7 +1039,7 @@ static int parse_alscal_idme(int *coeff)
 
 static ssize_t taos_calibrated_lux_show(struct device *dev,
 				       struct device_attribute *attr,
-				       const char *buf)
+				       char *buf)
 {
 	int coeff = 0;
 	int lux = 0;
@@ -1137,7 +1140,6 @@ static int taos_tsl258x_device(unsigned char *bufp)
 
 static const struct iio_info tsl258x_info = {
 	.attrs = &tsl258x_attribute_group,
-	.driver_module = THIS_MODULE,
 };
 
 #ifdef CONFIG_ALS_TSL2584_AUTOZERO
@@ -1145,7 +1147,7 @@ static void perform_autozero(struct tsl258x_chip *chip)
 {
 	int i, ret;
 	struct i2c_client *clientp = chip->client;
-	u8 utmp, buf[2];
+	u8 utmp;
 
 	dev_dbg(&clientp->dev, "Running ALS autozero sequence\n");
 
@@ -1231,8 +1233,7 @@ static void autozero_work(struct work_struct *work)
  * Client probe function - When a valid device is found, the driver's device
  * data structure is updated, and initialization completes successfully.
  */
-static int taos_probe(struct i2c_client *clientp,
-		      const struct i2c_device_id *idp)
+static int taos_probe(struct i2c_client *clientp)
 {
 	int i, ret;
 	unsigned char buf[TSL258X_MAX_DEVICE_REGS];
@@ -1248,7 +1249,7 @@ static int taos_probe(struct i2c_client *clientp,
 		return -EOPNOTSUPP;
 	}
 
-	indio_dev = iio_device_alloc(sizeof(*chip));
+	indio_dev = iio_device_alloc(&clientp->dev, sizeof(*chip));
 	if (indio_dev == NULL) {
 		ret = -ENOMEM;
 		dev_err(&clientp->dev, "iio allocation failed\n");
@@ -1286,11 +1287,7 @@ static int taos_probe(struct i2c_client *clientp,
 		goto fail2;
 	}
 
-	if (idp->driver_data != ID_UNKNOWN) {
-		chip->id = (int) idp->driver_data;
-	} else {
-		chip->id = taos_tsl258x_chip_id(buf);
-	}
+	chip->id = taos_tsl258x_chip_id(buf);
 
 	ret = i2c_smbus_write_byte(clientp, (TSL258X_CMD_REG | TSL258X_CNTRL));
 	if (ret < 0) {
@@ -1325,7 +1322,7 @@ static int taos_probe(struct i2c_client *clientp,
 				"device tree, defaulting to %u\n",
 				chip->autozero_period_ms);
 	}
-	dev_info(&clientp->dev, "Autozero period set to %u\n",
+	dev_dbg(&clientp->dev, "Autozero period set to %u\n",
 			chip->autozero_period_ms);
 #endif
 
@@ -1335,8 +1332,8 @@ static int taos_probe(struct i2c_client *clientp,
 	/* Make sure the chip is on */
 	taos_chip_on(indio_dev);
 
-	dev_info(&clientp->dev, "Light sensor found, %s.\n",
-		tsl2583x_get_name(chip));
+	dev_info(&clientp->dev, "Detected TSL2584TSV ID: 0x%0x.\n",
+		chip->id);
 	return 0;
 fail1:
 	iio_device_free(indio_dev);
@@ -1344,9 +1341,9 @@ fail2:
 	return ret;
 }
 
-static int taos_suspend(struct i2c_client *client, pm_message_t state)
+static int taos_suspend(struct device *dev)
 {
-	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
 	struct tsl258x_chip *chip = iio_priv(indio_dev);
 	int ret = 0;
 
@@ -1361,9 +1358,9 @@ static int taos_suspend(struct i2c_client *client, pm_message_t state)
 	return ret;
 }
 
-static int taos_resume(struct i2c_client *client)
+static int taos_resume(struct device *dev)
 {
-	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+	struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
 	struct tsl258x_chip *chip = iio_priv(indio_dev);
 	int ret = 0;
 
@@ -1376,12 +1373,10 @@ static int taos_resume(struct i2c_client *client)
 	return ret;
 }
 
-static int taos_remove(struct i2c_client *client)
+static void taos_remove(struct i2c_client *client)
 {
 	iio_device_unregister(i2c_get_clientdata(client));
 	iio_device_free(i2c_get_clientdata(client));
-
-	return 0;
 }
 
 static struct i2c_device_id taos_idtable[] = {
@@ -1396,26 +1391,17 @@ static const struct of_device_id taos_of_match[] = {
 };
 MODULE_DEVICE_TABLE(of, taos_of_match);
 
-static char *tsl2583x_get_name(struct tsl258x_chip *chip)
-{
-	int i;
-
-	for (i = 0; i < sizeof(taos_idtable) / sizeof(taos_idtable[0]); i++) {
-		if ((int) taos_idtable[i].driver_data ==  chip->id)
-			return taos_idtable[i].name;
-	}
-	return "unknown sensor";
-}
-
 /* Driver definition */
+static DEFINE_RUNTIME_DEV_PM_OPS(taos_pm_ops, taos_suspend,
+				 taos_resume, NULL);
+
 static struct i2c_driver taos_driver = {
 	.driver = {
 		.name = "tsl258x",
+		.pm = pm_ptr(&taos_pm_ops),
 		.of_match_table = taos_of_match,
 	},
 	.id_table = taos_idtable,
-	.suspend	= taos_suspend,
-	.resume		= taos_resume,
 	.probe = taos_probe,
 	.remove = taos_remove,
 };
