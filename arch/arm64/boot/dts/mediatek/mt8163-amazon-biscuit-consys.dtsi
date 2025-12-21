@@ -1,0 +1,85 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Copyright (c) 2025 Ben Grisdale <bengris32@protonmail.ch>
+ */
+
+&reserved_memory {
+		/* Shared RAM for consys accessed over EMI */
+		consys_mem: consys-reserve-memory {
+			no-map;
+			size = <0 0x200000>;
+			alignment = <0 0x200000>;
+		};
+};
+
+&btif {
+	status = "okay";
+};
+
+&consys {
+	pinctrl-names = "default",
+			"gps_lna_state_init",
+			"gps_lna_state_oh",
+			"gps_lna_state_ol",
+			"wifi_reset_init";
+	pinctrl-0 = <&consys_pins_default>;
+	pinctrl-1 = <&gpslna_pins_init>;
+	pinctrl-2 = <&gpslna_pins_oh>;
+	pinctrl-3 = <&gpslna_pins_ol>;
+	pinctrl-4 = <&wifi_reset_init>;
+	vcn18-supply = <&mt6323_vcn18_reg>;
+	vcn28-supply = <&mt6323_vcn28_reg>;
+	vcn33_bt-supply = <&mt6323_vcn33_bt_reg>;
+	vcn33_wifi-supply = <&mt6323_vcn33_wifi_reg>;
+	mediatek,pwrap-regmap = <&pwrap>;
+	memory-region = <&consys_mem>;
+	status = "okay";
+};
+
+&wifi {
+	status = "okay";
+};
+
+&pio {
+	/* CONSYS GPIO Settings - Start */
+	consys_pins_default: default {
+		pins_cmd_dat {
+			 pinmux = <MT8163_PIN_85_MSDC2_CMD__FUNC_ANT_SEL0>,
+				<MT8163_PIN_86_MSDC2_CLK__FUNC_ANT_SEL1>;
+		};
+	};
+
+	gpslna_pins_init: gpslna@0 {
+		pins_cmd_dat {
+			pinmux = <MT8163_PIN_6_PWRAP_SPI0_CSN2__FUNC_GPIO6>;
+			bias-disable;
+			output-low;
+		};
+	};
+
+	gpslna_pins_oh: gpslna@1 {
+		pins_cmd_dat {
+			pinmux = <MT8163_PIN_6_PWRAP_SPI0_CSN2__FUNC_GPIO6>;
+			output-high;
+		};
+	};
+
+	gpslna_pins_ol: gpslna@2 {
+		pins_cmd_dat {
+			pinmux = <MT8163_PIN_6_PWRAP_SPI0_CSN2__FUNC_GPIO6>;
+			output-low;
+		};
+	};
+	/* CONSYS GPIO Settings - End */
+
+	wifi_reset_init: wifireset@0 {
+		pins_reset_dat {
+			pinmux = <MT8163_PIN_60_WB_RSTB__FUNC_WB_RSTB>,
+				<MT8163_PIN_63_WB_SCLK__FUNC_WB_SCLK>,
+				<MT8163_PIN_64_WB_SDATA__FUNC_WB_SDATA>,
+				<MT8163_PIN_65_WB_SEN__FUNC_WB_SEN>;
+			input-enable;
+			bias-pull-up;
+		};
+	};
+};

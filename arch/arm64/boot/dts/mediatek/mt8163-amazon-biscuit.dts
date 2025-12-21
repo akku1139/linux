@@ -9,6 +9,7 @@
 #include <dt-bindings/leds/common.h>
 
 #include "mt8163-amazon.dtsi"
+#include "mt8163-amazon-biscuit-consys.dtsi"
 #include "mt8163-amazon-biscuit-leds.dtsi"
 
 / {
