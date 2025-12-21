@@ -191,6 +191,7 @@ struct early_suspend wmt_early_suspend_handler = {
 
 #else
 
+#if 0
 static struct notifier_block wmt_fb_notifier;
 static int wmt_fb_notifier_callback(struct notifier_block *self, unsigned long event, void *data)
 {
@@ -228,6 +229,7 @@ static int wmt_fb_notifier_callback(struct notifier_block *self, unsigned long e
 	}
 	return 0;
 }
+#endif
 #endif
 /*******************************************************************************
 *                          F U N C T I O N S
@@ -2395,12 +2397,14 @@ static int WMT_init(void)
 	register_early_suspend(&wmt_early_suspend_handler);
 	WMT_INFO_FUNC("register_early_suspend finished\n");
 #else
+#if 0
 	wmt_fb_notifier.notifier_call = wmt_fb_notifier_callback;
 	ret = fb_register_client(&wmt_fb_notifier);
 	if (ret)
 		WMT_ERR_FUNC("wmt register fb_notifier failed! ret(%d)\n", ret);
 	else
 		WMT_INFO_FUNC("wmt register fb_notifier OK!\n");
+#endif
 #endif
 	WMT_INFO_FUNC("success\n");
 	return 0;
@@ -2441,7 +2445,9 @@ static void WMT_exit(void)
 	unregister_early_suspend(&wmt_early_suspend_handler);
 	WMT_INFO_FUNC("unregister_early_suspend finished\n");
 #else
+#if 0
 	fb_unregister_client(&wmt_fb_notifier);
+#endif
 #endif
 
 	wmt_dev_bgw_desense_deinit();
