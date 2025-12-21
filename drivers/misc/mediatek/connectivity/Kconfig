@@ -209,6 +209,7 @@ config MTK_COMBO_WIFI
 	depends on MTK_COMBO
 	select WIRELESS_EXT
 	select WEXT_PRIV
+	select ZLIB_DEFLATE
 
 config MTK_BT_SUPPORT
 	bool "MTK_BT_SUPPORT"
