@@ -69,7 +69,7 @@
 ********************************************************************************
 */
 static INT32 mtk_wmt_probe(struct platform_device *pdev);
-static INT32 mtk_wmt_remove(struct platform_device *pdev);
+static void mtk_wmt_remove(struct platform_device *pdev);
 
 
 /*******************************************************************************
@@ -345,11 +345,11 @@ static INT32 mtk_wmt_probe(struct platform_device *pdev)
 	return 0;
 }
 
-static INT32 mtk_wmt_remove(struct platform_device *pdev)
+static void mtk_wmt_remove(struct platform_device *pdev)
 {
 	pm_runtime_disable(&pdev->dev);
 
-	return 0;
+	//return 0;
 }
 
 VOID mtk_wcn_consys_power_on(VOID)

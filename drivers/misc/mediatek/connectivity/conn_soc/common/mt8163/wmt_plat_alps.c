@@ -121,11 +121,7 @@ BT_WIFI_V33_STATUS gBtWifiV33;
 */
 #if CFG_WMT_WAKELOCK_SUPPORT
 static struct mutex gOsSLock;
-#ifdef CONFIG_PM_WAKELOCKS
-static struct wakeup_source wmtWakeLock;
-#else
-static struct wake_lock wmtWakeLock;
-#endif
+static struct wakeup_source *wmtWakeLock;
 #endif
 
 irq_cb wmt_plat_bgf_irq_cb = NULL;
@@ -325,11 +321,7 @@ INT32 wmt_plat_init(UINT32 co_clock_type)
 	/* register to cmb_stub */
 	iret = mtk_wcn_cmb_stub_reg(&stub_cb);
 #ifdef CFG_WMT_WAKELOCK_SUPPORT
-#ifdef CONFIG_PM_WAKELOCKS
-	wakeup_source_init(&wmtWakeLock, "wmtFuncCtrl");
-#else
-	wake_lock_init(&wmtWakeLock, WAKE_LOCK_SUSPEND, "wmtFuncCtrl");
-#endif
+	wmtWakeLock = wakeup_source_register(NULL, "wmtFuncCtrl");
 	mutex_init(&gOsSLock);
 #endif
 
@@ -355,11 +347,7 @@ INT32 wmt_plat_deinit(VOID)
 
 	/*3. wmt wakelock deinit */
 #ifdef CFG_WMT_WAKELOCK_SUPPORT
-#ifdef CONFIG_PM_WAKELOCKS
-	wakeup_source_trash(&wmtWakeLock);
-#else
-	wake_lock_destroy(&wmtWakeLock);
-#endif
+	wakeup_source_unregister(wmtWakeLock);
 	mutex_destroy(&gOsSLock);
 	WMT_PLAT_DBG_FUNC("destroy wmtWakeLock\n");
 #endif
@@ -827,30 +815,16 @@ INT32 wmt_plat_wake_lock_ctrl(ENUM_WL_OP opId)
 
 	mutex_unlock(&gOsSLock);
 	if (WL_OP_GET == opId && counter == 1) {
-		#ifdef CONFIG_PM_WAKELOCKS
-		__pm_stay_awake(&wmtWakeLock);
-		status = wmtWakeLock.active;
-		#else
-		wake_lock(&wmtWakeLock);
-		status = wake_lock_active(&wmtWakeLock);
-		#endif
+		__pm_stay_awake(wmtWakeLock);
+		status = wmtWakeLock->active;
 		WMT_PLAT_DBG_FUNC("WMT-PLAT: after wake_lock(%d), counter(%d)\n", status, counter);
 
 	} else if (WL_OP_PUT == opId && counter == 0) {
-		#ifdef CONFIG_PM_WAKELOCKS
-		__pm_relax(&wmtWakeLock);
-		status = wmtWakeLock.active;
-		#else
-		wake_unlock(&wmtWakeLock);
-		status = wake_lock_active(&wmtWakeLock);
-		#endif
+		__pm_relax(wmtWakeLock);
+		status = wmtWakeLock->active;
 		WMT_PLAT_DBG_FUNC("WMT-PLAT: after wake_unlock(%d), counter(%d)\n", status, counter);
 	} else {
-		#ifdef CONFIG_PM_WAKELOCKS
-		status = wmtWakeLock.active;
-		#else
-		status = wake_lock_active(&wmtWakeLock);
-		#endif
+		status = wmtWakeLock->active;
 		WMT_PLAT_WARN_FUNC("WMT-PLAT: wakelock status(%d), counter(%d)\n", status, counter);
 	}
 	return 0;

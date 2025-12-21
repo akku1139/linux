@@ -234,10 +234,10 @@ static int wmt_detect_probe(struct platform_device *pdev)
 	return ret;
 }
 
-static int wmt_detect_remove(struct platform_device *pdev)
+static void wmt_detect_remove(struct platform_device *pdev)
 {
 	wmt_gpio_deinit();
-	return 0;
+	//return 0;
 }
 #endif
 

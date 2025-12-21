@@ -12,7 +12,7 @@
 * If not, see <http://www.gnu.org/licenses/>.
 */
 #include <linux/kernel.h>	/* GFP_KERNEL */
-#include <linux/timer.h>	/* init_timer, add_time, del_timer_sync */
+#include <linux/timer.h>	/* init_timer, add_time, timer_delete_sync */
 #include <linux/time.h>		/* gettimeofday */
 #include <linux/delay.h>
 #include <linux/slab.h>		/* kzalloc */
@@ -184,9 +184,9 @@ static P_STP_DBG_DMAREGS_T g_stp_dbg_dmaregs;
  *
  * No return value
  */
-static void core_dump_timeout_handler(unsigned long data)
+static void core_dump_timeout_handler(struct timer_list *t)
 {
-	P_WCN_CORE_DUMP_T dmp = (P_WCN_CORE_DUMP_T) data;
+	P_WCN_CORE_DUMP_T dmp = timer_container_of(dmp,t,dmp_timer.timer);
 
 	STP_DBG_INFO_FUNC(" start\n");
 

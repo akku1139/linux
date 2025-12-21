@@ -710,10 +710,14 @@ BOOLEAN kalIndicateAgpsNotify(P_ADAPTER_T prAdapter, UINT_8 cmd, PUINT_8 data, U
 /*----------------------------------------------------------------------------*/
 #if CONFIG_ANDROID		/* Defined in Android kernel source */
 #define KAL_WAKE_LOCK_INIT(_prAdapter, _prWakeLock, _pcName) \
-	wake_lock_init(_prWakeLock, WAKE_LOCK_SUSPEND, _pcName)
+	do { \
+		(*(_prWakeLock)) = wakeup_source_register(NULL, _pcName); \
+	} while (0)
 
 #define KAL_WAKE_LOCK_DESTROY(_prAdapter, _prWakeLock) \
-	wake_lock_destroy(_prWakeLock)
+	do { \
+		wakeup_source_unregister(*(_prWakeLock)); \
+	} while (0)
 
 #define KAL_WAKE_LOCK(_prAdapter, _prWakeLock) \
 	wake_lock(_prWakeLock)
@@ -1429,7 +1433,7 @@ VOID kalScanDone(IN P_GLUE_INFO_T prGlueInfo, IN ENUM_KAL_NETWORK_TYPE_INDEX_T e
 
 UINT_32 kalRandomNumber(VOID);
 
-VOID kalTimeoutHandler(ULONG arg);
+VOID kalTimeoutHandler(struct timer_list *t);
 
 VOID kalSetEvent(P_GLUE_INFO_T pr);
 

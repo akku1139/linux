@@ -593,9 +593,7 @@ INT32 osal_timer_create(P_OSAL_TIMER pTimer)
 {
 	struct timer_list *timer = &pTimer->timer;
 
-	init_timer(timer);
-	timer->function = pTimer->timeoutHandler;
-	timer->data = (unsigned long)pTimer->timeroutHandlerData;
+	timer_setup(timer, pTimer->timeoutHandler,0);
 	return 0;
 }
 
@@ -613,7 +611,7 @@ INT32 osal_timer_stop(P_OSAL_TIMER pTimer)
 {
 	struct timer_list *timer = &pTimer->timer;
 
-	del_timer(timer);
+	timer_delete(timer);
 	return 0;
 }
 
@@ -621,7 +619,7 @@ INT32 osal_timer_stop_sync(P_OSAL_TIMER pTimer)
 {
 	struct timer_list *timer = &pTimer->timer;
 
-	del_timer_sync(timer);
+	timer_delete_sync(timer);
 	return 0;
 }
 
@@ -989,11 +987,8 @@ INT32 osal_wake_lock_init(P_OSAL_WAKE_LOCK pLock)
 	if (!pLock)
 		return -1;
 
-	#ifdef CONFIG_PM_WAKELOCKS
-	wakeup_source_init(&pLock->wake_lock, pLock->name);
-	#else
-	wake_lock_init(&pLock->wake_lock, WAKE_LOCK_SUSPEND, pLock->name);
-	#endif
+	pLock->wake_lock = wakeup_source_register(NULL, pLock->name);
+
 	return 0;
 }
 
@@ -1002,11 +997,7 @@ INT32 osal_wake_lock_deinit(P_OSAL_WAKE_LOCK pLock)
 	if (!pLock)
 		return -1;
 
-	#ifdef CONFIG_PM_WAKELOCKS
-	wakeup_source_trash(&pLock->wake_lock);
-	#else
-	wake_lock_destroy(&pLock->wake_lock);
-	#endif
+	wakeup_source_unregister(pLock->wake_lock);
 	return 0;
 }
 
@@ -1015,12 +1006,7 @@ INT32 osal_wake_lock(P_OSAL_WAKE_LOCK pLock)
 	if (!pLock)
 		return -1;
 
-	#ifdef CONFIG_PM_WAKELOCKS
-	__pm_stay_awake(&pLock->wake_lock);
-	#else
-	wake_lock(&pLock->wake_lock);
-	#endif
-
+	__pm_stay_awake(pLock->wake_lock);
 	return 0;
 }
 
@@ -1029,12 +1015,7 @@ INT32 osal_wake_unlock(P_OSAL_WAKE_LOCK pLock)
 	if (!pLock)
 		return -1;
 
-	#ifdef CONFIG_PM_WAKELOCKS
-	__pm_relax(&pLock->wake_lock);
-	#else
-	wake_unlock(&pLock->wake_lock);
-	#endif
-
+	__pm_relax(pLock->wake_lock);
 	return 0;
 
 }
@@ -1046,11 +1027,7 @@ INT32 osal_wake_lock_count(P_OSAL_WAKE_LOCK pLock)
 	if (!pLock)
 		return -1;
 
-	#ifdef CONFIG_PM_WAKELOCKS
-	count = pLock->wake_lock.active;
-	#else
-	count = wake_lock_active(&pLock->wake_lock);
-	#endif
+	count = pLock->wake_lock->active;
 	return count;
 }
 
@@ -1138,9 +1115,9 @@ INT32 osal_udelay(UINT32 us)
 INT32 osal_gettimeofday(PINT32 sec, PINT32 usec)
 {
 	INT32 ret = 0;
-	struct timeval now;
+	struct timespec64 now;
 
-	do_gettimeofday(&now);
+	ktime_get_real_ts64(&now);
 
 	if (sec != NULL)
 		*sec = now.tv_sec;
@@ -1148,7 +1125,7 @@ INT32 osal_gettimeofday(PINT32 sec, PINT32 usec)
 		ret = -1;
 
 	if (usec != NULL)
-		*usec = now.tv_usec;
+		*usec = now.tv_nsec / 1000;
 	else
 		ret = -1;
 
