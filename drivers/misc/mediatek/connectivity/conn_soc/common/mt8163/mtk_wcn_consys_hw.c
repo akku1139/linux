@@ -29,7 +29,6 @@
 #include <linux/clk.h>
 #endif /* defined(CONFIG_MTK_CLKMGR) */
 #include <linux/delay.h>
-#include <asm/memblock.h>
 #include "osal_typedef.h"
 #include "mtk_wcn_consys_hw.h"
 
