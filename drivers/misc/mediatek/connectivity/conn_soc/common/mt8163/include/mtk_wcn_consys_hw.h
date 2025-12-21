@@ -18,6 +18,8 @@
 #include <linux/of_irq.h>
 #include <linux/irqreturn.h>
 #include <linux/of_address.h>
+#include <linux/pinctrl/consumer.h>
+#include <linux/pinctrl/pinctrl.h>
 #endif
 
 /*******************************************************************************
