@@ -12,16 +12,17 @@ ifneq ($(KERNELRELEASE),)
   ifeq ($(CONFIG_MTK_CLKMGR),y)
   	ccflags-y +=	-I$(srctree)/drivers/misc/mediatek/include/mt-plat/$(MTK_PLATFORM)/include/mach
   	endif
-  ifeq ($(CONFIG_MTK_EMI_MPU),y)
-  	ccflags-y +=	-I$(srctree)/drivers/misc/mediatek/include/mt-plat/$(MTK_PLATFORM)/include/mach
-  	endif
   ifeq ($(CONFIG_MTK_CONN_LTE_IDC_SUPPORT),y)
 	subdir-ccflags-y += -DWMT_IDC_SUPPORT=1
 	else
 	subdir-ccflags-y += -DWMT_IDC_SUPPORT=0
 	endif
+
+  ccflags-y +=	-I$(srctree)/drivers/misc/mediatek/include/mt-plat/$(MTK_PLATFORM)/include
   obj-y += mtk_wcn_consys_hw.o
   obj-y += wmt_plat_alps.o
+  obj-y += pwrap_compat.o
+
 # Otherwise we were called directly from the command
 # line; invoke the kernel build system.
 else

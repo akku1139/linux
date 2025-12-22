@@ -38,8 +38,9 @@
 #endif
 
 #if CONSYS_PMIC_CTRL_ENABLE
-#include <upmu_common.h>
+#include "pwrap_compat.h"
 #include <linux/regulator/consumer.h>
+#include <linux/mfd/syscon.h>
 #endif
 
 #ifdef CONFIG_MTK_HIBERNATION
@@ -93,16 +94,17 @@ static const struct of_device_id apwmt_of_ids[] = {
 	{.compatible = "mediatek,mt8163-consys",},
 	{}
 };
+MODULE_DEVICE_TABLE(of, apwmt_of_ids);
 #endif
 
 static struct platform_driver mtk_wmt_dev_drv = {
 	.probe = mtk_wmt_probe,
 	.remove = mtk_wmt_remove,
 	.driver = {
-		   .name = "mtk_wmt",
+		   .name = "mt8163consys",
 		   .owner = THIS_MODULE,
 #ifdef CONFIG_OF
-		   .of_match_table = apwmt_of_ids,
+		   .of_match_table = of_match_ptr(apwmt_of_ids),
 #endif
 		   },
 };
@@ -280,6 +282,8 @@ UINT32 mtk_wcn_consys_jtag_flag_ctrl(UINT32 en)
 static INT32 mtk_wmt_probe(struct platform_device *pdev)
 {
 	int ret = 0;
+	struct device_node *node;
+	struct regmap *pmic_regmap;
 
 	pm_runtime_enable(&pdev->dev);
 	my_pdev = pdev;
@@ -316,6 +320,16 @@ static INT32 mtk_wmt_probe(struct platform_device *pdev)
 	if (IS_ERR(reg_VCN33_WIFI)) {
 		ret = PTR_ERR(reg_VCN33_WIFI);
 		WMT_PLAT_ERR_FUNC("Regulator_get VCN33_WIFI fail, ret=%d\n", ret);
+	}
+	node = of_parse_phandle(pdev->dev.of_node, "mediatek,pwrap-regmap", 0);
+	if (node) {
+		pmic_regmap = syscon_node_to_regmap(node);
+		if (IS_ERR(pmic_regmap))
+			return PTR_ERR(pmic_regmap);
+		set_pwrap_regmap(pmic_regmap);
+	} else {
+		WMT_PLAT_ERR_FUNC("Pwrap node has not register regmap.\n");
+		return -ENODEV;
 	}
 #endif
 #endif
