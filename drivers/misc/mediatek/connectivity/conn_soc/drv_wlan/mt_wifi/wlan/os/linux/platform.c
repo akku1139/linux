@@ -580,51 +580,32 @@ int glIndicateWoWPacket(void *data)
 static int nvram_read(char *filename, char *buf, ssize_t len, int offset)
 {
 #if CFG_SUPPORT_NVRAM
-	struct file *fd;
-	int retLen = -1;
+    const struct firmware *fw;
+    int ret = 0;
 
-	mm_segment_t old_fs = get_fs();
+    ret = request_firmware(&fw, filename, NULL);
+    if (ret) {
+        pr_info("[MT6620][nvram_read] : request_firmware failed (%d)\n", ret);
+        return -EIO;
+    }
 
-	set_fs(KERNEL_DS);
+    if (offset >= fw->size) {
+        pr_info("[MT6620][nvram_read] : offset beyond file size\n");
+        release_firmware(fw);
+        return -EINVAL;
+    }
 
-	fd = filp_open(filename, O_RDONLY, 0644);
+    if (offset + len > fw->size)
+        len = fw->size - offset;
 
-	if (IS_ERR(fd)) {
-		DBGLOG(INIT, INFO, "[MT6620][nvram_read] : failed to open!!\n");
-		return -1;
-	}
+    memcpy(buf, fw->data + offset, len);
 
-	do {
-		if ((fd->f_op == NULL) || (fd->f_op->read == NULL)) {
-			DBGLOG(INIT, INFO, "[MT6620][nvram_read] : file can not be read!!\n");
-			break;
-		}
+    release_firmware(fw);
 
-		if (fd->f_pos != offset) {
-			if (fd->f_op->llseek) {
-				if (fd->f_op->llseek(fd, offset, 0) != offset) {
-					DBGLOG(INIT, INFO, "[MT6620][nvram_read] : failed to seek!!\n");
-					break;
-				}
-			} else {
-				fd->f_pos = offset;
-			}
-		}
+    return len;
 
-		retLen = fd->f_op->read(fd, buf, len, &fd->f_pos);
-
-	} while (FALSE);
-
-	filp_close(fd, NULL);
-
-	set_fs(old_fs);
-
-	return retLen;
-
-#else /* !CFG_SUPPORT_NVRAM */
-
-	return -EIO;
-
+#else
+    return -EIO;
 #endif
 }
 
@@ -643,53 +624,7 @@ static int nvram_read(char *filename, char *buf, ssize_t len, int offset)
 /*----------------------------------------------------------------------------*/
 static int nvram_write(char *filename, char *buf, ssize_t len, int offset)
 {
-#if CFG_SUPPORT_NVRAM
-	struct file *fd;
-	int retLen = -1;
-
-	mm_segment_t old_fs = get_fs();
-
-	set_fs(KERNEL_DS);
-
-	fd = filp_open(filename, O_WRONLY | O_CREAT, 0644);
-
-	if (IS_ERR(fd)) {
-		DBGLOG(INIT, INFO, "[MT6620][nvram_write] : failed to open!!\n");
-		return -1;
-	}
-
-	do {
-		if ((fd->f_op == NULL) || (fd->f_op->write == NULL)) {
-			DBGLOG(INIT, INFO, "[MT6620][nvram_write] : file can not be write!!\n");
-			break;
-		}
-		/* End of if */
-		if (fd->f_pos != offset) {
-			if (fd->f_op->llseek) {
-				if (fd->f_op->llseek(fd, offset, 0) != offset) {
-					DBGLOG(INIT, INFO, "[MT6620][nvram_write] : failed to seek!!\n");
-					break;
-				}
-			} else {
-				fd->f_pos = offset;
-			}
-		}
-
-		retLen = fd->f_op->write(fd, buf, len, &fd->f_pos);
-
-	} while (FALSE);
-
-	filp_close(fd, NULL);
-
-	set_fs(old_fs);
-
-	return retLen;
-
-#else /* !CFG_SUPPORT_NVRAMS */
-
 	return -EIO;
-
-#endif
 }
 
 /*----------------------------------------------------------------------------*/

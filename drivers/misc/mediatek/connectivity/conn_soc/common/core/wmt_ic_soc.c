@@ -1980,8 +1980,8 @@ static INT32 mtk_wcn_soc_patch_info_prepare(VOID)
 static INT32 mtk_wcn_soc_patch_dwn(UINT32 index)
 {
 	INT32 iRet = -1;
-	P_WMT_PATCH patchHdr;
-	PUINT8 pbuf;
+	P_WMT_PATCH patchHdr = NULL;
+	PUINT8 pPatchBuf, pbuf;
 	UINT32 patchSize;
 	UINT32 fragSeq;
 	UINT32 fragNum;
@@ -2019,7 +2019,7 @@ static INT32 mtk_wcn_soc_patch_dwn(UINT32 index)
 	ctrlData.ctrlId = WMT_CTRL_GET_PATCH;
 	ctrlData.au4CtrlData[0] = (SIZE_T) NULL;
 	ctrlData.au4CtrlData[1] = (SIZE_T) &gFullPatchName;
-	ctrlData.au4CtrlData[2] = (SIZE_T) &pbuf;
+	ctrlData.au4CtrlData[2] = (SIZE_T) &pPatchBuf; /* was pbuf */
 	ctrlData.au4CtrlData[3] = (SIZE_T) &patchSize;
 	iRet = wmt_ctrl(&ctrlData);
 	if (iRet) {
@@ -2028,8 +2028,27 @@ static INT32 mtk_wcn_soc_patch_dwn(UINT32 index)
 		goto done;
 	}
 
+#if 0
+	/* we don't need to do this since we switched to request_firmware().
+	 * the original wmt_dev_patch_get() would read the firmware to
+	 * BCNT_PATCH_BUF_HEADROOM bytes from the beginning of the buffer it
+	 * allocates, but we don't do that with request_firmware().
+	 */
 	/* |<-BCNT_PATCH_BUF_HEADROOM(8) bytes dummy allocated->|<-patch file->| */
-	pbuf += BCNT_PATCH_BUF_HEADROOM;
+	//pbuf += BCNT_PATCH_BUF_HEADROOM;
+#else
+	/* instead, copy the firmware we get from request_firmware() into a
+	 * working buffer.
+	 */
+	pbuf = osal_malloc(patchSize);
+	if (pbuf == NULL) {
+		WMT_ERR_FUNC("vmalloc pbuf for patch download fail\n");
+		iRet = -2;
+		goto done;
+	}
+	osal_memcpy(pbuf, pPatchBuf, patchSize);
+#endif
+
 	/* patch file with header:
 	 * |<-patch header: 28 Bytes->|<-patch body: X Bytes ----->|
 	 */
@@ -2211,6 +2230,16 @@ static INT32 mtk_wcn_soc_patch_dwn(UINT32 index)
 	if (fragSeq != fragNum)
 		iRet -= 1;
 done:
+	if (patchHdr != NULL) {
+		/* WMT_CTRL_FREE_PATCH will call release_firmware()
+		 * which cleans up that resource, here we only need
+		 * to free our copy.
+		 */
+		osal_free(patchHdr);
+		pbuf = NULL;
+		patchHdr = NULL;
+	}
+
 	/* WMT_CTRL_FREE_PATCH always return 0 */
 	/* wmt_core_ctrl(WMT_CTRL_FREE_PATCH, NULL, NULL); */
 	ctrlData.ctrlId = WMT_CTRL_FREE_PATCH;

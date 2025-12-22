@@ -1478,6 +1478,7 @@ INT32 wmt_dev_rx_timeout(P_OSAL_EVENT pEvent)
 	return lRet;
 }
 
+#if 0
 INT32 wmt_dev_read_file(PUINT8 pName, const PPUINT8 ppBufPtr, INT32 offset, INT32 padSzBuf)
 {
 	INT32 iRet = -1;
@@ -1543,74 +1544,44 @@ read_file_done:
 
 	return (iRet) ? iRet : read_len;
 }
+#endif
 
 /* TODO: [ChangeFeature][George] refine this function name for general filesystem read operation, not patch only. */
 INT32 wmt_dev_patch_get(PUINT8 pPatchName, osal_firmware **ppPatch, INT32 padSzBuf)
 {
+	(void)padSzBuf; /* throw away padSzBuf, its no longer used */
 	INT32 iRet = -1;
-	osal_firmware *pfw;
-	uid_t orig_uid;
-	gid_t orig_gid;
+	osal_firmware *fw = NULL;
 
-	/* struct cred *cred = get_task_cred(current); */
-	struct cred *cred = (struct cred *)get_current_cred();
-
-	mm_segment_t orig_fs = get_fs();
-
-	if (*ppPatch) {
-		WMT_WARN_FUNC("f/w patch already exists\n");
-		if ((*ppPatch)->data)
-			vfree((*ppPatch)->data);
-
-		kfree(*ppPatch);
-		*ppPatch = NULL;
-	}
-
-	if (!osal_strlen(pPatchName)) {
-		WMT_ERR_FUNC("empty f/w name\n");
-		osal_assert((osal_strlen(pPatchName) > 0));
+	if (!ppPatch) {
+		WMT_ERR_FUNC("invalid ppBufptr!\n");
 		return -1;
 	}
 
-	pfw = kzalloc(sizeof(osal_firmware), /*GFP_KERNEL */ GFP_ATOMIC);
-	if (!pfw) {
-		WMT_ERR_FUNC("kzalloc(%d) fail\n", sizeof(osal_firmware));
-		return -2;
-	}
-
-	orig_uid = cred->fsuid.val;
-	orig_gid = cred->fsgid.val;
-	cred->fsuid.val = cred->fsgid.val = 0;
-
-	set_fs(get_ds());
-
-	/* load patch file from fs */
-	iRet = wmt_dev_read_file(pPatchName, (const PPUINT8)&pfw->data, 0, padSzBuf);
-	set_fs(orig_fs);
-
-	cred->fsuid.val = orig_uid;
-	cred->fsgid.val = orig_gid;
-
-
-	if (iRet > 0) {
-		pfw->size = iRet;
-		*ppPatch = pfw;
-		WMT_DBG_FUNC("load (%s) to addr(0x%p) success\n", pPatchName, pfw->data);
-		return 0;
-	}
-	kfree(pfw);
 	*ppPatch = NULL;
-	WMT_ERR_FUNC("load file (%s) fail, iRet(%d)\n", pPatchName, iRet);
-	return -1;
+	do {
+		iRet = request_firmware((const struct firmware **)&fw, pPatchName, NULL);
+		if (iRet == -EAGAIN) {
+			WMT_ERR_FUNC("failed to open or read!(%s), retry again!\n", pPatchName);
+			osal_sleep_ms(100);
+		}
+	} while (iRet == -EAGAIN);
+	if (iRet != 0) {
+		WMT_ERR_FUNC("failed to open or read!(%s)\n", pPatchName);
+		return -1;
+	}
+	WMT_DBG_FUNC("loader firmware %s  ok!!\n", pPatchName);
+	iRet = 0;
+	*ppPatch = fw;
+
+	return iRet;
 }
+EXPORT_SYMBOL(wmt_dev_patch_get);
 
 INT32 wmt_dev_patch_put(osal_firmware **ppPatch)
 {
-	if (NULL != *ppPatch) {
-		if ((*ppPatch)->data)
-			vfree((*ppPatch)->data);
-
-		kfree(*ppPatch);
+	if (*ppPatch != NULL) {
+		release_firmware((const struct firmware *)*ppPatch);
 		*ppPatch = NULL;
 	}
 	return 0;
@@ -1618,44 +1589,32 @@ INT32 wmt_dev_patch_put(osal_firmware **ppPatch)
 
 VOID wmt_dev_patch_info_free(VOID)
 {
-
 	kfree(pPatchInfo);
 	pPatchInfo = NULL;
-
 }
 
 MTK_WCN_BOOL wmt_dev_is_file_exist(PUINT8 pFileName)
 {
-	struct file *fd = NULL;
-	/* ssize_t iRet; */
-	INT32 fileLen = -1;
-	const struct cred *cred = get_current_cred();
+	INT32 iRet = 0;
+	osal_firmware *fw = NULL;
 
 	if (pFileName == NULL) {
 		WMT_ERR_FUNC("invalid file name pointer(%p)\n", pFileName);
 		return MTK_WCN_BOOL_FALSE;
 	}
+
 	if (osal_strlen(pFileName) < osal_strlen(defaultPatchName)) {
 		WMT_ERR_FUNC("invalid file name(%s)\n", pFileName);
 		return MTK_WCN_BOOL_FALSE;
 	}
-	/* struct cred *cred = get_task_cred(current); */
 
-	fd = filp_open(pFileName, O_RDONLY, 0);
-	if (!fd || IS_ERR(fd) || !fd->f_op || !fd->f_op->read) {
-		WMT_ERR_FUNC("failed to open or read(%s)!(0x%p, %d, %d)\n", pFileName, fd, cred->fsuid, cred->fsgid);
+	iRet = request_firmware((const struct firmware **)&fw, pFileName, NULL);
+	if (iRet != 0) {
+		WMT_ERR_FUNC("failed to open or read!(%s)\n", pFileName);
 		return MTK_WCN_BOOL_FALSE;
 	}
-	fileLen = fd->f_path.dentry->d_inode->i_size;
-	filp_close(fd, NULL);
-	fd = NULL;
-	if (fileLen <= 0) {
-		WMT_ERR_FUNC("invalid file(%s), length(%d)\n", pFileName, fileLen);
-		return MTK_WCN_BOOL_FALSE;
-	}
-	WMT_ERR_FUNC("valid file(%s), length(%d)\n", pFileName, fileLen);
+	release_firmware(fw);
 	return true;
-
 }
 
 /* static unsigned long count_last_access_sdio = 0; */
