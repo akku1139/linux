@@ -474,7 +474,7 @@ INT32 wmt_conf_read_file(VOID)
 #if 1
 	osal_memset(&gDevWmt.cWmtcfgName[0], 0, osal_sizeof(gDevWmt.cWmtcfgName));
 
-	osal_strncat(&(gDevWmt.cWmtcfgName[0]), CUST_CFG_WMT_PREFIX, osal_sizeof(CUST_CFG_WMT_PREFIX));
+	//osal_strncat(&(gDevWmt.cWmtcfgName[0]), CUST_CFG_WMT_PREFIX, osal_sizeof(CUST_CFG_WMT_PREFIX));
 	osal_strncat(&(gDevWmt.cWmtcfgName[0]), CUST_CFG_WMT, osal_sizeof(CUST_CFG_WMT));
 #endif
 
