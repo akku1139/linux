@@ -221,10 +221,9 @@ loff_t *data)
 	return (ssize_t)count;
 }
 
-static const struct file_operations rxba_fops = {
-	.owner = THIS_MODULE,
-	.write = procRxBAWinWrite,
-	.read = procRxBAWinRead,
+static const struct proc_ops rxba_fops = {
+	.proc_write = procRxBAWinWrite,
+	.proc_read = procRxBAWinRead,
 };
 
 /*----------------------------------------------------------------------------*/
@@ -331,10 +330,9 @@ static ssize_t procMCRWrite(struct file *file, const char __user *buffer, size_t
 	return (ssize_t)count;
 }				/* end of procMCRWrite() */
 
-static const struct file_operations mcr_fops = {
-	.owner = THIS_MODULE,
-	.write = procMCRWrite,
-	.read = procMCRRead,
+static const struct proc_ops mcr_fops = {
+	.proc_write = procMCRWrite,
+	.proc_read = procMCRRead,
 };
 
 #endif
@@ -672,10 +670,9 @@ free_Buf:
 }
 
 
-static const struct file_operations dbglevel_ops = {
-	.owner = THIS_MODULE,
-	.read = procDbgLevelRead,
-	.write = procDbgLevelWrite,
+static const struct proc_ops dbglevel_ops = {
+	.proc_read = procDbgLevelRead,
+	.proc_write = procDbgLevelWrite,
 };
 
 /*----------------------------------------------------------------------------*/
@@ -863,10 +860,9 @@ static ssize_t procfile_write(struct file *filp, const char __user *buffer,
 
 	return len;
 }
-static const struct file_operations proc_fops = {
-	.owner = THIS_MODULE,
-	.read = procfile_read,
-	.write = procfile_write,
+static const struct proc_ops proc_fops = {
+	.proc_read = procfile_read,
+	.proc_write = procfile_write,
 };
 #endif
 static ssize_t procCountryRead(struct file *file, char __user *buf,
@@ -979,10 +975,9 @@ free_Buf:
 	return i4ret;
 }
 
-static const struct file_operations country_ops = {
-	.owner = THIS_MODULE,
-	.write = procCountryWrite,
-	.read = procCountryRead
+static const struct proc_ops country_ops = {
+	.proc_write = procCountryWrite,
+	.proc_read = procCountryRead
 };
 
 static ssize_t procRoamRead(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
@@ -1069,10 +1064,9 @@ free_Buf:
 	return i4ret;
 }
 
-static const struct file_operations roam_ops = {
-	.owner = THIS_MODULE,
-	.read = procRoamRead,
-	.write = procRoamWrite,
+static const struct proc_ops roam_ops = {
+	.proc_read = procRoamRead,
+	.proc_write = procRoamWrite,
 };
 
 #ifdef CONFIG_MTK_WIFI_ANTENNA_SWITCH
@@ -1138,9 +1132,8 @@ static ssize_t antenna_select_write(struct file *filp, const char __user *buf,
 	return count;
 }
 
-static const struct file_operations antenna_select_fops = {
-	.owner = THIS_MODULE,
-	.write = antenna_select_write,
+static const struct proc_ops antenna_select_fops = {
+	.proc_write = antenna_select_write,
 };
 #endif
 
@@ -1315,10 +1308,9 @@ free_Buf:
 	return i4ret;
 }
 
-static const struct file_operations antenna_rssi_fops = {
-	.owner = THIS_MODULE,
-	.read = antenna_query_read,
-	.write = antenna_query_write,
+static const struct proc_ops antenna_rssi_fops = {
+	.proc_read = antenna_query_read,
+	.proc_write = antenna_query_write,
 };
 #endif
 
@@ -1344,9 +1336,8 @@ static ssize_t procVersionRead(struct file *filp, char __user *buf, size_t count
 
 	return (INT_32)u4CopySize;
 }
-static const struct file_operations version_fops = {
-	.owner = THIS_MODULE,
-	.read = procVersionRead,
+static const struct proc_ops version_fops = {
+	.proc_read = procVersionRead,
 };
 
 static ssize_t procChipIDRead(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
@@ -1369,9 +1360,8 @@ static ssize_t procChipIDRead(struct file *filp, char __user *buf, size_t count,
 
 	return (INT_32)u4CopySize;
 }
-static const struct file_operations ChipID_fops = {
-	.owner = THIS_MODULE,
-	.read = procChipIDRead,
+static const struct proc_ops ChipID_fops = {
+	.proc_read = procChipIDRead,
 };
 
 static ssize_t dtim_skip_count_read(struct file *filp,
@@ -1476,10 +1466,9 @@ free_Buf:
 }
 
 
-static const struct file_operations dtim_ops = {
-	.owner = THIS_MODULE,
-	.read = dtim_skip_count_read,
-	.write = dtim_skip_count_write,
+static const struct proc_ops dtim_ops = {
+	.proc_read = dtim_skip_count_read,
+	.proc_write = dtim_skip_count_write,
 };
 
 INT_32 procInitFs(VOID)

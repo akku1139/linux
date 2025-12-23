@@ -23,7 +23,7 @@
 #define STP_SDIO      0x04
 
 #define CFG_WMT_DBG_SUPPORT 1	/* support wmt_dbg or not */
-#define CFG_WMT_PROC_FOR_AEE 1
+#define CFG_WMT_PROC_FOR_AEE 0
 
 extern VOID wmt_dev_rx_event_cb(VOID);
 extern INT32 wmt_dev_rx_timeout(P_OSAL_EVENT pEvent);
