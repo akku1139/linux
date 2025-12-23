@@ -77,7 +77,7 @@ static INT32 mtk_wmt_remove(struct platform_device *pdev);
 ********************************************************************************
 */
 UINT8 __iomem *pEmibaseaddr = NULL;
-phys_addr_t gConEmiPhyBase;
+extern phys_addr_t gConEmiPhyBase;
 struct CONSYS_BASE_ADDRESS conn_reg;
 
 /* CCF part */
@@ -1207,18 +1207,6 @@ INT32 mtk_wcn_consys_hw_restore(struct device *device)
 
 	return 0;
 }
-
-/*Reserved memory by device tree!*/
-int reserve_memory_consys_fn(struct reserved_mem *rmem)
-{
-	WMT_PLAT_WARN_FUNC(" name: %s, base: 0x%llx, size: 0x%llx\n", rmem->name,
-			   (unsigned long long)rmem->base, (unsigned long long)rmem->size);
-	gConEmiPhyBase = rmem->base;
-	return 0;
-}
-
-RESERVEDMEM_OF_DECLARE(reserve_memory_test, "mediatek,consys-reserve-memory", reserve_memory_consys_fn);
-
 
 INT32 mtk_wcn_consys_hw_init(void)
 {
