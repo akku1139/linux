@@ -1652,7 +1652,6 @@ WLAN_STATUS kalRxIndicatePkts(IN P_GLUE_INFO_T prGlueInfo, IN PVOID apvPkts[], I
 
 		STATS_RX_PKT_INFO_DISPLAY(prSkb->data);
 
-		prNetDev->last_rx = jiffies;
 		prSkb->protocol = eth_type_trans(prSkb, prNetDev);
 		prSkb->dev = prNetDev;
 		/* DBGLOG_MEM32(RX, TRACE, (PUINT_32)prSkb->data, prSkb->len); */
@@ -1674,13 +1673,8 @@ WLAN_STATUS kalRxIndicatePkts(IN P_GLUE_INFO_T prGlueInfo, IN PVOID apvPkts[], I
 #endif
 
 
-		if (!in_interrupt()) {
-			glIndicateWoWPacket(prSkb);
-			netif_rx_ni(prSkb);	/* only in non-interrupt context */
-		} else {
-			glIndicateWoWPacket(prSkb);
-			netif_rx(prSkb);
-		}
+		WoWPacket(prSkb);
+		netif_rx(prSkb);
 		wlanReturnPacket(prGlueInfo->prAdapter, NULL);
 	}
 
