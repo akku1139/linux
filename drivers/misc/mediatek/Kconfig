@@ -1,0 +1,4 @@
+menu "Mediatek Peripherals "
+depends on ARM || ARM64
+
+endmenu  # CONN
