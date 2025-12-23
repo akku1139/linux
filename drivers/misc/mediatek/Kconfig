@@ -7,4 +7,7 @@ config MTK_PLATFORM
 config ARCH_MTK_PROJECT
 	string "ARCH_MTK_PROJECT"
 
+source "drivers/misc/mediatek/btif/Kconfig"
+source "drivers/misc/mediatek/connectivity/Kconfig"
+
 endmenu  # CONN

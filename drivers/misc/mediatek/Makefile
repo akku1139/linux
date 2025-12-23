@@ -13,3 +13,6 @@
 
 # Built into the kernel for reserved memory
 obj-y += connectivity_build_in_adapter.o
+
+obj-$(CONFIG_MTK_BTIF) += btif/
+obj-$(CONFIG_MTK_COMBO) += connectivity/
