@@ -883,6 +883,7 @@ static struct reg_mapping support_region[] = {
 ** locale info basically could tell which country it is for
 ** For IN, the locale is en-IN
 */
+#if 0
 BOOLEAN wlanIsDeviceForIN(void)
 {
 #define IN_LOCALE       "en-IN"
@@ -909,7 +910,7 @@ BOOLEAN wlanIsDeviceForIN(void)
 
 	return ret;
 }
-
+#endif /* WTF?? */
 
 
 UINT32 rlmDomainSupOperatingClassIeFill(UINT_8 *pBuf)
