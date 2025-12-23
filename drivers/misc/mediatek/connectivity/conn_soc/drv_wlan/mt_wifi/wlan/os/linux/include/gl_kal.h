@@ -849,7 +849,7 @@ BOOLEAN kalIndicateAgpsNotify(P_ADAPTER_T prAdapter, UINT_8 cmd, PUINT_8 data, U
 #define kalStrnChr(s, n, c)                           strnchr(s, n, c)
 #define kalStrLen(s)                                strlen(s)
 #define kalStrnLen(s, b)                             strnlen(s, b)
-#define kalStrniCmp(s1, s2, n)                          strnicmp(s1, s2, n)
+#define kalStrniCmp(s1, s2, n)                          strncasecmp(s1, s2, n)
 /* #define kalStrtoul(cp, endp, base)                    simple_strtoul(cp, endp, base)
 #define kalStrtol(cp, endp, base)                     simple_strtol(cp, endp, base) */
 #define kalkStrtou32(cp, base, resp)                   kstrtou32(cp, base, resp)
