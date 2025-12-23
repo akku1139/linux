@@ -1750,12 +1750,12 @@ kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo, IN WLAN_STATUS eStatus
 				prChannel =
 				    ieee80211_get_channel(priv_to_wiphy(prGlueInfo),
 							  ieee80211_channel_to_frequency(ucChannelNum,
-											 IEEE80211_BAND_2GHZ));
+											 NL80211_BAND_2GHZ));
 			} else {
 				prChannel =
 				    ieee80211_get_channel(priv_to_wiphy(prGlueInfo),
 							  ieee80211_channel_to_frequency(ucChannelNum,
-											 IEEE80211_BAND_5GHZ));
+											 NL80211_BAND_5GHZ));
 			}
 
 			/* ensure BSS exists */
@@ -3900,10 +3900,10 @@ kalIndicateBssInfo(IN P_GLUE_INFO_T prGlueInfo,
 	/* search through channel entries */
 	if (ucChannelNum <= 14) {
 		prChannel =
-		    ieee80211_get_channel(wiphy, ieee80211_channel_to_frequency(ucChannelNum, IEEE80211_BAND_2GHZ));
+		    ieee80211_get_channel(wiphy, ieee80211_channel_to_frequency(ucChannelNum, NL80211_BAND_2GHZ));
 	} else {
 		prChannel =
-		    ieee80211_get_channel(wiphy, ieee80211_channel_to_frequency(ucChannelNum, IEEE80211_BAND_5GHZ));
+		    ieee80211_get_channel(wiphy, ieee80211_channel_to_frequency(ucChannelNum, NL80211_BAND_5GHZ));
 	}
 
 	if (prChannel != NULL && (prGlueInfo->prScanRequest != NULL || prGlueInfo->prSchedScanRequest != NULL)) {
@@ -3957,11 +3957,11 @@ kalReadyOnChannel(IN P_GLUE_INFO_T prGlueInfo,
 		if (ucChannelNum <= 14) {
 			prChannel =
 			    ieee80211_get_channel(priv_to_wiphy(prGlueInfo),
-						  ieee80211_channel_to_frequency(ucChannelNum, IEEE80211_BAND_2GHZ));
+						  ieee80211_channel_to_frequency(ucChannelNum, NL80211_BAND_2GHZ));
 		} else {
 			prChannel =
 			    ieee80211_get_channel(priv_to_wiphy(prGlueInfo),
-						  ieee80211_channel_to_frequency(ucChannelNum, IEEE80211_BAND_5GHZ));
+						  ieee80211_channel_to_frequency(ucChannelNum, NL80211_BAND_5GHZ));
 		}
 
 		switch (eSco) {
@@ -4013,11 +4013,11 @@ kalRemainOnChannelExpired(IN P_GLUE_INFO_T prGlueInfo,
 		if (ucChannelNum <= 14) {
 			prChannel =
 			    ieee80211_get_channel(priv_to_wiphy(prGlueInfo),
-						  ieee80211_channel_to_frequency(ucChannelNum, IEEE80211_BAND_2GHZ));
+						  ieee80211_channel_to_frequency(ucChannelNum, NL80211_BAND_2GHZ));
 		} else {
 			prChannel =
 			    ieee80211_get_channel(priv_to_wiphy(prGlueInfo),
-						  ieee80211_channel_to_frequency(ucChannelNum, IEEE80211_BAND_5GHZ));
+						  ieee80211_channel_to_frequency(ucChannelNum, NL80211_BAND_5GHZ));
 		}
 
 		switch (eSco) {
@@ -4478,10 +4478,10 @@ WLAN_STATUS kalGetScanRequestChannelList(IN P_GLUE_INFO_T prGlueInfo,
 					   arChnlInfoList[u4Idx].ucChannelNum, prChannel->center_freq);
 
 			switch (prChannel->band) {
-			case IEEE80211_BAND_2GHZ:
+			case NL80211_BAND_2GHZ:
 				arChnlInfoList[u4Idx].eBand = BAND_2G4;
 				break;
-			case IEEE80211_BAND_5GHZ:
+			case NL80211_BAND_5GHZ:
 				arChnlInfoList[u4Idx].eBand = BAND_5G;
 				break;
 			default:
@@ -4508,11 +4508,11 @@ VOID kalIndicateChannelSwitch(IN P_GLUE_INFO_T prGlueInfo, IN ENUM_CHNL_EXT_T eS
 	if (ucChannelNum <= 14) {
 		prChannel =
 		    ieee80211_get_channel(priv_to_wiphy(prGlueInfo),
-					  ieee80211_channel_to_frequency(ucChannelNum, IEEE80211_BAND_2GHZ));
+					  ieee80211_channel_to_frequency(ucChannelNum, NL80211_BAND_2GHZ));
 	} else {
 		prChannel =
 		    ieee80211_get_channel(priv_to_wiphy(prGlueInfo),
-					  ieee80211_channel_to_frequency(ucChannelNum, IEEE80211_BAND_5GHZ));
+					  ieee80211_channel_to_frequency(ucChannelNum, NL80211_BAND_5GHZ));
 	}
 
 	if (!prChannel) {
