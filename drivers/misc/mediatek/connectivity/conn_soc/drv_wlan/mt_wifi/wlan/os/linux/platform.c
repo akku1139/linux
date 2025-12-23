@@ -489,7 +489,8 @@ int glUnregisterPlatformDev(void)
 
 int glWlanSetSuspendFlag(void)
 {
-	return atomic_set(&fgSuspendFlag, 1);
+	atomic_set(&fgSuspendFlag, 1);
+	return 0;
 }
 
 int glWlanGetSuspendFlag(void)
@@ -508,12 +509,14 @@ int glWlanGetSuspendFlag(void)
 
 int glWlanSetIndicateWoWFlag(void)
 {
-	return atomic_set(&fgIndicateWoW, 1);
+	atomic_set(&fgIndicateWoW, 1);
+	return 0;
 }
 
 int glWlanClearSuspendFlag(void)
 {
-	return atomic_set(&fgSuspendFlag, 0);
+	atomic_set(&fgSuspendFlag, 0);
+	return 0;
 }
 
 int glIndicateWoWPacket(void *data)
