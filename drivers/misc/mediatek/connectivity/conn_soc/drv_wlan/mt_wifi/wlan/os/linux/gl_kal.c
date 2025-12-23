@@ -1242,6 +1242,7 @@ VOID kalReleaseSpinLock(IN P_GLUE_INFO_T prGlueInfo, IN ENUM_SPIN_LOCK_CATEGORY_
 * \return (none)
 */
 /*----------------------------------------------------------------------------*/
+#if 0
 VOID kalUpdateMACAddress(IN P_GLUE_INFO_T prGlueInfo, IN PUINT_8 pucMacAddr)
 {
 	ASSERT(prGlueInfo);
@@ -1251,6 +1252,15 @@ VOID kalUpdateMACAddress(IN P_GLUE_INFO_T prGlueInfo, IN PUINT_8 pucMacAddr)
 		memcpy(prGlueInfo->prDevHandler->dev_addr, pucMacAddr, PARAM_MAC_ADDR_LEN);
 
 }
+#else
+VOID kalUpdateMACAddress(IN P_GLUE_INFO_T prGlueInfo, IN PUINT_8 pucMacAddr)
+{
+	ASSERT(prGlueInfo);
+	ASSERT(pucMacAddr);
+
+	dev_addr_set(prGlueInfo->prDevHandler, pucMacAddr);
+}
+#endif
 
 #if CFG_TCP_IP_CHKSUM_OFFLOAD
 /*----------------------------------------------------------------------------*/

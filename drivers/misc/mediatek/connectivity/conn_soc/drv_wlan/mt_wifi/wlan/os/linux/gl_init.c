@@ -3959,10 +3959,13 @@ bailout:
 				DBGLOG(INIT, WARN, "set MAC addr fail 0x%x\n", rStatus);
 				prGlueInfo->u4ReadyFlag = 0;
 			} else {
+#if 0
 				ether_addr_copy(prGlueInfo->prDevHandler->dev_addr, (const u8 *)&(MacAddr.sa_data));
 				ether_addr_copy(prGlueInfo->prDevHandler->perm_addr,
 					prGlueInfo->prDevHandler->dev_addr);
-
+#else
+				dev_addr_set(prGlueInfo->prDevHandler, (const u8*)&MacAddr.sa_data);
+#endif
 				/* card is ready */
 				prGlueInfo->u4ReadyFlag = 1;
 #if CFG_SHOW_MACADDR_SOURCE
