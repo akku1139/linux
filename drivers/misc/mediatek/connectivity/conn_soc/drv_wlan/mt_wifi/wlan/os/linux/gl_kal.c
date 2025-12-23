@@ -1673,7 +1673,6 @@ WLAN_STATUS kalRxIndicatePkts(IN P_GLUE_INFO_T prGlueInfo, IN PVOID apvPkts[], I
 #endif
 
 
-		WoWPacket(prSkb);
 		netif_rx(prSkb);
 		wlanReturnPacket(prGlueInfo->prAdapter, NULL);
 	}
@@ -1711,6 +1710,9 @@ kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo, IN WLAN_STATUS eStatus
 	UINT_8 ucChannelNum;
 	P_BSS_DESC_T prBssDesc = NULL;
 	P_CONNECTION_SETTINGS_T prConnSettings = NULL;
+	struct cfg80211_scan_info scanInfo = {
+		.aborted = false,
+	};
 
 	GLUE_SPIN_LOCK_DECLARATION();
 
@@ -1782,11 +1784,16 @@ kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo, IN WLAN_STATUS eStatus
 
 			/* CFG80211 Indication */
 			if (eStatus == WLAN_STATUS_ROAM_OUT_FIND_BEST) {
-				cfg80211_roamed_bss(prGlueInfo->prDevHandler,
-						    bss,
-						    prGlueInfo->aucReqIe,
-						    prGlueInfo->u4ReqIeLength,
-						    prGlueInfo->aucRspIe, prGlueInfo->u4RspIeLength, GFP_KERNEL);
+				struct cfg80211_roam_info rRoamInfo = {0};
+
+				rRoamInfo.req_ie = prGlueInfo->aucReqIe;
+				rRoamInfo.req_ie_len = prGlueInfo->u4ReqIeLength;
+				rRoamInfo.resp_ie = prGlueInfo->aucRspIe;
+				rRoamInfo.resp_ie_len = prGlueInfo->u4RspIeLength;
+
+				cfg80211_roamed(prGlueInfo->prDevHandler,
+								&rRoamInfo,
+								GFP_KERNEL);
 				bss = NULL;
 			} else {
 				/* to support user space roaming, cfg80211 will change the sme_state to connecting
@@ -1828,7 +1835,7 @@ kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo, IN WLAN_STATUS eStatus
 			UINT_16 u2DeauthReason = prWifiVar->arBssInfo[NETWORK_TYPE_AIS_INDEX].u2DeauthReason;
 			/* CFG80211 Indication */
 			DBGLOG(AIS, INFO, "[wifi] %s cfg80211_disconnected\n", prGlueInfo->prDevHandler->name);
-			cfg80211_disconnected(prGlueInfo->prDevHandler, u2DeauthReason, NULL, 0, GFP_KERNEL);
+			cfg80211_disconnected(prGlueInfo->prDevHandler, u2DeauthReason, NULL, 0, false, GFP_KERNEL);
 		}
 
 		prGlueInfo->eParamMediaStateIndicated = PARAM_MEDIA_STATE_DISCONNECTED;
@@ -1851,7 +1858,7 @@ kalIndicateStatusAndComplete(IN P_GLUE_INFO_T prGlueInfo, IN WLAN_STATUS eStatus
 		DBGLOG(SCN, TRACE, "[ais] scan complete %p %d %d\n", prScanRequest, ScanCnt, ScanDoneFailCnt);
 
 		if (prScanRequest != NULL)
-			cfg80211_scan_done(prScanRequest, FALSE);
+			cfg80211_scan_done(prScanRequest, &scanInfo);
 		break;
 	case WLAN_STATUS_CONNECT_INDICATION:
 		/* indicate AIS Jion fail  event
@@ -4398,7 +4405,7 @@ VOID kalSchedScanResults(IN P_GLUE_INFO_T prGlueInfo)
 {
 	ASSERT(prGlueInfo);
 
-	cfg80211_sched_scan_results(priv_to_wiphy(prGlueInfo));
+	cfg80211_sched_scan_results(priv_to_wiphy(prGlueInfo), 0);
 
 }
 
@@ -4542,6 +4549,6 @@ VOID kalIndicateChannelSwitch(IN P_GLUE_INFO_T prGlueInfo, IN ENUM_CHNL_EXT_T eS
 	DBGLOG(REQ, STATE, "DFS channel switch to %d\n", ucChannelNum);
 
 	cfg80211_chandef_create(&chandef, prChannel, rChannelType);
-	cfg80211_ch_switch_notify(prGlueInfo->prDevHandler, &chandef);
+	cfg80211_ch_switch_notify(prGlueInfo->prDevHandler, &chandef, 0);
 }
 #endif

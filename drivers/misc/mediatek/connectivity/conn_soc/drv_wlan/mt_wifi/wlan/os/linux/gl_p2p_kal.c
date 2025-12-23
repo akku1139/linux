@@ -872,6 +872,9 @@ VOID kalP2PIndicateScanDone(IN P_GLUE_INFO_T prGlueInfo, IN BOOLEAN fgIsAbort)
 {
 	P_GL_P2P_INFO_T prGlueP2pInfo = (P_GL_P2P_INFO_T) NULL;
 	struct cfg80211_scan_request *prScanRequest = NULL;
+	struct cfg80211_scan_info info = {
+		.aborted = fgIsAbort,
+	};
 
 	GLUE_SPIN_LOCK_DECLARATION();
 
@@ -906,7 +909,7 @@ VOID kalP2PIndicateScanDone(IN P_GLUE_INFO_T prGlueInfo, IN BOOLEAN fgIsAbort)
 			scanReportBss2Cfg80211(prGlueInfo->prAdapter, BSS_TYPE_P2P_DEVICE, NULL);
 
 			DBGLOG(INIT, TRACE, "DBG:p2p_cfg_scan_done\n");
-			cfg80211_scan_done(prScanRequest, fgIsAbort);
+			cfg80211_scan_done(prScanRequest, &info);
 		}
 
 	} while (FALSE);
@@ -1032,7 +1035,8 @@ VOID kalP2PIndicateRxMgmtFrame(IN P_GLUE_INFO_T prGlueInfo, IN P_SW_RFB_T prSwRf
 VOID
 kalP2PGCIndicateConnectionStatus(IN P_GLUE_INFO_T prGlueInfo,
 				 IN P_P2P_CONNECTION_REQ_INFO_T prP2pConnInfo,
-				 IN PUINT_8 pucRxIEBuf, IN UINT_16 u2RxIELen, IN UINT_16 u2StatusReason)
+				 IN PUINT_8 pucRxIEBuf, IN UINT_16 u2RxIELen, IN UINT_16 u2StatusReason,
+				 IN WLAN_STATUS eStatus)
 {
 	P_GL_P2P_INFO_T prGlueP2pInfo = (P_GL_P2P_INFO_T) NULL;
 
@@ -1054,7 +1058,9 @@ kalP2PGCIndicateConnectionStatus(IN P_GLUE_INFO_T prGlueInfo,
 		} else {
 			/* Disconnect, what if u2StatusReason == 0? */
 			cfg80211_disconnected(prGlueP2pInfo->prDevHandler,	/* struct net_device * dev, */
-					      u2StatusReason, pucRxIEBuf, u2RxIELen, GFP_KERNEL);
+					      u2StatusReason, pucRxIEBuf, u2RxIELen, 
+					      eStatus == WLAN_STATUS_MEDIA_DISCONNECT_LOCALLY,
+					      GFP_KERNEL);
 		}
 
 	} while (FALSE);
@@ -1073,7 +1079,7 @@ VOID kalP2PGOStationUpdate(IN P_GLUE_INFO_T prGlueInfo, IN P_STA_RECORD_T prCliS
 		prP2pGlueInfo = prGlueInfo->prP2PInfo;
 
 		if (fgIsNew) {
-			rStationInfo.filled = STATION_INFO_ASSOC_REQ_IES;
+			//rStationInfo.filled = STATION_INFO_ASSOC_REQ_IES; ????
 			rStationInfo.generation = ++prP2pGlueInfo->i4Generation;
 
 			rStationInfo.assoc_req_ies = prCliStaRec->pucAssocReqIe;

@@ -267,28 +267,32 @@ typedef struct _NL80211_DRIVER_GET_LTE_PARAMS {
 /* cfg80211 hooks */
 int
 mtk_cfg80211_change_iface(struct wiphy *wiphy,
-			  struct net_device *ndev, enum nl80211_iftype type, u32 *flags, struct vif_params *params);
+			  struct net_device *ndev, enum nl80211_iftype type, struct vif_params *params);
 
 int
 mtk_cfg80211_add_key(struct wiphy *wiphy,
-		     struct net_device *ndev,
-		     u8 key_index, bool pairwise, const u8 *mac_addr, struct key_params *params);
+		     struct net_device *ndev, int link_id,
+		     u8 key_index, bool pairwise, const u8 *mac_addr,
+		     struct key_params *params);
 
 int
 mtk_cfg80211_get_key(struct wiphy *wiphy,
 		     struct net_device *ndev,
+		     int link_id,
 		     u8 key_index,
 		     bool pairwise,
-		     const u8 *mac_addr, void *cookie, void (*callback) (void *cookie, struct key_params *)
-);
+		     const u8 *mac_addr, void *cookie,
+		     void (*callback)(void *cookie, struct key_params *));
 
 int
-mtk_cfg80211_del_key(struct wiphy *wiphy, struct net_device *ndev, u8 key_index, bool pairwise, const u8 *mac_addr);
+mtk_cfg80211_del_key(struct wiphy *wiphy, struct net_device *ndev, int link_id,
+		u8 key_index, bool pairwise, const u8 *mac_addr);
 
 int
-mtk_cfg80211_set_default_key(struct wiphy *wiphy, struct net_device *ndev, u8 key_index, bool unicast, bool multicast);
+mtk_cfg80211_set_default_key(struct wiphy *wiphy, struct net_device *ndev,
+		int link_id, u8 key_index, bool unicast, bool multicast);
 
-int mtk_cfg80211_set_default_mgmt_key(struct wiphy *wiphy, struct net_device *netdev, u8 key_index);
+int mtk_cfg80211_set_default_mgmt_key(struct wiphy *wiphy, struct net_device *netdev, int link_id, u8 key_index);
 
 int mtk_cfg80211_get_station(struct wiphy *wiphy, struct net_device *ndev, const u8 *mac, struct station_info *sinfo);
 
@@ -298,7 +302,7 @@ int mtk_cfg80211_add_station(struct wiphy *wiphy, struct net_device *ndev,
 int mtk_cfg80211_change_station(struct wiphy *wiphy, struct net_device *ndev,
 				const u8 *mac, struct station_parameters *params);
 
-int mtk_cfg80211_del_station(struct wiphy *wiphy, struct net_device *ndev, const u8 *mac);
+int mtk_cfg80211_del_station(struct wiphy *wiphy, struct net_device *ndev, struct station_del_parameters *params);
 
 int mtk_cfg80211_scan(struct wiphy *wiphy, struct cfg80211_scan_request *request);
 
@@ -333,7 +337,7 @@ mtk_cfg80211_mgmt_tx(struct wiphy *wiphy,
 
 void mtk_cfg80211_mgmt_frame_register(IN struct wiphy *wiphy,
 				      IN struct wireless_dev *wdev,
-				      IN u16 frame_type, IN bool reg);
+				      IN struct mgmt_frame_regs *upd);
 
 int mtk_cfg80211_mgmt_tx_cancel_wait(struct wiphy *wiphy, struct wireless_dev *wdev, u64 cookie);
 
