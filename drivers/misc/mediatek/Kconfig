@@ -1,4 +1,10 @@
 menu "Mediatek Peripherals "
 depends on ARM || ARM64
 
+config MTK_PLATFORM
+	string "MTK platform name"
+
+config ARCH_MTK_PROJECT
+	string "ARCH_MTK_PROJECT"
+
 endmenu  # CONN
