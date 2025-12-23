@@ -9,17 +9,17 @@ ifeq ($(CONFIG_MTK_COMBO),y)
 	obj-y += gps_drv_init.o
 	obj-y += fm_drv_init.o
 	obj-y += wlan_drv_init.o
-ifneq ($(filter "MT6630",$(CONFIG_MTK_COMBO_CHIP)),)
+ifneq ($(filter MT6630,$(CONFIG_MTK_COMBO_CHIP)),)
 	obj-y += ant_drv_init.o
 endif
 
-	ifneq ($(filter "MT6620",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter MT6620,$(CONFIG_MTK_COMBO_CHIP)),)
 		ccflags-y += -DMT6620
 	endif
-	ifneq ($(filter "MT6628",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter MT6628,$(CONFIG_MTK_COMBO_CHIP)),)
 		ccflags-y += -DMT6628
 	endif
-	ifneq ($(filter "MT6630",$(CONFIG_MTK_WLAN_CHIP)),)
+	ifneq ($(filter MT6630,$(CONFIG_MTK_WLAN_CHIP)),)
 		ccflags-y += -DMT6630
 	endif
 endif

@@ -5,15 +5,15 @@ ifneq ($(KERNELRELEASE),)
 	subdir-ccflags-y += -I$(srctree)/arch/arm/mach-$(MTK_PLATFORM)/$(ARCH_MTK_PROJECT)/dct/dct
 
 	COMBO_CHIP_SUPPORT := false
-	ifneq ($(filter "MT6620E3",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter MT6620E3,$(CONFIG_MTK_COMBO_CHIP)),)
 		COMBO_CHIP_SUPPORT := true
 	endif
 
-	ifneq ($(filter "MT6628",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter MT6628,$(CONFIG_MTK_COMBO_CHIP)),)
 		COMBO_CHIP_SUPPORT := true
 	endif
 
-	ifneq ($(filter "MT6630",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter MT6630,$(CONFIG_MTK_COMBO_CHIP)),)
 		COMBO_CHIP_SUPPORT := true
 	endif
 
@@ -24,31 +24,31 @@ ifneq ($(KERNELRELEASE),)
 	endif
 
 	SOC_CHIP_SUPPORT := false
-	ifneq ($(filter "CONSYS_6592",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter CONSYS_6592,$(CONFIG_MTK_COMBO_CHIP)),)
 		SOC_CHIP_SUPPORT := true
 	endif
-	ifneq ($(filter "CONSYS_6582",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter CONSYS_6582,$(CONFIG_MTK_COMBO_CHIP)),)
 		SOC_CHIP_SUPPORT := true
 	endif
-	ifneq ($(filter "CONSYS_8127",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter CONSYS_8127,$(CONFIG_MTK_COMBO_CHIP)),)
                 SOC_CHIP_SUPPORT := true
         endif
-	ifneq ($(filter "CONSYS_6572",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter CONSYS_6572,$(CONFIG_MTK_COMBO_CHIP)),)
 		SOC_CHIP_SUPPORT := true
 	endif
-	ifneq ($(filter "CONSYS_6571",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter CONSYS_6571,$(CONFIG_MTK_COMBO_CHIP)),)
 		SOC_CHIP_SUPPORT := true
 	endif
-	ifneq ($(filter "CONSYS_6752",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter CONSYS_6752,$(CONFIG_MTK_COMBO_CHIP)),)
 		SOC_CHIP_SUPPORT := true
 	endif
-	ifneq ($(filter "CONSYS_6735",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter CONSYS_6735,$(CONFIG_MTK_COMBO_CHIP)),)
 		SOC_CHIP_SUPPORT := true
 	endif
-	ifneq ($(filter "CONSYS_8163",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter CONSYS_8163,$(CONFIG_MTK_COMBO_CHIP)),)
 		SOC_CHIP_SUPPORT := true
 	endif
-	ifneq ($(filter "CONSYS_6580",$(CONFIG_MTK_COMBO_CHIP)),)
+	ifneq ($(filter CONSYS_6580,$(CONFIG_MTK_COMBO_CHIP)),)
 		SOC_CHIP_SUPPORT := true
 	endif
 	ifeq ($(SOC_CHIP_SUPPORT), true)
