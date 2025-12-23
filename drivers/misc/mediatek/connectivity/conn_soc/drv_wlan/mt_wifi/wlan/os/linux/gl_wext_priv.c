@@ -3232,7 +3232,7 @@ int priv_support_driver_cmd(IN struct net_device *prNetDev, IN OUT struct ifreq 
 		goto exit;
 	}
 
-	if (!access_ok(VERIFY_READ, priv_cmd.buf, i4TotalLen)) {
+	if (!access_ok(priv_cmd.buf, i4TotalLen)) {
 		DBGLOG(REQ, INFO, "%s: copy_from_user fail %d\n", __func__, i4TotalLen);
 		ret = -ENOMEM;
 		goto exit;
