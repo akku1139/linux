@@ -53,9 +53,6 @@
 #endif
 #include <linux/device.h>
 #include <linux/platform_device.h>
-#ifdef WMT_PLAT_ALPS
-#include <aee.h>
-#endif
 #include <linux/kfifo.h>
 #include <linux/pm_wakeup.h>
 #include <linux/log2.h>

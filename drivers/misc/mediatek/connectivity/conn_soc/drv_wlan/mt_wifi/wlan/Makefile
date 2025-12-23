@@ -19,17 +19,8 @@ else
 	ccflags-y += -DCFG_SUPPORT_MCC=0
 endif
 
-ifeq ($(CONFIG_HAVE_XLOG_FEATURE), y)
-    ccflags-y += -DCFG_SUPPORT_XLOG=1
-else
     ccflags-y += -DCFG_SUPPORT_XLOG=0
-endif
-
-ifeq ($(CONFIG_MTK_AEE_FEATURE), y)
-    ccflags-y += -DCFG_SUPPORT_AEE=1
-else
     ccflags-y += -DCFG_SUPPORT_AEE=0
-endif
 
 #ifeq ($(CONFIG_MTK_COMBO_WIFI_HIF_SDIO1), y)
 #    ccflags-y += -D_HIF_SDIO=1
@@ -45,12 +36,7 @@ else
     ccflags-y += -DCFG_ENABLE_GTK_FRAME_FILTER=0
 endif
 
-MTK_MET_PROFILING_SUPPORT = yes
-ifeq ($(MTK_MET_PROFILING_SUPPORT), yes)
-    ccflags-y += -DCFG_SUPPORT_MET_PROFILING=1
-else
     ccflags-y += -DCFG_SUPPORT_MET_PROFILING=0
-endif
 
 ifeq ($(CONFIG_MTK_TC1_FEATURE), y)
 ifeq ($(CONFIG_MTK_GPT_SCHEME_SUPPORT), y)
