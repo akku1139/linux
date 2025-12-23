@@ -4366,14 +4366,13 @@ int kalMetRemoveProcfs(void)
 	return 0;
 }
 #endif
-UINT_64 kalGetBootTime(void)
+uint64_t kalGetBootTime(void)
 {
-	struct timespec ts;
-	UINT_64 bootTime = 0;
+	struct timespec64 ts;
+	uint64_t bootTime = 0;
 
-	get_monotonic_boottime(&ts);
-	/* we assign ts.tv_sec to bootTime first, then multiply USEC_PER_SEC
-	   this will prevent multiply result turn to a negative value on 32bit system */
+	ktime_get_boottime_ts64(&ts);
+
 	bootTime = ts.tv_sec;
 	bootTime *= USEC_PER_SEC;
 	bootTime += ts.tv_nsec / NSEC_PER_USEC;

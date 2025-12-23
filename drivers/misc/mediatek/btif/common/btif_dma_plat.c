@@ -700,8 +700,8 @@ int hal_tx_dma_irq_handler(P_MTK_DMA_INFO_STR p_dma_info)
 	unsigned int left_len = 0;
 	unsigned long base = p_dma_info->base;
 	static int flush_irq_counter;
-	static struct timeval start_timer;
-	static struct timeval end_timer;
+	static struct timespec64 start_timer;
+	static struct timespec64 end_timer;
 	unsigned long flag = 0;
 
 	spin_lock_irqsave(&(g_clk_cg_spinlock), flag);
@@ -720,12 +720,12 @@ int hal_tx_dma_irq_handler(P_MTK_DMA_INFO_STR p_dma_info)
 	valid_size = BTIF_READ32(TX_DMA_VFF_VALID_SIZE(base));
 	left_len = BTIF_READ32(TX_DMA_VFF_LEFT_SIZE(base));
 	if (0 == flush_irq_counter)
-		do_gettimeofday(&start_timer);
+		ktime_get_real_ts64(&start_timer);
 	if ((0 < valid_size) && (8 > valid_size)) {
 		i_ret = _tx_dma_flush(p_dma_info);
 		flush_irq_counter++;
 		if (MAX_CONTINIOUS_TIMES <= flush_irq_counter) {
-			do_gettimeofday(&end_timer);
+			ktime_get_real_ts64(&end_timer);
 /*when btif tx fifo cannot accept any data and counts of bytes left in tx vfifo < 8 for a while
 we assume that btif cannot send data for a long time
 in order not to generate interrupt continiously, which may effect system's performance.
@@ -741,8 +741,8 @@ we clear tx flag and disable btif tx interrupt
 			BTIF_ERR_FUNC
 			    ("BTIF Tx IRQ happened %d times (continiously), between %d.%d and %d.%d\n",
 			     MAX_CONTINIOUS_TIMES, start_timer.tv_sec,
-			     start_timer.tv_usec, end_timer.tv_usec,
-			     end_timer.tv_usec);
+			     start_timer.tv_nsec / 1000, end_timer.tv_nsec / 1000,
+			     end_timer.tv_nsec / 1000);
 		}
 		hal_btif_ftrace_print("%s: tx done111!", __func__);
 	} else if (vff_len == left_len) {

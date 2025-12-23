@@ -1713,13 +1713,13 @@ incase of one driver's suspend/resume process block other device's suspend/resum
 	unsigned int retry = 0;
 	unsigned int wait_period = 1;
 	unsigned int max_retry = MAX_WAIT_TIME_MS / wait_period;
-	struct timeval timer_start;
-	struct timeval timer_now;
+	struct timespec64 timer_start;
+	struct timespec64 timer_now;
 
-	do_gettimeofday(&timer_start);
+	ktime_get_real_ts64(&timer_start);
 
 	while ((!_btif_is_tx_complete(p_btif)) && (retry < max_retry)) {
-		do_gettimeofday(&timer_now);
+		ktime_get_real_ts64(&timer_now);
 		if ((MAX_WAIT_TIME_MS/1000) <= (timer_now.tv_sec - timer_start.tv_sec)) {
 			BTIF_WARN_FUNC("max retry timer expired, timer_start.tv_sec:%d, timer_now.tv_sec:%d,",
 				"retry:%d\n", timer_start.tv_sec, timer_now.tv_sec, retry);
@@ -2844,7 +2844,7 @@ int btif_log_buf_dmp_in(P_BTIF_LOG_QUEUE_T p_log_que, const char *p_buf,
 {
 	P_BTIF_LOG_BUF_T p_log_buf = NULL;
 	char *dir = NULL;
-	struct timeval *p_timer = NULL;
+	struct timespec64 *p_timer = NULL;
 	unsigned long flags;
 
 	bool output_flag = false;
@@ -2870,7 +2870,7 @@ int btif_log_buf_dmp_in(P_BTIF_LOG_QUEUE_T p_log_que, const char *p_buf,
 	p_timer = &p_log_buf->timer;
 
 /*log time stamp*/
-	do_gettimeofday(p_timer);
+	ktime_get_real_ts64(p_timer);
 
 /*record data information including length and content*/
 	p_log_buf->len = len;
@@ -2890,7 +2890,7 @@ int btif_log_buf_dmp_in(P_BTIF_LOG_QUEUE_T p_log_que, const char *p_buf,
 /*check if log dynamic output function is enabled or not*/
 	if (output_flag) {
 		pr_debug("BTIF-DBG, dir:%s, %d.%ds len:%d\n",
-		       dir, (int)p_timer->tv_sec, (int)p_timer->tv_usec, len);
+		       dir, (int)p_timer->tv_sec, (int)p_timer->tv_nsec / 1000, len);
 /*output buffer content*/
 		btif_dump_data((char *)p_buf, len);
 	}
@@ -2909,7 +2909,7 @@ int btif_log_buf_dmp_out(P_BTIF_LOG_QUEUE_T p_log_que)
 	unsigned int len = 0;
 	unsigned int pkt_count = 0;
 	unsigned char *p_dir = NULL;
-	struct timeval *p_timer = NULL;
+	struct timespec64 *p_timer = NULL;
 	unsigned long flags;
 
 #if 0				/* no matter enable or not, we allowed output */
@@ -2943,7 +2943,7 @@ int btif_log_buf_dmp_out(P_BTIF_LOG_QUEUE_T p_log_que)
 			       p_dir,
 			       pkt_count++,
 			       (int)p_timer->tv_sec,
-			       (int)p_timer->tv_usec, len);
+			       (int)p_timer->tv_nsec / 1000, len);
 /*output buffer content*/
 			btif_dump_data(p_log_buf->buffer, len);
 			out_index++;
