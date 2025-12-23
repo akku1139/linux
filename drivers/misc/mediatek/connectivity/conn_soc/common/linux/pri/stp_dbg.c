@@ -102,14 +102,6 @@ enum {
 };
 #define MTK_WIFI_COMMAND_MAX    (__STP_DBG_COMMAND_MAX - 1)
 
-static struct genl_family stp_dbg_gnl_family = {
-	.id = GENL_ID_GENERATE,
-	.hdrsize = 0,
-	.name = STP_DBG_FAMILY_NAME,
-	.version = 1,
-	.maxattr = STP_DBG_ATTR_MAX,
-};
-
 static void stp_dbg_nl_init(void);
 static void stp_dbg_nl_deinit(void);
 static int stp_dbg_nl_bind(struct sk_buff *skb, struct genl_info *info);
@@ -142,17 +134,25 @@ static struct genl_ops stp_dbg_gnl_ops_array[] = {
 	{
 		.cmd = STP_DBG_COMMAND_BIND,
 		.flags = 0,
-		.policy = stp_dbg_genl_policy,
 		.doit = stp_dbg_nl_bind,
 		.dumpit = NULL,
 	},
 	{
 		.cmd = STP_DBG_COMMAND_RESET,
 		.flags = 0,
-		.policy = stp_dbg_genl_policy,
 		.doit = stp_dbg_nl_reset,
 		.dumpit = NULL,
 	},
+};
+
+static struct genl_family stp_dbg_gnl_family = {
+	.hdrsize = 0,
+	.name = STP_DBG_FAMILY_NAME,
+	.version = 1,
+	.policy = stp_dbg_genl_policy,
+	.maxattr = STP_DBG_ATTR_MAX,
+	.ops = stp_dbg_gnl_ops_array,
+	.n_ops = ARRAY_SIZE(stp_dbg_gnl_ops_array),
 };
 
 #define WLAN_IFACE_NAME "wlan0"
@@ -1196,7 +1196,7 @@ static void stp_dbg_nl_init(void)
 
 	}
 #endif
-	if (genl_register_family_with_ops(&stp_dbg_gnl_family, stp_dbg_gnl_ops_array) != 0)
+	if (genl_register_family(&stp_dbg_gnl_family) != 0)
 		STP_DBG_ERR_FUNC("%s(): GE_NELINK family registration fail\n", __func__);
 }
 
