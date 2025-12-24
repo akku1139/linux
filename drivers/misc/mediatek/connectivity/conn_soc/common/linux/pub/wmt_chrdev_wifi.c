@@ -174,6 +174,9 @@ static struct cdev WIFI_cdev;
 volatile INT32 retflag = 0;
 static struct semaphore wr_mtx;
 
+UINT32 g_IsNeedDoChipReset = 0;
+EXPORT_SYMBOL(g_IsNeedDoChipReset);
+
 #define WMT_CHECK_DO_CHIP_RESET() \
 do { \
 	if (g_IsNeedDoChipReset) { \
