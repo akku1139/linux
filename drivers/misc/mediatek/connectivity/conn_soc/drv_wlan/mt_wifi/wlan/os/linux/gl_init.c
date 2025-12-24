@@ -933,62 +933,72 @@ static const struct wiphy_vendor_command mtk_wlan_vendor_ops[] = {
 	  .vendor_id = GOOGLE_OUI,
 	  .subcmd = GSCAN_SUBCMD_GET_CAPABILITIES},
 	 .flags = WIPHY_VENDOR_CMD_NEED_WDEV | WIPHY_VENDOR_CMD_NEED_NETDEV,
-	 .doit = mtk_cfg80211_vendor_get_capabilities},
+	 .doit = mtk_cfg80211_vendor_get_capabilities,
+	 .policy = VENDOR_CMD_RAW_DATA},
 	{
 	 {
 	  .vendor_id = GOOGLE_OUI,
 	  .subcmd = GSCAN_SUBCMD_SET_CONFIG},
 	 .flags = WIPHY_VENDOR_CMD_NEED_WDEV | WIPHY_VENDOR_CMD_NEED_NETDEV,
-	 .doit = mtk_cfg80211_vendor_set_config},
+	 .doit = mtk_cfg80211_vendor_set_config,
+	 .policy = VENDOR_CMD_RAW_DATA},
 	{
 	 {
 	  .vendor_id = GOOGLE_OUI,
 	  .subcmd = GSCAN_SUBCMD_SET_SCAN_CONFIG},
 	 .flags = WIPHY_VENDOR_CMD_NEED_WDEV,
-	 .doit = mtk_cfg80211_vendor_set_scan_config},
+	 .doit = mtk_cfg80211_vendor_set_scan_config,
+	 .policy = VENDOR_CMD_RAW_DATA},
 	{
 	 {
 	  .vendor_id = GOOGLE_OUI,
 	  .subcmd = GSCAN_SUBCMD_ENABLE_GSCAN},
 	 .flags = WIPHY_VENDOR_CMD_NEED_WDEV | WIPHY_VENDOR_CMD_NEED_NETDEV,
-	 .doit = mtk_cfg80211_vendor_enable_scan},
+	 .doit = mtk_cfg80211_vendor_enable_scan,
+	 .policy = VENDOR_CMD_RAW_DATA},
 	{
 	 {
 	  .vendor_id = GOOGLE_OUI,
 	  .subcmd = GSCAN_SUBCMD_ENABLE_FULL_SCAN_RESULTS},
 	 .flags = WIPHY_VENDOR_CMD_NEED_WDEV | WIPHY_VENDOR_CMD_NEED_NETDEV,
-	 .doit = mtk_cfg80211_vendor_enable_full_scan_results},
+	 .doit = mtk_cfg80211_vendor_enable_full_scan_results,
+	 .policy = VENDOR_CMD_RAW_DATA},
 	{
 	 {
 	  .vendor_id = GOOGLE_OUI,
 	  .subcmd = GSCAN_SUBCMD_GET_SCAN_RESULTS},
 	 .flags = WIPHY_VENDOR_CMD_NEED_WDEV | WIPHY_VENDOR_CMD_NEED_NETDEV,
-	 .doit = mtk_cfg80211_vendor_get_scan_results},
+	 .doit = mtk_cfg80211_vendor_get_scan_results,
+	 .policy = VENDOR_CMD_RAW_DATA},
 	{
 	 {
 	  .vendor_id = GOOGLE_OUI,
 	  .subcmd = GSCAN_SUBCMD_GET_CHANNEL_LIST},
 	 .flags = WIPHY_VENDOR_CMD_NEED_WDEV | WIPHY_VENDOR_CMD_NEED_NETDEV,
-	 .doit = mtk_cfg80211_vendor_get_channel_list},
+	 .doit = mtk_cfg80211_vendor_get_channel_list,
+	 .policy = VENDOR_CMD_RAW_DATA},
 	{
 	 {
 	  .vendor_id = GOOGLE_OUI,
 	  .subcmd = GSCAN_SUBCMD_SET_SIGNIFICANT_CHANGE_CONFIG},
 	 .flags = WIPHY_VENDOR_CMD_NEED_WDEV | WIPHY_VENDOR_CMD_NEED_NETDEV,
-	 .doit = mtk_cfg80211_vendor_set_significant_change},
+	 .doit = mtk_cfg80211_vendor_set_significant_change,
+	 .policy = VENDOR_CMD_RAW_DATA},
 	{
 	 {
 	  .vendor_id = GOOGLE_OUI,
 	  .subcmd = GSCAN_SUBCMD_SET_HOTLIST},
 	 .flags = WIPHY_VENDOR_CMD_NEED_WDEV | WIPHY_VENDOR_CMD_NEED_NETDEV,
-	 .doit = mtk_cfg80211_vendor_set_hotlist},
+	 .doit = mtk_cfg80211_vendor_set_hotlist,
+	 .policy = VENDOR_CMD_RAW_DATA},
 	/*Link Layer Statistics */
 	{
 	 {
 	  .vendor_id = GOOGLE_OUI,
 	  .subcmd = LSTATS_SUBCMD_GET_INFO},
 	 .flags = WIPHY_VENDOR_CMD_NEED_WDEV | WIPHY_VENDOR_CMD_NEED_NETDEV,
-	 .doit = mtk_cfg80211_vendor_llstats_get_info},
+	 .doit = mtk_cfg80211_vendor_llstats_get_info,
+	 .policy = VENDOR_CMD_RAW_DATA},
 
 };
 
