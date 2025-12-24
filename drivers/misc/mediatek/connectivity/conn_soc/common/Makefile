@@ -3,8 +3,11 @@ subdir-ccflags-y += -I$(src)/linux/include \
 						 -I$(src)/linux/pri/include \
 						 -I$(src)/core/include \
 						 -I$(src)/include \
+						 -I$(src)/$(MTK_PLATFORM)/include \
 						 -I$(src)/ \
 						 -I$(srctree)/drivers/misc/mediatek/btif/common/inc \
+						 -I$(srctree)/drivers/misc/mediatek/connectivity/conn_soc/common/linux/include \
+						 -I$(srctree)/drivers/misc/mediatek/connectivity/conn_soc/common/include \
 						 -I$(srctree)/drivers/misc/mediatek/connectivity/common_detect
 
 subdir-ccflags-y += -I$(srctree)/drivers/misc/mediatek/eccci/
@@ -34,10 +37,11 @@ mtk_stp_wmt$(EXT_FLAG)-objs	+= linux/pri/stp_btif.o
 # WMT DRIVER-OSAL
 mtk_stp_wmt$(EXT_FLAG)-objs	+= linux/pub/osal.o linux/pub/bgw_desense.o
 # WMT DRIVER-platform implementation
-ccflags-y += -D WMT_PLAT_ALPS
-# mtk_stp_wmt$(EXT_FLAG)-objs	+= platform/alps/wmt_plat_alps.o
+#ccflags-y += -D WMT_PLAT_ALPS
 
-# mtk_stp_wmt$(EXT_FLAG)-objs	+= platform/alps/mtk_wcn_consys_hw.o
+mtk_stp_wmt$(EXT_FLAG)-objs	+= $(MTK_PLATFORM)/wmt_plat_alps.o
+mtk_stp_wmt$(EXT_FLAG)-objs	+= $(MTK_PLATFORM)/mtk_wcn_consys_hw.o
+mtk_stp_wmt$(EXT_FLAG)-objs	+= $(MTK_PLATFORM)/pwrap_compat.o
 
 
 mtk_stp_wmt$(EXT_FLAG)-objs	+= linux/pri/stp_exp.o core/stp_core.o core/psm_core.o core/btm_core.o linux/pri/stp_dbg.o
@@ -60,7 +64,7 @@ mtk_wmt_wifi$(EXT_FLAG)-objs       := linux/pub/wmt_chrdev_wifi.o
 endif
 
 ifeq ($(CONFIG_MTK_COMBO), y)
-subdir-ccflags-y += -D WMT_PLAT_ALPS
+#subdir-ccflags-y += -D WMT_PLAT_ALPS
 obj-y += core/
 obj-y += linux/
 obj-y += $(subst ",,$(CONFIG_MTK_PLATFORM))/

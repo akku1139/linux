@@ -57,10 +57,10 @@ ifneq ($(KERNELRELEASE),)
 		ccflags-y += -I$(src)/$(CONN_COMMON)/linux/include
 	endif
 
-	subdir-ccflags-y += -DWMT_PLAT_ALPS=1
+#	subdir-ccflags-y += -DWMT_PLAT_ALPS=1
 
 ifeq ($(CONFIG_MTK_COMBO),y)
-	subdir-ccflags-y += -DWMT_PLAT_ALPS=1
+#	subdir-ccflags-y += -DWMT_PLAT_ALPS=1
 	ccflags-y += -I$(src)/drv_init/inc
 	obj-y += mtk_wcn_stub_alps.o
 	obj-y += wmt_stp_exp.o
@@ -75,14 +75,15 @@ ifeq ($(CONFIG_MTK_COMBO),y)
 endif
 
 ifeq ($(CONFIG_MTK_COMBO),m)
-	obj-y += mtk_wcn_stub_alps.o
-	obj-y += wmt_stp_exp.o
-	obj-y += wmt_gpio.o
+	ccflags-y += -I$(src)/drv_init/inc
 
 	obj-$(CONFIG_MTK_COMBO) += mtk_wmt_detect.o
 	mtk_wmt_detect-objs := wmt_detect.o
 	mtk_wmt_detect-objs += sdio_detect.o
 	mtk_wmt_detect-objs += wmt_detect_pwr.o
+	mtk_wmt_detect-objs += mtk_wcn_stub_alps.o
+	mtk_wmt_detect-objs += wmt_stp_exp.o
+	mtk_wmt_detect-objs += wmt_gpio.o
 
 endif
 
