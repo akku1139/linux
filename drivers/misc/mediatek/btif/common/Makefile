@@ -5,7 +5,7 @@ ifneq ($(KERNELRELEASE),)
 	ccflags-y += -I$(src)/inc
 	ccflags-y += -I$(src)/plat_inc
 
-	obj-y += btif.o
+	obj-$(CONFIG_MTK_BTIF) += btif.o
 	btif-y	:= mtk_btif.o mtk_btif_exp.o btif_dma_plat.o btif_plat.o
 	btif-$(CONFIG_AMAZON_A2DP_TS) += btif_audio_ts.o
 
