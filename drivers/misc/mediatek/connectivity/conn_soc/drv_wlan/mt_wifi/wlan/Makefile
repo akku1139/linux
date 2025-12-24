@@ -76,6 +76,8 @@ MODULE_NAME := wlan_mt
 
 ccflags-y += -D_HIF_SDIO=1
 
+ccflags-y += -DCONFIG_IDME
+
 ccflags-y += -DDBG=0
 ccflags-y += -I$(src)/os -I$(src)/os/linux/include -I$(src)/os/linux/hif/ahb/include
 ccflags-y += -I$(src)/include -I$(src)/include/nic -I$(src)/include/mgmt
