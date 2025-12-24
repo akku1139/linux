@@ -26,7 +26,7 @@ ifeq ($(CONFIG_MTK_COMBO), m)
 # WMT DRIVER
 obj-$(CONFIG_MTK_COMBO) += mtk_stp_wmt$(EXT_FLAG).o
 # WMT DRIVER-core part
-mtk_stp_wmt$(EXT_FLAG)-objs	:= core/wmt_core.o core/wmt_ctrl.o  core/wmt_func.o core/wmt_ic_soc.o core/wmt_lib.o core/wmt_conf.o
+mtk_stp_wmt$(EXT_FLAG)-objs	:= core/wmt_core.o core/wmt_ctrl.o  core/wmt_func.o core/wmt_ic_soc.o core/wmt_lib.o core/wmt_conf.o core/mtk_wcn_stub_alps.o
 
 
 # WMT DRIVER-linux private part

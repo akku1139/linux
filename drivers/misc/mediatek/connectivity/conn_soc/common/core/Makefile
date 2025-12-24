@@ -16,6 +16,7 @@ obj-y += wmt_core.o \
          btm_core.o \
          dbg_core.o \
          psm_core.o \
-         stp_core.o
+         stp_core.o \
+         mtk_wcn_stub_alps.o
 
 endif
