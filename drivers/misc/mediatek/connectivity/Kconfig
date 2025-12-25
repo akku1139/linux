@@ -267,7 +267,6 @@ config MTK_CONN_LTE_IDC_SUPPORT
 
 config MTK_WIFI_ANTENNA_SWITCH
 	bool "MTK_WIFI_ANTENNA_SWITCH"
-	depends on ARCH_MT8163
 	default n
 	help
 	  Enable manual antenna switch for MT8163 iLNA.
