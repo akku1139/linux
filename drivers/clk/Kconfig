@@ -511,6 +511,13 @@ config COMMON_CLK_RPMI
 	  Support for clocks based on the clock service group defined by
 	  the RISC-V platform management interface (RPMI) specification.
 
+config COMMON_CLK_MTK_ISP_MCLK
+	tristate "Clock driver for MediaTek ISP MCLK"
+	depends on COMMON_CLK && OF
+	select REGMAP
+	help
+	  This driver supports the MCLK clocks on MediaTek ISP.
+
 source "drivers/clk/actions/Kconfig"
 source "drivers/clk/analogbits/Kconfig"
 source "drivers/clk/baikal-t1/Kconfig"
