@@ -86,6 +86,16 @@ config SND_SOC_MT8163
 	  Select Y if you have such device.
 	  Ex: MT8163
 
+config SND_SOC_MT8163_TLV320AIC32X4
+	tristate "ASoC Audio driver for MT8163 with TLV320AIC32X4 codec"
+	depends on SND_SOC_MT8163 && I2C
+	select SND_SOC_TLV320AIC32X4_I2C
+	help
+	  This adds ASoC driver for Mediatek MT8163 boards
+	  from Amazon with the TLV320AIC32X4 audio codec.
+	  Select Y if you have such device.
+	  If unsure select "N".
+
 config SND_SOC_MT8173
 	tristate "ASoC support for Mediatek MT8173 chip"
 	depends on ARCH_MEDIATEK
