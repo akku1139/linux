@@ -54,6 +54,7 @@ config SND_SOC_ALL_CODECS
 	imply SND_SOC_ALC5623
 	imply SND_SOC_ALC5632
 	imply SND_SOC_AUDIO_IIO_AUX
+	imply SND_SOC_AMAZON_DOUGH_FPGA
 	imply SND_SOC_AW8738
 	imply SND_SOC_AW87390
 	imply SND_SOC_AW88395
@@ -662,6 +663,15 @@ config SND_SOC_AUDIO_IIO_AUX
 
 	  To compile this driver as a module, choose M here: the module
 	  will be called snd-soc-audio-iio-aux.
+
+config SND_SOC_AMAZON_DOUGH_FPGA
+	tristate "Amazon Dough FPGA device"
+	select GPIOLIB
+	help
+	  Enable support for the Amazon Dough FPGA device.
+
+	  To compile this driver as a module, choose M here: the module
+	  will be called amazon-dough-fpga.
 
 config SND_SOC_AW8738
 	tristate "Awinic AW8738 Audio Amplifier"
