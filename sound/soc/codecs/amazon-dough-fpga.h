@@ -23,7 +23,7 @@
 
 #define FIRMWARE_MAX_BYTES     (10*4096)
 #define FPGA_FIRMWARE_REV       30
-#define FPGA_FIRMWARE_NAME      CONFIG_EXTRA_FIRMWARE
+#define FPGA_FIRMWARE_NAME      "i2s_to_spi_v34.bin"
 
 #define SPI_SPEED_HZ            50000000 /* Maximum speed 50 MHz */
 #define SPI_READ_WAIT_MIN_USEC  6000
