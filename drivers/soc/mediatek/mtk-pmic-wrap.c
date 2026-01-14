@@ -7,6 +7,7 @@
 #include <linux/interrupt.h>
 #include <linux/io.h>
 #include <linux/kernel.h>
+#include <linux/mfd/syscon.h>
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/of_platform.h>
@@ -2725,6 +2726,12 @@ static int pwrap_probe(struct platform_device *pdev)
 	if (ret) {
 		dev_dbg(wrp->dev, "failed to create child devices at %pOF\n",
 				np);
+		return ret;
+	}
+
+	ret = of_syscon_register_regmap(wrp->dev->of_node, wrp->regmap);
+	if (ret) {
+		dev_err(wrp->dev, "failed to register syscon regmap for pwrap.\n");
 		return ret;
 	}
 
