@@ -3529,29 +3529,6 @@ WLAN_STATUS wfdAdjustResource(IN P_ADAPTER_T prAdapter, IN BOOLEAN fgEnable)
 
 WLAN_STATUS wfdAdjustThread(IN P_ADAPTER_T prAdapter, IN BOOLEAN fgEnable)
 {
-#define WFD_TX_THREAD_PRIORITY 70
-	DBGLOG(P2P, INFO, "wfdAdjustResource %d\n", fgEnable);
-	if (prAdapter->prGlueInfo->main_thread != NULL) {
-		if (fgEnable) {
-#ifdef LINUX
-			/* TODO the change schedule API shall be provided by OS glue layer */
-			/* Or the API shall be put in os glue layer */
-			struct sched_param param = {.sched_priority = WFD_TX_THREAD_PRIORITY };
-
-			sched_setscheduler(prAdapter->prGlueInfo->main_thread, SCHED_RR, &param);
-#endif
-		} else {
-#ifdef LINUX
-			/* TODO the change schedule API shall be provided by OS glue layer */
-			struct sched_param param = {.sched_priority = 0 };
-
-			sched_setscheduler(prAdapter->prGlueInfo->main_thread, SCHED_NORMAL, &param);
-#endif
-		}
-	} else {
-
-		DBGLOG(P2P, WARN, "main_thread is null, please check if the wlanRemove is called in advance\n");
-	}
 	return WLAN_STATUS_SUCCESS;
 }
 
