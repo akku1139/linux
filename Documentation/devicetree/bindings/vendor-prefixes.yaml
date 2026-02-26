@@ -1535,6 +1535,8 @@ patternProperties:
     description: SolidRun
   "^solomon,.*":
     description: Solomon Systech Limited
+  "^solteam,.*":
+    description: Solteam Electronics Co, Ltd.
   "^somfy,.*":
     description: Somfy Systems Inc.
   "^sony,.*":
