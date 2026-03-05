@@ -46,7 +46,6 @@ int us144mkii_configure_device_for_rate(struct tascam_card *tascam, int rate)
 	struct usb_device *dev = tascam->dev;
 	int i, err;
 	const struct rate_config *cfg = NULL;
-	u8 *payload;
 
 	for (i = 0; i < ARRAY_SIZE(rate_map); i++) {
 		if (rate_map[i].rate == rate) {
@@ -57,7 +56,7 @@ int us144mkii_configure_device_for_rate(struct tascam_card *tascam, int rate)
 	if (!cfg)
 		return -EINVAL;
 
-	payload = kmemdup(cfg->data, 3, GFP_KERNEL);
+	u8 *payload __free(kfree) = kmemdup(cfg->data, 3, GFP_KERNEL);
 	if (!payload)
 		return -ENOMEM;
 
