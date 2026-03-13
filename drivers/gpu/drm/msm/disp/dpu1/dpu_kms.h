@@ -169,4 +169,4 @@ void dpu_disable_vblank(struct msm_kms *kms, struct drm_crtc *crtc);
 
 unsigned long dpu_kms_get_clk_rate(struct dpu_kms *dpu_kms, char *clock_name);
 
-#endif /* __dpu_kms_H__ */
+#endif /* __DPU_KMS_H__ */

@@ -26,4 +26,4 @@
 #endif /* __ASSEMBLER__ */
 
 #endif /* __KERNEL__ */
-#endif /* _SYSTEMCFG_H */
+#endif /* _VDSO_DATAPAGE_H */

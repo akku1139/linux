@@ -5459,4 +5459,4 @@ enum tcp_tstorm_ooo {
 
 
 
-#endif /* __5710_HSI_CNIC_LE__ */
+#endif /* CNIC_DEFS_H */

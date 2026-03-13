@@ -213,4 +213,4 @@ static inline void intel_gt_set_wedged_async(struct intel_gt *gt)
 	queue_work(system_highpri_wq, &gt->wedge);
 }
 
-#endif /* __INTEL_GT_H__ */
+#endif /* __INTEL_GT__ */

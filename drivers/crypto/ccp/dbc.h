@@ -44,4 +44,4 @@ union dbc_buffer {
 void dbc_dev_destroy(struct psp_device *psp);
 int dbc_dev_init(struct psp_device *psp);
 
-#endif /* __DBC_H */
+#endif /* __DBC_H__ */

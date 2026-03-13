@@ -149,4 +149,4 @@ static inline void mlx5e_ktls_get_strings(struct mlx5e_priv *priv, u8 **data) { 
 static inline void mlx5e_ktls_get_stats(struct mlx5e_priv *priv, u64 **data) { }
 #endif
 
-#endif /* __MLX5E_TLS_H__ */
+#endif /* __MLX5E_KTLS_H__ */

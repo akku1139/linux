@@ -50,4 +50,4 @@ struct ice_adapter {
 struct ice_adapter *ice_adapter_get(struct pci_dev *pdev);
 void ice_adapter_put(struct pci_dev *pdev);
 
-#endif /* _ICE_ADAPTER_H */
+#endif /* _ICE_ADAPTER_H_ */

@@ -865,4 +865,4 @@
 #define NVCA7D_TILE_SET_TILE_SIZE_START                                         14:0
 #define NVCA7D_TILE_SET_TILE_SIZE_WIDTH                                         30:16
 
-#endif // _clca7d_h
+#endif /* _clca7d_h_ */

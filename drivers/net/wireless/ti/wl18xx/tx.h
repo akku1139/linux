@@ -29,4 +29,4 @@
 
 void wl18xx_tx_immediate_complete(struct wl1271 *wl);
 
-#endif /* __WL12XX_TX_H__ */
+#endif /* __WL18XX_TX_H__ */

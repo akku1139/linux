@@ -145,4 +145,4 @@ struct br_mrp_sub_option1_hdr {
 	__u8 data[MRP_MANUFACTURE_DATA_LENGTH];
 };
 
-#endif /* _BR_PRIVATE_MRP_H */
+#endif /* _BR_PRIVATE_MRP_H_ */

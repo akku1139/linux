@@ -83,4 +83,4 @@
 #define NV827C_SURFACE_SET_PARAMS_LAYOUT_FLD2                                   (0x00000002)
 #define NV827C_SURFACE_SET_PARAMS_RESERVED0                                     22:16
 #define NV827C_SURFACE_SET_PARAMS_RESERVED1                                     24:24
-#endif // _cl827c_h
+#endif /* _cl827c_h_ */

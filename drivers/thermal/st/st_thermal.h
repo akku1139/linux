@@ -97,4 +97,4 @@ extern int st_thermal_register(struct platform_device *pdev,
 extern void st_thermal_unregister(struct platform_device *pdev);
 extern const struct dev_pm_ops st_thermal_pm_ops;
 
-#endif /* __STI_RESET_SYSCFG_H */
+#endif /* __STI_THERMAL_SYSCFG_H */

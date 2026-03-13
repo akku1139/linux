@@ -59,4 +59,4 @@ int ibmebus_request_irq(u32 ist, irq_handler_t handler,
 void ibmebus_free_irq(u32 ist, void *dev_id);
 
 #endif /* __KERNEL__ */
-#endif /* _ASM_IBMEBUS_H */
+#endif /* _ASM_EBUS_H */

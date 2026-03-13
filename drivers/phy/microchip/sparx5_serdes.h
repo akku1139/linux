@@ -166,4 +166,4 @@ static inline void __iomem *sdx5_inst_addr(void __iomem *iomem,
 }
 
 
-#endif /* _SPARX5_SERDES_REGS_H_ */
+#endif /* _SPARX5_SERDES_H_ */

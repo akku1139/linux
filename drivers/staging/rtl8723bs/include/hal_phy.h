@@ -70,4 +70,4 @@ struct SwChnlCmd {
 
 /*--------------------------Exported Function prototype---------------------*/
 
-#endif /* __HAL_COMMON_H__ */
+#endif /* __HAL_PHY_H__ */

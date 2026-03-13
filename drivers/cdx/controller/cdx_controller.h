@@ -27,4 +27,4 @@ int cdx_setup_rpmsg(struct platform_device *pdev);
 
 void cdx_destroy_rpmsg(struct platform_device *pdev);
 
-#endif /* _CDX_CONT_PRIV_H_ */
+#endif /* _CDX_CONTROLLER_H_ */

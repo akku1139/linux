@@ -42,4 +42,4 @@ extern int arc_cache_mumbojumbo(int cpu_id, char *buf, int len);
 
 extern void __init handle_uboot_args(void);
 
-#endif /* __ASMARC_SETUP_H */
+#endif /* __ASM_ARC_SETUP_H */

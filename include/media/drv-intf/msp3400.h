@@ -210,4 +210,4 @@
    msp44x8g  y    y   y      y      y
  */
 
-#endif /* MSP3400_H */
+#endif /* _MSP3400_H_ */

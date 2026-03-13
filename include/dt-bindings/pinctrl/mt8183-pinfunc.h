@@ -1117,4 +1117,4 @@
 
 #define PINMUX_GPIO179__FUNC_GPIO179 (MTK_PIN_NO(179) | 0)
 
-#endif /* __MT8183-PINFUNC_H */
+#endif /* __MT8183_PINFUNC_H */

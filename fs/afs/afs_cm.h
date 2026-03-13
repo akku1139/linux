@@ -26,4 +26,4 @@ enum AFS_CM_Operations {
 
 #define AFS_CAP_ERROR_TRANSLATION	0x1
 
-#endif /* AFS_FS_H */
+#endif /* AFS_CM_H */

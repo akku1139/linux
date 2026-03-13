@@ -1258,4 +1258,4 @@ double CalculateWriteBackDISPCLK(
 		unsigned int HTotal,
 		unsigned int WritebackChromaLineBufferWidth);
 
-#endif /* _DML2_DISPLAY_MODE_VBA_H_ */
+#endif /* __DML2_DISPLAY_MODE_VBA_H__ */

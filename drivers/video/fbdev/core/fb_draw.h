@@ -160,4 +160,4 @@ static inline struct fb_reverse fb_reverse_init(struct fb_info *info)
 	return reverse;
 }
 
-#endif /* FB_DRAW_H */
+#endif /* _FB_DRAW_H */

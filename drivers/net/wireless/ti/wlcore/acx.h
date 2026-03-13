@@ -1119,4 +1119,4 @@ int wl1271_acx_default_rx_filter_enable(struct wl1271 *wl, bool enable,
 					enum rx_filter_action action);
 int wl1271_acx_set_rx_filter(struct wl1271 *wl, u8 index, bool enable,
 			     struct wl12xx_rx_filter *filter);
-#endif /* __WL1271_ACX_H__ */
+#endif /* __ACX_H__ */

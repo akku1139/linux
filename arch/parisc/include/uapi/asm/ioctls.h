@@ -98,4 +98,4 @@
 
 #define TIOCSER_TEMT    0x01	/* Transmitter physically empty */
 
-#endif /* _ASM_PARISC_IOCTLS_H */
+#endif /* __ARCH_PARISC_IOCTLS_H__ */

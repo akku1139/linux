@@ -20,4 +20,4 @@ static inline void ice_vf_vsi_init_vlan_ops(struct ice_vsi *vsi) { }
 static inline void ice_vf_vsi_enable_port_vlan(struct ice_vsi *vsi) { }
 static inline void ice_vf_vsi_disable_port_vlan(struct ice_vsi *vsi) { }
 #endif /* CONFIG_PCI_IOV */
-#endif /* _ICE_PF_VSI_VLAN_OPS_H_ */
+#endif /* _ICE_VF_VSI_VLAN_OPS_H_ */

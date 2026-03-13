@@ -58,5 +58,5 @@ int smu7_set_power_limit(struct pp_hwmgr *hwmgr, uint32_t n);
 int smu7_power_control_set_level(struct pp_hwmgr *hwmgr);
 int smu7_enable_didt_config(struct pp_hwmgr *hwmgr);
 int smu7_disable_didt_config(struct pp_hwmgr *hwmgr);
-#endif  /* DGPU_POWERTUNE_H */
+#endif /* _SMU7_POWERTUNE_H */
 

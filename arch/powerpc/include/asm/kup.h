@@ -133,4 +133,4 @@ static __always_inline void kuap_assert_locked(void)
 
 #endif /* !__ASSEMBLER__ */
 
-#endif /* _ASM_POWERPC_KUAP_H_ */
+#endif /* _ASM_POWERPC_KUP_H_ */

@@ -16,4 +16,4 @@ static inline uint mk_int_int_mask(uint mask)
 	return (1 << (7 - (mask/2)));
 }
 
-#endif /* _PPC_KERNEL_PPC8xx_H */
+#endif /* _PPC_KERNEL_MPC8xx_H */

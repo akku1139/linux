@@ -34,5 +34,5 @@ struct dc;
 bool dce121_xgmi_enabled(struct dce_hwseq *hws);
 void dce120_hw_sequencer_construct(struct dc *dc);
 
-#endif /* __DC_HWSS_DCE112_H__ */
+#endif /* __DC_HWSS_DCE120_H__ */
 

@@ -222,4 +222,4 @@ static inline void ibuf_ctrl_dump_state(const ibuf_ctrl_ID_t ID,
 	}
 }
 
-#endif /* __INPUT_SYSTEM_PRIVATE_H_INCLUDED__ */
+#endif /* __INPUT_SYSTEM_2401_PRIVATE_H_INCLUDED__ */

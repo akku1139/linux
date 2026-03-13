@@ -89,4 +89,4 @@ bool brcmf_chip_sr_capable(struct brcmf_chip *pub);
 char *brcmf_chip_name(u32 chipid, u32 chiprev, char *buf, uint len);
 u32 brcmf_chip_enum_base(u16 devid);
 
-#endif /* BRCMF_AXIDMP_H */
+#endif /* BRCMF_CHIP_H */

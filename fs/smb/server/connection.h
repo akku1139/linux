@@ -257,4 +257,4 @@ static inline void ksmbd_conn_set_releasing(struct ksmbd_conn *conn)
 }
 
 void ksmbd_all_conn_set_status(u64 sess_id, u32 status);
-#endif /* __CONNECTION_H__ */
+#endif /* __KSMBD_CONNECTION_H__ */

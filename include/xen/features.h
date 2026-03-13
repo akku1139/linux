@@ -21,4 +21,4 @@ static inline int xen_feature(int flag)
 	return xen_features[flag];
 }
 
-#endif /* __ASM_XEN_FEATURES_H__ */
+#endif /* __XEN_FEATURES_H__ */

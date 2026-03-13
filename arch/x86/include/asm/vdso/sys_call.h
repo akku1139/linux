@@ -102,4 +102,4 @@
 			      "r" (_sys_arg5));				\
 	})
 
-#endif /* X86_VDSO_SYS_CALL_H */
+#endif /* X86_ASM_VDSO_SYS_CALL_H */

@@ -33,4 +33,4 @@
 #define NV507A_SET_CURSOR_HOT_SPOT_POINT_OUT                                    (0x00000084)
 #define NV507A_SET_CURSOR_HOT_SPOT_POINT_OUT_X                                  15:0
 #define NV507A_SET_CURSOR_HOT_SPOT_POINT_OUT_Y                                  31:16
-#endif // _cl507a_h
+#endif /* _cl507a_h_ */

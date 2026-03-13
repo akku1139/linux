@@ -251,4 +251,4 @@ void rtw_ps_deny(struct adapter *padapter, enum ps_deny_reason reason);
 void rtw_ps_deny_cancel(struct adapter *padapter, enum ps_deny_reason reason);
 u32 rtw_ps_deny_get(struct adapter *padapter);
 
-#endif  /* __RTL871X_PWRCTRL_H_ */
+#endif /* __RTW_PWRCTRL_H_ */

@@ -18,4 +18,4 @@ static __always_inline void boot_init_stack_canary(void)
 	__stack_chk_guard = current->stack_canary;
 }
 
-#endif /* __ASM_SH_STACKPROTECTOR_H */
+#endif /* _ASM_STACKPROTECTOR_H */

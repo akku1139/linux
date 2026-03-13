@@ -83,4 +83,4 @@ void sev_tsm_init_locked(struct sev_device *sev, void *tio_status_page);
 void sev_tsm_uninit(struct sev_device *sev);
 int sev_tio_cmd_buffer_len(int cmd);
 
-#endif /* __SEV_DEV_H */
+#endif /* __SEV_DEV_H__ */

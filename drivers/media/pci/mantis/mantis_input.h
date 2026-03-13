@@ -13,4 +13,4 @@ int mantis_input_init(struct mantis_pci *mantis);
 void mantis_input_exit(struct mantis_pci *mantis);
 void mantis_input_process(struct mantis_pci *mantis, int scancode);
 
-#endif /* __MANTIS_UART_H */
+#endif /* __MANTIS_INPUT_H */

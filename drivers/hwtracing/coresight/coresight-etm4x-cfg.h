@@ -27,4 +27,4 @@
 /* ETMv4 specific config functions */
 int etm4_cscfg_register(struct coresight_device *csdev);
 
-#endif /* CORESIGHT_ETM4X_CFG_H */
+#endif /* _CORESIGHT_ETM4X_CFG_H */

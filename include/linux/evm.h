@@ -85,4 +85,4 @@ static inline bool evm_metadata_changed(struct inode *inode,
 }
 
 #endif /* CONFIG_EVM */
-#endif /* LINUX_EVM_H */
+#endif /* _LINUX_EVM_H */

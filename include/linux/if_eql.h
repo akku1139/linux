@@ -48,4 +48,4 @@ typedef struct equalizer {
 	struct timer_list	timer;
 } equalizer_t;  
 
-#endif /* _LINUX_EQL_H */
+#endif /* _LINUX_IF_EQL_H */

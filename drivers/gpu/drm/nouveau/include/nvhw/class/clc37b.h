@@ -46,4 +46,4 @@
 #define NVC37B_SET_POINT_OUT(b)                                                 (0x00000208 + (b)*0x00000004)
 #define NVC37B_SET_POINT_OUT_X                                                  15:0
 #define NVC37B_SET_POINT_OUT_Y                                                  31:16
-#endif // _clC37b_h
+#endif /* _clC37b_h_ */

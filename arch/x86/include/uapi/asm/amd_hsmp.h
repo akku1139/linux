@@ -474,4 +474,4 @@ struct hsmp_metric_table {
 #define HSMP_BASE_IOCTL_NR	0xF8
 #define HSMP_IOCTL_CMD		_IOWR(HSMP_BASE_IOCTL_NR, 0, struct hsmp_message)
 
-#endif /*_ASM_X86_AMD_HSMP_H_*/
+#endif /* _UAPI_ASM_X86_AMD_HSMP_H_ */

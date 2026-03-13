@@ -67,4 +67,4 @@ arch_test_and_change_bit(unsigned int nr, volatile unsigned long *p)
 
 #include <asm-generic/bitops/instrumented-atomic.h>
 
-#endif /* _ASM_GENERIC_BITOPS_ATOMIC_H */
+#endif /* _ASM_GENERIC_BITOPS_ATOMIC_H_ */

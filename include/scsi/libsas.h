@@ -764,4 +764,4 @@ void sas_notify_phy_event(struct asd_sas_phy *phy, enum phy_event event,
 #define LIBSAS_SHT_BASE_NO_SLAVE_INIT	_LIBSAS_SHT_BASE
 
 
-#endif /* _SASLIB_H_ */
+#endif /* _LIBSAS_H_ */

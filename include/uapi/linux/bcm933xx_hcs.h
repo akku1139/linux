@@ -22,4 +22,4 @@ struct bcm_hcs {
 	__u32 crc;
 };
 
-#endif /* __BCM933XX_HCS */
+#endif /* __BCM933XX_HCS_H */

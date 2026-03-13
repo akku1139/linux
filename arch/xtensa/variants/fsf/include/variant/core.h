@@ -355,5 +355,5 @@
 #endif /* !XTENSA_HAL_NON_PRIVILEGED_ONLY */
 
 
-#endif /* _XTENSA_CORE_CONFIGURATION_H */
+#endif /* _XTENSA_CORE_H */
 

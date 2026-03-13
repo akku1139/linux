@@ -103,4 +103,4 @@ s32 fm10k_iov_msg_lport_state_pf(struct fm10k_hw *, u32 **,
 				 struct fm10k_mbx_info *);
 
 extern const struct fm10k_info fm10k_pf_info;
-#endif /* _FM10K_PF_H */
+#endif /* _FM10K_PF_H_ */

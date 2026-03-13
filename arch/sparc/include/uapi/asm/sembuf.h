@@ -29,4 +29,4 @@ struct semid64_ds {
 	unsigned long	__unused2;
 };
 
-#endif /* _SPARC64_SEMBUF_H */
+#endif /* _SPARC_SEMBUF_H */

@@ -124,4 +124,4 @@ void xdna_mailbox_stop_channel(struct mailbox_channel *mailbox_chann);
 int xdna_mailbox_send_msg(struct mailbox_channel *mailbox_chann,
 			  const struct xdna_mailbox_msg *msg, u64 tx_timeout);
 
-#endif /* _AIE2_MAILBOX_ */
+#endif /* _AIE2_MAILBOX_H_ */

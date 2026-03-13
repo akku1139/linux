@@ -37,4 +37,4 @@ static inline void trace_ ## name(proto) {}
 #include "brcms_trace_brcmsmac_tx.h"
 #include "brcms_trace_brcmsmac_msg.h"
 
-#endif /* __TRACE_BRCMSMAC_H */
+#endif /* __BRCMS_TRACE_EVENTS_H */

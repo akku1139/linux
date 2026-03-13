@@ -88,4 +88,4 @@ int ixgbe_dcb_hw_config_82599(struct ixgbe_hw *hw, u8 pfc_en, u16 *refill,
 			      u16 *max, u8 *bwg_id, u8 *prio_type,
 			      u8 *prio_tc);
 
-#endif /* _DCB_82599_CONFIG_H */
+#endif /* _DCB_82599_CONFIG_H_ */

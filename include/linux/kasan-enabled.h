@@ -46,4 +46,4 @@ static inline bool kasan_hw_tags_enabled(void)
 }
 #endif /* CONFIG_KASAN_HW_TAGS */
 
-#endif /* LINUX_KASAN_ENABLED_H */
+#endif /* _LINUX_KASAN_ENABLED_H */

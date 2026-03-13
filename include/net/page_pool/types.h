@@ -308,4 +308,4 @@ static inline bool is_page_pool_compiled_in(void)
 /* Caller must provide appropriate safe context, e.g. NAPI. */
 void page_pool_update_nid(struct page_pool *pool, int new_nid);
 
-#endif /* _NET_PAGE_POOL_H */
+#endif /* _NET_PAGE_POOL_TYPES_H */

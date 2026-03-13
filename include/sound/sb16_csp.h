@@ -73,4 +73,4 @@ struct snd_sb_csp {
 };
 
 int snd_sb_csp_new(struct snd_sb *chip, int device, struct snd_hwdep ** rhwdep);
-#endif /* __SOUND_SB16_CSP */
+#endif /* __SOUND_SB16_CSP_H */

@@ -218,4 +218,4 @@ struct ufs_rpmb_reply {
 	struct ufs_bsg_reply bsg_reply;
 	struct ufs_ehs ehs_rsp;
 };
-#endif /* UFS_BSG_H */
+#endif /* SCSI_BSG_UFS_H */

@@ -574,4 +574,4 @@ typedef struct tuple_t {
 
 #define CISTPL_MAX_CIS_SIZE	0x200
 
-#endif /* LINUX_CISTPL_H */
+#endif /* _LINUX_CISTPL_H */

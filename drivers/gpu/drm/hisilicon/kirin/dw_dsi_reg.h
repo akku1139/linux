@@ -98,4 +98,4 @@ static inline void dw_update_bits(void __iomem *addr, u32 bit_start,
 	writel(tmp, addr);
 }
 
-#endif /* __DW_DRM_DSI_H__ */
+#endif /* __DW_DSI_REG_H__ */

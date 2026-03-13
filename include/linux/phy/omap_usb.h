@@ -22,4 +22,4 @@ static inline int omap_usb2_set_comparator(struct phy_companion *comparator)
 }
 #endif
 
-#endif /* __DRIVERS_OMAP_USB_H */
+#endif /* __DRIVERS_OMAP_USB2_H */

@@ -161,4 +161,4 @@ wlcore_scan_sched_scan_ssid_list(struct wl1271 *wl,
 				 struct wl12xx_vif *wlvif,
 				 struct cfg80211_sched_scan_request *req);
 
-#endif /* __WL1271_SCAN_H__ */
+#endif /* __SCAN_H__ */

@@ -622,4 +622,4 @@ struct utp_task_req_desc {
 	} upiu_rsp;
 };
 
-#endif /* End of Header */
+#endif /* _UFSHCI_H */

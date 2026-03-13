@@ -78,4 +78,4 @@
 /* Reset lines not available on V3s */
 #define RST_BUS_I2S0		52
 
-#endif /* _DT_BINDINGS_RST_SUN8I_H3_H_ */
+#endif /* _DT_BINDINGS_RST_SUN8I_V3S_H_ */

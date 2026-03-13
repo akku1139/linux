@@ -66,4 +66,4 @@ extern void pinctrl_falcon_add_gpio_range(struct pinctrl_gpio_range *range);
 #define LTQ_EBU_PCC_ISTAT	0
 
 #endif /* CONFIG_SOC_FALCON */
-#endif /* _LTQ_XWAY_H__ */
+#endif /* _LTQ_FALCON_H__ */

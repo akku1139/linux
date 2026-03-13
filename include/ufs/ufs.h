@@ -661,4 +661,4 @@ struct ufs_dev_info {
 	u8 rpmb_region_size[4];
 };
 
-#endif /* End of Header */
+#endif /* _UFS_H */

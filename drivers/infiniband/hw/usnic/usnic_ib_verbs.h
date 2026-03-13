@@ -67,4 +67,4 @@ int usnic_ib_alloc_ucontext(struct ib_ucontext *uctx, struct ib_udata *udata);
 void usnic_ib_dealloc_ucontext(struct ib_ucontext *ibcontext);
 int usnic_ib_mmap(struct ib_ucontext *context,
 			struct vm_area_struct *vma);
-#endif /* !USNIC_IB_VERBS_H */
+#endif /* USNIC_IB_VERBS_H_ */

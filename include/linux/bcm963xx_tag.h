@@ -100,4 +100,4 @@ struct bcm_tag {
 	char reserved2[16];
 };
 
-#endif /* __LINUX_BCM63XX_TAG_H__ */
+#endif /* __LINUX_BCM963XX_TAG_H__ */

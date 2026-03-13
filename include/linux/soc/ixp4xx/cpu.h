@@ -117,4 +117,4 @@ static inline u32 cpu_ixp4xx_features(struct regmap *rmap)
 }
 #endif
 
-#endif  /* _ASM_ARCH_CPU_H */
+#endif /* __SOC_IXP4XX_CPU_H__ */

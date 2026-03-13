@@ -27,4 +27,4 @@ extern const struct sparc32_cachetlb_ops *sparc32_cachetlb_ops;
 extern const struct sparc32_cachetlb_ops *local_ops;
 #endif
 
-#endif /* SPARC_CACHETLB_H */
+#endif /* _SPARC_CACHETLB_H */

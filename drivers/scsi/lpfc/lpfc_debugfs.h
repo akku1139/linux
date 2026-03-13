@@ -323,7 +323,7 @@ enum {
 
 #define LPFC_DISC_TRC_DISCOVERY		0xef    /* common mask for general
 						 * discovery */
-#endif /* H_LPFC_DEBUG_FS */
+#endif /* _H_LPFC_DEBUG_FS */
 
 enum {
 	writeGuard = 1,

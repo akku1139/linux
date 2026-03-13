@@ -66,4 +66,4 @@
 #define	RST_HDMI_SYS		21
 #define	RST_HDMI_AUDIO_DMA	22
 
-#endif /* DT_BINDINGS_RST_SUN4I_A10_H */
+#endif /* _DT_BINDINGS_RST_SUN4I_A10_H */

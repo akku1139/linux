@@ -31,4 +31,4 @@ struct command_table_helper;
 /* Initialize command table helper functions */
 const struct command_table_helper *dal_cmd_tbl_helper_dce112_get_table2(void);
 
-#endif /* __DAL_COMMAND_TABLE_HELPER_DCE110_H__ */
+#endif /* __DAL_COMMAND_TABLE_HELPER2_DCE112_H__ */

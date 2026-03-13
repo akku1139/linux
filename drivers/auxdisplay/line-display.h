@@ -89,4 +89,4 @@ int linedisp_register(struct linedisp *linedisp, struct device *parent,
 		      unsigned int num_chars, const struct linedisp_ops *ops);
 void linedisp_unregister(struct linedisp *linedisp);
 
-#endif /* LINEDISP_H */
+#endif /* _LINEDISP_H */

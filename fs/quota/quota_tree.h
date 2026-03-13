@@ -23,4 +23,4 @@ struct qt_disk_dqdbheader {
 
 #define QT_TREEOFF	1		/* Offset of tree in file in blocks */
 
-#endif /* _LINUX_QUOTAIO_TREE_H */
+#endif /* _LINUX_QUOTA_TREE_H */

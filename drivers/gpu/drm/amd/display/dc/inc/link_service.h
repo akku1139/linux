@@ -348,4 +348,4 @@ struct link_service {
 	void (*dp_trace_source_sequence)(
 			struct dc_link *link, uint8_t dp_test_mode);
 };
-#endif /* __DC_LINK_HPD_H__ */
+#endif /* __DC_LINK_H__ */

@@ -59,4 +59,4 @@ struct i915_pxp_component {
 	struct mutex mutex;
 };
 
-#endif /* _I915_TEE_PXP_INTERFACE_H_ */
+#endif /* _I915_PXP_TEE_INTERFACE_H_ */

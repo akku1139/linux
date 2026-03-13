@@ -104,4 +104,4 @@ int charlcd_unregister(struct charlcd *lcd);
 
 void charlcd_poke(struct charlcd *lcd);
 
-#endif /* CHARLCD_H */
+#endif /* _CHARLCD_H */

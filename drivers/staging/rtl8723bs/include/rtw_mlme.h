@@ -393,4 +393,4 @@ int rtw_select_roaming_candidate(struct mlme_priv *pmlmepriv);
 void rtw_sta_media_status_rpt(struct adapter *adapter, struct sta_info *psta, u32 mstatus);
 void rtw_reset_securitypriv(struct adapter *adapter);
 
-#endif /* __RTL871X_MLME_H_ */
+#endif /* __RTW_MLME_H_ */

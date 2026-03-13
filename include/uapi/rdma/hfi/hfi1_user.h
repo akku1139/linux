@@ -265,4 +265,4 @@ enum hfi1_ureg {
 	ur_rcvtidflowtable = 256
 };
 
-#endif /* _LINIUX__HFI1_USER_H */
+#endif /* _LINUX__HFI1_USER_H */

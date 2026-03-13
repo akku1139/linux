@@ -143,4 +143,4 @@ void ixgbe_dcb_read_rtrup2tc(struct ixgbe_hw *hw, u8 *map);
 #define MINIMUM_CREDIT_FOR_TSO  (DCB_MAX_TSO_SIZE/64 + 1) /* 513 for 32KB TSO packet */
 #define MAX_CREDIT              4095 /* Maximum credit supported: 256KB * 1204 / 64B */
 
-#endif /* _DCB_CONFIG_H */
+#endif /* _DCB_CONFIG_H_ */

@@ -322,4 +322,4 @@ extern void ceph_copy_from_page_vector(struct page **pages,
 extern void ceph_zero_page_vector_range(int off, int len, struct page **pages);
 
 
-#endif /* _FS_CEPH_SUPER_H */
+#endif /* _FS_CEPH_LIBCEPH_H */

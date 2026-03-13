@@ -18,4 +18,4 @@ unsigned int ia_css_util_input_format_bpp(
     enum atomisp_input_format format,
     bool two_ppc);
 
-#endif /* __ATOMISP_INPUT_FORMAT_H */
+#endif /* __IA_CSS_STREAM_FORMAT_H */

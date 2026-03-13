@@ -96,5 +96,5 @@ extern void register_current_timer_delay(const struct delay_timer *timer);
 
 #endif /* __ASSEMBLY__ */
 
-#endif /* defined(_ARM_DELAY_H) */
+#endif /* __ASM_ARM_DELAY_H */
 

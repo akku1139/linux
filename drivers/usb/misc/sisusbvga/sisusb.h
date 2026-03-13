@@ -275,4 +275,4 @@ struct sisusb_command {
 #define SISUSB_GET_CONFIG_SIZE	_IOR(0xF3,0x3E,__u32)
 #define SISUSB_GET_CONFIG	_IOR(0xF3,0x3F,struct sisusb_info)
 
-#endif /* SISUSB_H */
+#endif /* _SISUSB_H_ */

@@ -174,4 +174,4 @@ struct gpmc_omap_platform_data {
 	struct gpmc_omap_cs_data cs[GPMC_CS_NUM];
 };
 
-#endif /* _GPMC_OMAP_H */
+#endif /* _GPMC_OMAP_H_ */

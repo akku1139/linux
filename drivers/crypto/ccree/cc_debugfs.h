@@ -25,4 +25,4 @@ static inline void cc_debugfs_fini(struct cc_drvdata *drvdata) {}
 
 #endif
 
-#endif /*__CC_SYSFS_H__*/
+#endif /* __CC_DEBUGFS_H__ */

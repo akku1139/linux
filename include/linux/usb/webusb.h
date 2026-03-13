@@ -77,4 +77,4 @@ struct webusb_url_descriptor {
  */
 #define WEBUSB_URL_RAW_MAX_LENGTH (U8_MAX - WEBUSB_URL_DESCRIPTOR_HEADER_LENGTH + 8)
 
-#endif /* __LINUX_USB_USBNET_H */
+#endif /* __LINUX_USB_WEBUSB_H */

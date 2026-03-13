@@ -12,4 +12,4 @@
 
 void intel_gt_sysfs_pm_init(struct intel_gt *gt, struct kobject *kobj);
 
-#endif /* SYSFS_RC6_H */
+#endif /* __SYSFS_GT_PM_H__ */

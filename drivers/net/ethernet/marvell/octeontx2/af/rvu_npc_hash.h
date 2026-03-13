@@ -234,4 +234,4 @@ void rvu_npc_exact_reset(struct rvu *rvu, u16 pcifunc);
 u16 rvu_npc_exact_drop_rule_to_pcifunc(struct rvu *rvu, u32 drop_rule_idx);
 int rvu_npc_exact_promisc_disable(struct rvu *rvu, u16 pcifunc);
 int rvu_npc_exact_promisc_enable(struct rvu *rvu, u16 pcifunc);
-#endif /* RVU_NPC_HASH_H */
+#endif /* __RVU_NPC_HASH_H */

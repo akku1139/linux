@@ -173,4 +173,4 @@ struct pvr2_device_desc {
 
 extern struct usb_device_id pvr2_device_table[];
 
-#endif /* __PVRUSB2_HDW_INTERNAL_H */
+#endif /* __PVRUSB2_DEVATTR_H */

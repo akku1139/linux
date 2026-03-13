@@ -11,4 +11,4 @@ void ceph_end_io_write(struct inode *inode);
 int __must_check ceph_start_io_direct(struct inode *inode);
 void ceph_end_io_direct(struct inode *inode);
 
-#endif /* FS_CEPH_IO_H */
+#endif /* _FS_CEPH_IO_H */

@@ -191,4 +191,4 @@
 #define _TRANS_CMRR_N_HI_A			0x604FC
 #define TRANS_CMRR_N_HI(display, trans)		_MMIO_TRANS2((display), (trans), _TRANS_CMRR_N_HI_A)
 
-#endif /* __INTEL_VRR_REGS__ */
+#endif /* __INTEL_VRR_REGS_H__ */

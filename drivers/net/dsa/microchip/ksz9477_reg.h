@@ -1568,4 +1568,4 @@
 #define PTP_TRIG_UNIT_M			(BIT(MAX_TRIG_UNIT) - 1)
 #define PTP_TS_UNIT_M			(BIT(MAX_TIMESTAMP_UNIT) - 1)
 
-#endif /* KSZ9477_REGS_H */
+#endif /* __KSZ9477_REGS_H */

@@ -134,4 +134,4 @@
 #define NVCA7E_SET_SURFACE_ADDRESS_LO_ILUT_ENABLE_DISABLE                       (0x00000000)
 #define NVCA7E_SET_SURFACE_ADDRESS_LO_ILUT_ENABLE_ENABLE                        (0x00000001)
 
-#endif // _clca7e_h
+#endif /* _clca7e_h_ */

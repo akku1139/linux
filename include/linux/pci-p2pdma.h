@@ -212,4 +212,4 @@ pci_p2pdma_bus_addr_map(struct p2pdma_provider *provider, phys_addr_t paddr)
 	return paddr + provider->bus_offset;
 }
 
-#endif /* _LINUX_PCI_P2P_H */
+#endif /* _LINUX_PCI_P2PDMA_H */

@@ -432,4 +432,4 @@ enum max77843_irq_muic {
 #define MAX77843_REG_SAFEOUTCTRL_SAFEOUT2_MASK \
 		(0x3 << SAFEOUTCTRL_SAFEOUT2_SHIFT)
 
-#endif /* __MAX77843_H__ */
+#endif /* __MAX77843_PRIVATE_H_ */

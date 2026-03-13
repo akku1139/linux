@@ -41,4 +41,4 @@ void update_freq_counters_refs(void);
 
 #include <asm-generic/topology.h>
 
-#endif /* _ASM_ARM_TOPOLOGY_H */
+#endif /* __ASM_TOPOLOGY_H */

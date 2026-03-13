@@ -1443,4 +1443,4 @@ static const u32 *gen7_9_0_external_core_regs[] = {
 	gen7_9_0_dpm_leakage_registers,
 	gen7_9_0_gfx_gpu_acd_registers,
 };
-#endif /*_ADRENO_GEN7_9_0_SNAPSHOT_H */
+#endif /* __ADRENO_GEN7_9_0_SNAPSHOT_H */

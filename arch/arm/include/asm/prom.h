@@ -22,4 +22,4 @@ static inline const struct machine_desc *setup_machine_fdt(void *dt_virt)
 static inline void arm_dt_init_cpu_maps(void) { }
 
 #endif /* CONFIG_OF */
-#endif /* ASMARM_PROM_H */
+#endif /* __ASMARM_PROM_H */

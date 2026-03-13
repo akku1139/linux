@@ -189,4 +189,4 @@ extern int cvmx_helper_get_interface_num(int ipd_port);
  */
 extern int cvmx_helper_get_interface_index_num(int ipd_port);
 
-#endif /* __CVMX_HELPER_H__ */
+#endif /* __CVMX_HELPER_UTIL_H__ */

@@ -150,4 +150,4 @@ static inline void flite_hw_set_dma_buf_mask(struct fimc_lite *dev, u32 mask)
 	writel(mask, dev->regs + FLITE_REG_CIFCNTSEQ);
 }
 
-#endif /* FIMC_LITE_REG_H */
+#endif /* FIMC_LITE_REG_H_ */

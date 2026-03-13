@@ -250,4 +250,4 @@ static inline struct ns_common *ns_get_owner(struct ns_common *ns)
 }
 #endif
 
-#endif /* _LINUX_USER_H */
+#endif /* _LINUX_USER_NAMESPACE_H */

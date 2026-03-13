@@ -707,4 +707,4 @@ struct wl1271_cmd_cal_p2g {
 	u8 padding2;
 } __packed;
 
-#endif /* __WL1271_CMD_H__ */
+#endif /* __CMD_H__ */

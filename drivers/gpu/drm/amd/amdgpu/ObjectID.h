@@ -738,7 +738,7 @@
 #pragma pack()
 #endif
 
-#endif  /*GRAPHICTYPE */
+#endif /* _OBJECTID_H */
 
 
 

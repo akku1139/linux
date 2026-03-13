@@ -85,4 +85,4 @@
 #define NV827E_SURFACE_SET_PARAMS_COLOR_SPACE_YUV_709                           (0x00000002)
 #define NV827E_SURFACE_SET_PARAMS_RESERVED0                                     22:16
 #define NV827E_SURFACE_SET_PARAMS_RESERVED1                                     24:24
-#endif // _cl827e_h
+#endif /* _cl827e_h_ */

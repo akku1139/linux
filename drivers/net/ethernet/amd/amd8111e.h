@@ -796,5 +796,5 @@ static bool coalesce[MAX_UNITS] = { [ 0 ... MAX_UNITS-1] = true };
 static bool dynamic_ipg[MAX_UNITS] = { [ 0 ... MAX_UNITS-1] = false };
 static unsigned int chip_version;
 
-#endif /* _AMD8111E_H */
+#endif /* _AMD811E_H */
 

@@ -254,4 +254,4 @@ struct s5p_jpeg_addr {
 	u32     cr;
 };
 
-#endif /* JPEG_CORE_H */
+#endif /* JPEG_CORE_H_ */

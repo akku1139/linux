@@ -105,4 +105,4 @@ s8 PHY_GetTxPowerTrackingOffset(struct adapter *padapter, u8 Rate, u8 RFPath);
 
 void Hal_ChannelPlanToRegulation(struct adapter *Adapter, u16 ChannelPlan);
 
-#endif /* __HAL_COMMON_H__ */
+#endif /* __HAL_COM_PHYCFG_H__ */

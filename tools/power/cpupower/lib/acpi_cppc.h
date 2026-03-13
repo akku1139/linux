@@ -18,4 +18,4 @@ enum acpi_cppc_value {
 unsigned long acpi_cppc_get_data(unsigned int cpu,
 				 enum acpi_cppc_value which);
 
-#endif /* _ACPI_CPPC_H */
+#endif /* __ACPI_CPPC_H__ */

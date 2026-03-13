@@ -449,4 +449,4 @@ unsigned long __clear_user(void __user *to, unsigned long n);
 #include <asm-generic/uaccess.h>
 #endif
 
-#endif /* _M68K_UACCESS_H */
+#endif /* __M68K_UACCESS_H */

@@ -36,4 +36,4 @@ int intel_pcode_write_timeout(struct drm_device *drm, u32 mbox, u32 val, int tim
 int intel_pcode_request(struct drm_device *drm, u32 mbox, u32 request,
 			u32 reply_mask, u32 reply, int timeout_base_ms);
 
-#endif /* _INTEL_PCODE_H */
+#endif /* _INTEL_PCODE_H_ */

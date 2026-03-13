@@ -63,4 +63,4 @@ int usnic_transport_sock_get_addr(struct socket *sock, int *proto,
 					uint32_t *addr, uint16_t *port);
 int usnic_transport_init(void);
 void usnic_transport_fini(void);
-#endif /* !USNIC_TRANSPORT_H */
+#endif /* USNIC_TRANSPORT_H_ */

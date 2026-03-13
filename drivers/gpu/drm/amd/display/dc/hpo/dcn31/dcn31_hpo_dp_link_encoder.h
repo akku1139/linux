@@ -232,4 +232,4 @@ void dcn31_fill_stream_allocation_row_info(
 		uint32_t *src,
 		uint32_t *slots);
 
-#endif   // __DAL_DCN31_HPO_LINK_ENCODER_H__
+#endif /* __DAL_DCN31_HPO_DP_LINK_ENCODER_H__ */

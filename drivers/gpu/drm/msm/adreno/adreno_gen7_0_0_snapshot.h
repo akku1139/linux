@@ -932,4 +932,4 @@ static const u32 *gen7_0_0_external_core_regs[] = {
 	gen7_0_0_gpucc_registers,
 	gen7_0_0_cpr_registers,
 };
-#endif /*_ADRENO_GEN7_0_0_SNAPSHOT_H */
+#endif /* __ADRENO_GEN7_0_0_SNAPSHOT_H */

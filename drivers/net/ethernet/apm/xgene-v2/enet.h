@@ -30,4 +30,4 @@ u32 xge_rd_csr(struct xge_pdata *pdata, u32 offset);
 int xge_port_reset(struct net_device *ndev);
 void xge_port_init(struct net_device *ndev);
 
-#endif  /* __XGENE_ENET_V2_ENET__H__ */
+#endif /* __XGENE_ENET_V2_ENET_H__ */

@@ -741,4 +741,4 @@ static inline void axienet_dma_out_addr(struct axienet_local *lp, off_t reg,
 int axienet_mdio_setup(struct axienet_local *lp);
 void axienet_mdio_teardown(struct axienet_local *lp);
 
-#endif /* XILINX_AXI_ENET_H */
+#endif /* XILINX_AXIENET_H */

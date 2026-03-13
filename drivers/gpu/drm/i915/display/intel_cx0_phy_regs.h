@@ -433,4 +433,4 @@
 #define PICA_PHY_CONFIG_CONTROL		_MMIO(0x16FE68)
 #define   EDP_ON_TYPEC			REG_BIT(31)
 
-#endif /* __INTEL_CX0_REG_DEFS_H__ */
+#endif /* __INTEL_CX0_PHY_REGS_H__ */

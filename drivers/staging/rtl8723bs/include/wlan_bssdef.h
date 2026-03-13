@@ -213,4 +213,4 @@ enum {
 #define NUM_PRE_AUTH_KEY 16
 #define NUM_PMKID_CACHE NUM_PRE_AUTH_KEY
 
-#endif /* ifndef WLAN_BSSDEF_H_ */
+#endif /* __WLAN_BSSDEF_H__ */

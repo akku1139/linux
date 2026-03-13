@@ -1139,4 +1139,4 @@ enum ovs_dec_ttl_attr {
 
 #define OVS_DEC_TTL_ATTR_MAX (__OVS_DEC_TTL_ATTR_MAX - 1)
 
-#endif /* _LINUX_OPENVSWITCH_H */
+#endif /* _UAPI__LINUX_OPENVSWITCH_H */

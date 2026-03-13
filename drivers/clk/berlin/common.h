@@ -15,4 +15,4 @@ struct berlin2_gate_data {
 	unsigned long flags;
 };
 
-#endif /* BERLIN2_COMMON_H */
+#endif /* __BERLIN2_COMMON_H */

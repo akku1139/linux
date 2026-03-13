@@ -353,4 +353,4 @@ void dpu_encoder_frame_done_callback(
 void dpu_encoder_phys_init(struct dpu_encoder_phys *phys,
 			   struct dpu_enc_phys_init_params *p);
 
-#endif /* __dpu_encoder_phys_H__ */
+#endif /* __DPU_ENCODER_PHYS_H__ */

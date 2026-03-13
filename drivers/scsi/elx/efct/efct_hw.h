@@ -761,4 +761,4 @@ efct_hw_port_control(struct efct_hw *hw, enum efct_hw_port ctrl,
 		void (*cb)(int status, uintptr_t value, void *arg),
 		void *arg);
 
-#endif /* __EFCT_H__ */
+#endif /* _EFCT_HW_H */

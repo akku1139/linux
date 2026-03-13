@@ -139,4 +139,4 @@
 #define NVC57E_SET_CONTEXT_DMA_ILUT_HANDLE                                      31:0
 #define NVC57E_SET_OFFSET_ILUT                                                  (0x00000448)
 #define NVC57E_SET_OFFSET_ILUT_ORIGIN                                           31:0
-#endif // _clC57e_h
+#endif /* _clC57e_h_ */

@@ -231,4 +231,4 @@ static const hrt_address __maybe_unused SUB_SYSTEM_OFFSET[N_SUB_SYSTEM_ID] = {
 	0x0000C000UL
 };
 
-#endif /* __INPUT_SYSTEM_LOCAL_H_INCLUDED__ */
+#endif /* __INPUT_SYSTEM_2400_LOCAL_H_INCLUDED__ */

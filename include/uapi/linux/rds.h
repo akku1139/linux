@@ -418,4 +418,4 @@ struct rds_zcopy_cookies {
 #define RDS_RDMA_NOTIFY_ME	0x0020	/* Notify when operation completes */
 #define RDS_RDMA_SILENT		0x0040	/* Do not interrupt remote */
 
-#endif /* IB_RDS_H */
+#endif /* _LINUX_RDS_H */

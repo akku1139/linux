@@ -93,4 +93,4 @@ static inline u32 mls_range_hash(const struct mls_range *r, u32 hash)
 	return hash;
 }
 
-#endif /* _SS_MLS_H */
+#endif /* _SS_MLS_H_ */

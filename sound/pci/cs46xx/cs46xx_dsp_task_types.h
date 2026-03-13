@@ -234,4 +234,4 @@ struct dsp_task_tree_control_block {
 };
 
 
-#endif /* __DSP_TASK_TYPES_H__ */
+#endif /* __CS46XX_DSP_TASK_TYPES_H__ */

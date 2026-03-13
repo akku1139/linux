@@ -51,4 +51,4 @@ static inline unsigned long kaslr_offset(void)
 	return (unsigned long)&_text - VMLINUX_LOAD_ADDRESS;
 }
 
-#endif /* __SETUP_H */
+#endif /* _LOONGARCH_SETUP_H */

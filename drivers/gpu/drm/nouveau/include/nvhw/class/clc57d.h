@@ -352,4 +352,4 @@
 #define NVC57D_HEAD_SET_CONTEXT_DMA_OLUT_HANDLE                                 31:0
 #define NVC57D_HEAD_SET_OFFSET_OLUT(a)                                          (0x0000228C + (a)*0x00000400)
 #define NVC57D_HEAD_SET_OFFSET_OLUT_ORIGIN                                      31:0
-#endif // _clC57d_h
+#endif /* _clC57d_h_ */

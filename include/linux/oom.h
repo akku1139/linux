@@ -111,4 +111,4 @@ extern void oom_killer_enable(void);
 
 extern struct task_struct *find_lock_task_mm(struct task_struct *p);
 
-#endif /* _INCLUDE_LINUX_OOM_H */
+#endif /* __INCLUDE_LINUX_OOM_H */

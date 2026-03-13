@@ -179,4 +179,4 @@ void irdma_puda_free_ah(struct irdma_sc_dev *dev, struct irdma_sc_ah *ah);
 void irdma_ieq_process_fpdus(struct irdma_sc_qp *qp,
 			     struct irdma_puda_rsrc *ieq);
 void irdma_ieq_cleanup_qp(struct irdma_puda_rsrc *ieq, struct irdma_sc_qp *qp);
-#endif /*IRDMA_PROTOS_H */
+#endif /* IRDMA_PUDA_H */

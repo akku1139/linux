@@ -94,4 +94,4 @@ bool kgdb_breakpoint_handler(struct pt_regs *regs);
 static inline bool kgdb_breakpoint_handler(struct pt_regs *regs) { return false; }
 #endif /* CONFIG_KGDB */
 
-#endif /* __ASM_KGDB_H_ */
+#endif /* _ASM_LOONGARCH_KGDB_H */

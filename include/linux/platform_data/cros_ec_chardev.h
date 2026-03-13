@@ -35,4 +35,4 @@ struct cros_ec_readmem {
 #define CROS_EC_DEV_IOCRDMEM  _IOWR(CROS_EC_DEV_IOC, 1, struct cros_ec_readmem)
 #define CROS_EC_DEV_IOCEVENTMASK _IO(CROS_EC_DEV_IOC, 2)
 
-#endif /* _CROS_EC_DEV_H_ */
+#endif /* _UAPI_LINUX_CROS_EC_DEV_H_ */

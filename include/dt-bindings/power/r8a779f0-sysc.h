@@ -27,4 +27,4 @@
 /* Always-on power area */
 #define R8A779F0_PD_ALWAYS_ON		64
 
-#endif /* __DT_BINDINGS_POWER_R8A779A0_SYSC_H__*/
+#endif /* __DT_BINDINGS_POWER_R8A779F0_SYSC_H__ */

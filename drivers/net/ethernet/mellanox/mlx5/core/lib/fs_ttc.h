@@ -89,4 +89,4 @@ static inline bool mlx5_ttc_is_decrypted_esp_tt(enum mlx5_traffic_types tt)
 	       tt <= MLX5_TT_DECRYPTED_ESP_INNER_IPV6_UDP;
 }
 
-#endif /* __MLX5_FS_TTC_H__ */
+#endif /* __ML5_FS_TTC_H__ */

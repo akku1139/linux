@@ -310,4 +310,4 @@ enum {
 /* SMC socket options */
 #define SMC_LIMIT_HS 1	/* constraint on smc handshake */
 
-#endif /* _UAPI_LINUX_SMC_H */
+#endif /* _UAPI_LINUX_SMC_H_ */

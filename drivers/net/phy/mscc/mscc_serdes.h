@@ -28,4 +28,4 @@
 
 int vsc85xx_sd6g_config_v2(struct phy_device *phydev);
 
-#endif /* _MSCC_PHY_SERDES_H_ */
+#endif /* _MSCC_SERDES_PHY_H_ */

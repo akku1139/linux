@@ -10,4 +10,4 @@
 #undef __HAVE_ARCH_SIG_BITOPS
 
 #endif /* __ASSEMBLY__ */
-#endif /* _ASM_GENERIC_SIGNAL_H */
+#endif /* __ASM_GENERIC_SIGNAL_H */

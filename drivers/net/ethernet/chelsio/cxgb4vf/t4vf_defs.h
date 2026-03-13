@@ -119,4 +119,4 @@ enum {
 #define T4VF_MBDATA_FIRST	0
 #define T4VF_MBDATA_LAST	((NUM_CIM_VF_MAILBOX_DATA_INSTANCES-1)*4)
 
-#endif /* __T4T4VF_DEFS_H__ */
+#endif /* __T4VF_DEFS_H__ */

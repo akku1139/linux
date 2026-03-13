@@ -174,4 +174,4 @@ unsigned long find_first_zero_bit(const unsigned long *addr, unsigned long size)
 }
 #endif
 
-#endif /*__LINUX_FIND_H_ */
+#endif /* _TOOLS_LINUX_FIND_H_ */

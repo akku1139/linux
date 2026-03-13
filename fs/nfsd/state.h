@@ -877,4 +877,4 @@ struct nfsd4_get_dir_delegation;
 struct nfs4_delegation *nfsd_get_dir_deleg(struct nfsd4_compound_state *cstate,
 						struct nfsd4_get_dir_delegation *gdd,
 						struct nfsd_file *nf);
-#endif   /* NFSD4_STATE_H */
+#endif /* _NFSD4_STATE_H */

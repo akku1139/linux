@@ -182,4 +182,4 @@ static inline ssize_t zone_cond_store(struct nullb_device *dev,
 }
 #define null_report_zones	NULL
 #endif /* CONFIG_BLK_DEV_ZONED */
-#endif /* __NULL_BLK_H */
+#endif /* __BLK_NULL_BLK_H */

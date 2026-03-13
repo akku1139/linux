@@ -104,4 +104,4 @@ extern int kgdb_fault_expected;
  */
 #define CFI_END_FRAME(func)	__CFI_END_FRAME(_PC, _SPT, func)
 
-#endif /* __ASM_KGDB_H__ */
+#endif /* __ARM_KGDB_H__ */

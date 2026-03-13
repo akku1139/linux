@@ -154,4 +154,4 @@ bool refcount_dec_and_test(refcount_t *r)
 }
 
 
-#endif /* _ATOMIC_LINUX_REFCOUNT_H */
+#endif /* _TOOLS_LINUX_REFCOUNT_H */

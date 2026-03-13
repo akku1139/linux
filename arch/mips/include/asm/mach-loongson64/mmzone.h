@@ -16,4 +16,4 @@
 
 extern void __init prom_init_numa_memory(void);
 
-#endif /* _ASM_MACH_MMZONE_H */
+#endif /* _ASM_MACH_LOONGSON64_MMZONE_H */

@@ -40,4 +40,4 @@ static inline uint32_t ia_css_isys_generate_stream_id(
 	return sp_thread_id * IA_CSS_STREAM_MAX_ISYS_STREAM_PER_CH + stream_id;
 }
 
-#endif  /*_IA_CSS_ISYS_COMM_H */
+#endif /* __IA_CSS_ISYS_COMM_H */

@@ -63,4 +63,4 @@ struct audio {
 	bool enabled;
 };
 
-#endif  /* __DAL_AUDIO__ */
+#endif /* __DAL_AUDIO_H__ */

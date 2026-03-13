@@ -175,4 +175,4 @@ static inline u32 mxs_lradc_irq_mask(struct mxs_lradc *lradc)
 	}
 }
 
-#endif /* __MXS_LRADC_H */
+#endif /* __MFD_MXS_LRADC_H */

@@ -709,4 +709,4 @@ intel_engine_uses_wa_hold_switchout(struct intel_engine_cs *engine)
 	return engine->flags & I915_ENGINE_USES_WA_HOLD_SWITCHOUT;
 }
 
-#endif /* __INTEL_ENGINE_TYPES_H__ */
+#endif /* __INTEL_ENGINE_TYPES__ */

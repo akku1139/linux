@@ -489,4 +489,4 @@ void atl1e_down(struct atl1e_adapter *adapter);
 void atl1e_reinit_locked(struct atl1e_adapter *adapter);
 s32 atl1e_reset_hw(struct atl1e_hw *hw);
 void atl1e_set_ethtool_ops(struct net_device *netdev);
-#endif /* _ATL1_E_H_ */
+#endif /* _ATL1E_H_ */

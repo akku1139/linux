@@ -142,4 +142,4 @@ struct snd_intelhad_card {
 	struct snd_intelhad pcm_ctx[3]; /* one for each port */
 };
 
-#endif /* _INTEL_HDMI_AUDIO_ */
+#endif /* _INTEL_HDMI_AUDIO_H_ */

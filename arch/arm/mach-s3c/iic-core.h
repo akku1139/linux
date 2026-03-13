@@ -28,4 +28,4 @@ static inline void s3c_i2c1_setname(char *name)
 #endif
 }
 
-#endif /* __ASM_ARCH_IIC_H */
+#endif /* __ASM_ARCH_IIC_CORE_H */

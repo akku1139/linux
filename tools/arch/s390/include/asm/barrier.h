@@ -41,4 +41,4 @@ do {						\
 	___p1;					\
 })
 
-#endif /* __TOOLS_LIB_ASM_BARRIER_H */
+#endif /* __TOOLS_LINUX_ASM_BARRIER_H */

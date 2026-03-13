@@ -84,4 +84,4 @@ struct et8ek8_meta_reglist {
 
 extern struct et8ek8_meta_reglist meta_reglist;
 
-#endif /* ET8EK8REGS */
+#endif /* ET8EK8REGS_H */

@@ -765,4 +765,4 @@ struct fm10k_ftag {
 	__be16 dglort;
 };
 
-#endif /* _FM10K_TYPE_H */
+#endif /* _FM10K_TYPE_H_ */

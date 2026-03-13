@@ -312,4 +312,4 @@ typedef struct dmx_filter dmx_filter_t;
 #define DMX_QBUF                 _IOWR('o', 63, struct dmx_buffer)
 #define DMX_DQBUF                _IOWR('o', 64, struct dmx_buffer)
 
-#endif /* _DVBDMX_H_ */
+#endif /* _UAPI_DVBDMX_H_ */

@@ -178,4 +178,4 @@ static inline int v4l2_fh_is_singular_file(struct file *filp)
 	return v4l2_fh_is_singular(filp->private_data);
 }
 
-#endif /* V4L2_EVENT_H */
+#endif /* V4L2_FH_H */

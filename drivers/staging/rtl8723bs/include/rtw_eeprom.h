@@ -115,4 +115,4 @@ struct eeprom_priv {
 	u8 cis1[eeprom_cis1_sz];
 };
 
-#endif  /* __RTL871X_EEPROM_H__ */
+#endif /* __RTW_EEPROM_H__ */

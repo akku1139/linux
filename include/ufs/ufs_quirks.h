@@ -109,4 +109,4 @@ struct ufs_dev_quirk {
 /* Some UFS 4 devices do not support the qTimestamp attribute */
 #define UFS_DEVICE_QUIRK_NO_TIMESTAMP_SUPPORT	(1 << 13)
 
-#endif /* UFS_QUIRKS_H_ */
+#endif /* _UFS_QUIRKS_H_ */

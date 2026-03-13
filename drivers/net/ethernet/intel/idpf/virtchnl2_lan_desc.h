@@ -448,4 +448,4 @@ union virtchnl2_rx_desc {
 	struct virtchnl2_rx_flex_desc_adv_nic_3		flex_adv_nic_3_wb;
 };
 
-#endif /* _VIRTCHNL_LAN_DESC_H_ */
+#endif /* _VIRTCHNL2_LAN_DESC_H_ */

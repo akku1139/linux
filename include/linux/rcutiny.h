@@ -141,4 +141,4 @@ static inline void rcu_all_qs(void) { barrier(); }
 #define rcutree_dying_cpu        NULL
 static inline void rcutree_report_cpu_starting(unsigned int cpu) { }
 
-#endif /* __LINUX_RCUTINY_H */
+#endif /* __LINUX_TINY_H */

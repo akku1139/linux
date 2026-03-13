@@ -134,4 +134,4 @@ enum psp_sub_cmd {
 
 int psp_extended_mailbox_cmd(struct psp_device *psp, unsigned int timeout_msecs,
 			     struct psp_ext_request *req);
-#endif /* __PSP_DEV_H */
+#endif /* __PSP_DEV_H__ */

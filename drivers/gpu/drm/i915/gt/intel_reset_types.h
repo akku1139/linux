@@ -57,4 +57,4 @@ struct intel_reset {
 	struct srcu_struct backoff_srcu;
 };
 
-#endif /* _INTEL_RESET_TYPES_H_ */
+#endif /* __INTEL_RESET_TYPES_H_ */

@@ -42,4 +42,4 @@ static inline void prefetchw(const void *addr)
 #endif /* CONFIG_PREFETCH */
 #endif /* __ASSEMBLER__ */
 
-#endif /* __ASM_PARISC_PROCESSOR_H */
+#endif /* __ASM_PARISC_PREFETCH_H */

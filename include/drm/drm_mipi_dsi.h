@@ -582,4 +582,4 @@ void mipi_dsi_driver_unregister(struct mipi_dsi_driver *driver);
 	module_driver(__mipi_dsi_driver, mipi_dsi_driver_register, \
 			mipi_dsi_driver_unregister)
 
-#endif /* __DRM_MIPI_DSI__ */
+#endif /* __DRM_MIPI_DSI_H__ */

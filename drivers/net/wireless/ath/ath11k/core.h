@@ -1372,4 +1372,4 @@ static inline const char *ath11k_bus_str(enum ath11k_bus bus)
 
 void ath11k_core_pm_notifier_unregister(struct ath11k_base *ab);
 
-#endif /* _CORE_H_ */
+#endif /* ATH11K_CORE_H */

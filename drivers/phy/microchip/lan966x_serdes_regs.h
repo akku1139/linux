@@ -248,4 +248,4 @@ enum lan966x_target {
 #define HSIO_DLL_CFG_DLL_RST_GET(x)\
 	FIELD_GET(HSIO_DLL_CFG_DLL_RST, x)
 
-#endif /* _LAN966X_HSIO_REGS_H_ */
+#endif /* _LAN966X_SERDES_REGS_H_ */

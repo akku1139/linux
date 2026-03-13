@@ -121,4 +121,4 @@
 				(NR_NON_PAGEFLAG_BITS + NR_PAGEFLAGS))
 
 #endif
-#endif /* _LINUX_PAGE_FLAGS_LAYOUT */
+#endif /* PAGE_FLAGS_LAYOUT_H */

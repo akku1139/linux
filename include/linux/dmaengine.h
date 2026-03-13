@@ -1677,4 +1677,4 @@ static inline struct device *dmaengine_get_dma_device(struct dma_chan *chan)
 	return chan->device->dev;
 }
 
-#endif /* DMAENGINE_H */
+#endif /* LINUX_DMAENGINE_H */

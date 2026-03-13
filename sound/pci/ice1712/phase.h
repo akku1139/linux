@@ -36,4 +36,4 @@ extern struct snd_ice1712_card_info snd_vt1724_phase_cards[];
 #define PHASE28_AC97_DATA_LOW	(1 << 9)
 #define PHASE28_AC97_DATA_HIGH	(1 << 8)
 #define PHASE28_AC97_DATA_MASK	0xFF
-#endif /* __SOUND_PHASE */
+#endif /* __SOUND_PHASE_H */

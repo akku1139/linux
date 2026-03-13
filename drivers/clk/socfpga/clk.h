@@ -63,4 +63,4 @@ struct socfpga_periph_clk {
 	u32 bypass_shift;      /* only valid if bypass_reg != 0 */
 };
 
-#endif /* SOCFPGA_CLK_H */
+#endif /* __SOCFPGA_CLK_H */

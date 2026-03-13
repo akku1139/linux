@@ -29,4 +29,4 @@ static inline void cc_pm_put_suspend(struct device *dev) {}
 
 #endif
 
-#endif /*__POWER_MGR_H__*/
+#endif /* __CC_POWER_MGR_H__ */

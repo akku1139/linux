@@ -45,6 +45,6 @@
 #define SDMA0_4_0__SRCID__SDMA_POLL_TIMEOUT                                    246             /* 0xF6 SRBM read poll timeout  */
 #define SDMA0_4_0__SRCID__SDMA_SRBMWRITE                                       247             /* 0xF7 SRBM write Protection  */
 
-#endif /* __IRQSRCS_SDMA_4_0_H__ */
+#endif /* __IRQSRCS_SDMA0_4_0_H__ */
 
 

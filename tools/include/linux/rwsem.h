@@ -41,4 +41,4 @@ static inline int up_write(struct rw_semaphore *sem)
 #define down_read_nested(sem, subclass)		down_read(sem)
 #define down_write_nested(sem, subclass)	down_write(sem)
 
-#endif /* _TOOLS_RWSEM_H */
+#endif /* _TOOLS__RWSEM_H */

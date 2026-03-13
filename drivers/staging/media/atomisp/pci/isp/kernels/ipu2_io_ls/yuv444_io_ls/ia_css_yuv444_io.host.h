@@ -16,4 +16,4 @@ Copyright (c) 2010 - 2015, Intel Corporation.
 int ia_css_yuv444_io_config(const struct ia_css_binary     *binary,
 			    const struct sh_css_binary_args *args);
 
-#endif /*__YUV44_IO_HOST_H */
+#endif /* __YUV444_IO_HOST_H */

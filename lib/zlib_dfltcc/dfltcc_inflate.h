@@ -34,4 +34,4 @@ dfltcc_inflate_action dfltcc_inflate(z_streamp strm,
 
 #define INFLATE_NEED_UPDATEWINDOW(strm) (!dfltcc_can_inflate((strm)))
 
-#endif /* DFLTCC_DEFLATE_H */
+#endif /* DFLTCC_INFLATE_H */

@@ -534,4 +534,4 @@ static inline u32 mt792x_acpi_get_mtcl_conf(struct mt792x_phy *phy, char *alpha2
 }
 #endif
 
-#endif /* __MT7925_H */
+#endif /* __MT792X_H */

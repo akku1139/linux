@@ -64,4 +64,4 @@ static inline struct rvt_cq *ibcq_to_rvtcq(struct ib_cq *ibcq)
 
 bool rvt_cq_enter(struct rvt_cq *cq, struct ib_wc *entry, bool solicited);
 
-#endif          /* DEF_RDMAVT_INCCQH */
+#endif /* DEF_RDMAVT_INCCQ_H */

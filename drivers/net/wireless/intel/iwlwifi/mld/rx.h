@@ -70,4 +70,4 @@ void iwl_mld_handle_phy_air_sniffer_notif(struct iwl_mld *mld,
 					  struct napi_struct *napi,
 					  struct iwl_rx_packet *pkt);
 
-#endif /* __iwl_mld_agg_h__ */
+#endif /* __iwl_mld_rx_h__ */

@@ -399,4 +399,4 @@ int iwlagn_rate_control_register(void);
  */
 void iwlagn_rate_control_unregister(void);
 
-#endif /* __iwl_agn__rs__ */
+#endif /* __iwl_agn_rs_h__ */

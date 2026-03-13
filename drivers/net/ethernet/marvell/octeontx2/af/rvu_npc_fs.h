@@ -18,4 +18,4 @@ void npc_update_entry(struct rvu *rvu, enum key_fields type,
 		      struct mcam_entry *entry, u64 val_lo,
 		      u64 val_hi, u64 mask_lo, u64 mask_hi, u8 intf);
 
-#endif /* RVU_NPC_FS_H */
+#endif /* __RVU_NPC_FS_H */

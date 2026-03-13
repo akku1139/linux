@@ -1575,4 +1575,4 @@
 #define PIXEL_ENGINE_VIP1 0
 #define PIXEL_ENGINE_VIP2 1
 
-#endif /* Athena_REGISTERS */
+#endif /* __CX25821_REGISTERS__ */

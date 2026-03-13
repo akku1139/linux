@@ -140,4 +140,4 @@
 #define NV907C_SURFACE_SET_PARAMS_LAYOUT_FRM                                    (0x00000000)
 #define NV907C_SURFACE_SET_PARAMS_LAYOUT_FLD1                                   (0x00000001)
 #define NV907C_SURFACE_SET_PARAMS_LAYOUT_FLD2                                   (0x00000002)
-#endif // _cl907c_h
+#endif /* _cl907c_h_ */

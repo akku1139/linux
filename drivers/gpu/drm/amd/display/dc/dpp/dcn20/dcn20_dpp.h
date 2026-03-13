@@ -785,4 +785,4 @@ void dpp2_power_on_obuf(
 
 void dpp2_cm_get_gamut_remap(struct dpp *dpp_base,
 			     struct dpp_grph_csc_adjustment *adjust);
-#endif /* __DC_HWSS_DCN20_H__ */
+#endif /* __DCN20_DPP_H__ */
