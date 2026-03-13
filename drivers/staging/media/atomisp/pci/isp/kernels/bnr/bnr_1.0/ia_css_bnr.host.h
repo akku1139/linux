@@ -23,4 +23,4 @@ ia_css_bnr_dump(
     const struct sh_css_isp_bnr_params *bnr,
     unsigned int level);
 
-#endif /* __IA_CSS_DP_HOST_H */
+#endif /* __IA_CSS_BNR_HOST_H */

@@ -108,4 +108,4 @@ struct ad7793_platform_data {
 	enum ad7793_current_source_direction current_source_direction;
 };
 
-#endif /* IIO_ADC_AD7793_H_ */
+#endif /* __LINUX_PLATFORM_DATA_AD7793_H__ */

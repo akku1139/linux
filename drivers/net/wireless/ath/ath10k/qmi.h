@@ -120,4 +120,4 @@ int ath10k_qmi_init(struct ath10k *ar, u32 msa_size);
 int ath10k_qmi_deinit(struct ath10k *ar);
 int ath10k_qmi_set_fw_log_mode(struct ath10k *ar, u8 fw_log_mode);
 
-#endif /* ATH10K_QMI_H */
+#endif /* _ATH10K_QMI_H_ */

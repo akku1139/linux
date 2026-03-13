@@ -334,4 +334,4 @@ static const struct reg_default rt715_reg_defaults[] = {
 	{ 0x752039, 0xa500 },
 };
 
-#endif /* __RT715_H__ */
+#endif /* __RT715_SDW_H__ */

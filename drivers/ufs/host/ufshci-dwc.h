@@ -30,4 +30,4 @@ enum selector_index {
 	SELIND_LN1_RX		= 0x05,
 };
 
-#endif /* End of Header */
+#endif /* _UFSHCI_DWC_H */

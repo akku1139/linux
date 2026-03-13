@@ -96,4 +96,4 @@ union igc_adv_rx_desc {
 #define IGC_SRRCTL_DESCTYPE_MASK	GENMASK(27, 25)
 #define IGC_SRRCTL_DESCTYPE_ADV_ONEBUF	FIELD_PREP(IGC_SRRCTL_DESCTYPE_MASK, 1)
 
-#endif /* _IGC_BASE_H */
+#endif /* _IGC_BASE_H_ */

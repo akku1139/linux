@@ -263,4 +263,4 @@ int tn40_mdiobus_init(struct tn40_priv *priv);
 int tn40_phy_register(struct tn40_priv *priv);
 void tn40_phy_unregister(struct tn40_priv *priv);
 
-#endif /* _TN40XX_H */
+#endif /* _TN40_H_ */

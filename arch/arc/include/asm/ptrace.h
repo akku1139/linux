@@ -174,4 +174,4 @@ extern void syscall_trace_exit(struct pt_regs *);
 
 #endif /* !__ASSEMBLER__ */
 
-#endif /* __ASM_PTRACE_H */
+#endif /* __ASM_ARC_PTRACE_H */

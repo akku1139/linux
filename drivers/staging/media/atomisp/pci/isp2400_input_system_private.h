@@ -111,4 +111,4 @@ STORAGE_CLASS_INPUT_SYSTEM_C hrt_data input_system_sub_system_reg_load(
 					 SUB_SYSTEM_OFFSET[sub_ID] + reg * sizeof(hrt_data));
 }
 
-#endif /* __INPUT_SYSTEM_PRIVATE_H_INCLUDED__ */
+#endif /* __INPUT_SYSTEM_2400_PRIVATE_H_INCLUDED__ */

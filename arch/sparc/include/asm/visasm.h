@@ -64,4 +64,4 @@ static inline void save_and_clear_fpu(void) {
 int vis_emul(struct pt_regs *, unsigned int);
 #endif
 
-#endif /* _SPARC64_ASI_H */
+#endif /* _SPARC64_VISASM_H */

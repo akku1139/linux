@@ -69,4 +69,4 @@ extern int verify_pefile_signature(const void *pebuf, unsigned pelen,
 #endif
 
 #endif /* CONFIG_SYSTEM_DATA_VERIFICATION */
-#endif /* _LINUX_VERIFY_PEFILE_H */
+#endif /* _LINUX_VERIFICATION_H */

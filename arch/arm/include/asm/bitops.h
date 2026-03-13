@@ -275,4 +275,4 @@ static inline int find_next_bit_le(const void *p, int size, int offset)
 
 #endif /* __KERNEL__ */
 
-#endif /* _ARM_BITOPS_H */
+#endif /* __ASM_ARM_BITOPS_H */

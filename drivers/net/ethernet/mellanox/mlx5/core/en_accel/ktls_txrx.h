@@ -95,4 +95,4 @@ static inline void mlx5e_ktls_handle_rx_skb(struct mlx5e_rq *rq,
 }
 #endif /* CONFIG_MLX5_EN_TLS */
 
-#endif /* __MLX5E_TLS_TXRX_H__ */
+#endif /* __MLX5E_KTLS_TXRX_H__ */

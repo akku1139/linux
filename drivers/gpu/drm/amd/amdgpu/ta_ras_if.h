@@ -221,4 +221,4 @@ struct ta_ras_shared_memory {
 	union ta_ras_cmd_output     ras_out_message;
 };
 
-#endif // TL_RAS_IF_H_
+#endif /* _TA_RAS_IF_H */

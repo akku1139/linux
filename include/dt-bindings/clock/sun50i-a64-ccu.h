@@ -137,4 +137,4 @@
 #define CLK_DSI_DPHY		113
 #define CLK_GPU			114
 
-#endif /* _DT_BINDINGS_CLK_SUN50I_H_ */
+#endif /* _DT_BINDINGS_CLK_SUN50I_A64_H_ */

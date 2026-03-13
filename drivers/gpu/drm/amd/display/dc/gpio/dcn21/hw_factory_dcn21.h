@@ -28,4 +28,4 @@
 /* Initialize HW factory function pointers and pin info */
 void dal_hw_factory_dcn21_init(struct hw_factory *factory);
 
-#endif /* __DAL_HW_FACTORY_DCN20_H__ */
+#endif /* __DAL_HW_FACTORY_DCN21_H__ */

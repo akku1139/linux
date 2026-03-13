@@ -1810,4 +1810,4 @@ struct virtchnl2_flow_rule_add_del {
 };
 VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_flow_rule_add_del);
 
-#endif /* _VIRTCHNL_2_H_ */
+#endif /* _VIRTCHNL2_H_ */

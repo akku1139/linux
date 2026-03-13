@@ -72,4 +72,4 @@ static inline void i3c_readl_fifo(const void __iomem *addr, void *buf,
 	}
 }
 
-#endif /* I3C_INTERNAL_H */
+#endif /* I3C_INTERNALS_H */

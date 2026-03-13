@@ -58,4 +58,4 @@ typedef enum {
 /* The number of stores for compressed format types */
 #define	N_MIPI_COMPRESSOR_CONTEXT	(N_RX_CHANNEL_ID * N_MIPI_FORMAT_CUSTOM)
 
-#endif /* __INPUT_SYSTEM_LOCAL_H_INCLUDED__ */
+#endif /* __INPUT_SYSTEM_2401_LOCAL_H_INCLUDED__ */

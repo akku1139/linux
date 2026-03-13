@@ -352,4 +352,4 @@ rfkill_set_led_trigger_name(struct rfkill *rfkill, const char *name)
 }
 #endif
 
-#endif /* RFKILL_H */
+#endif /* __RFKILL_H */

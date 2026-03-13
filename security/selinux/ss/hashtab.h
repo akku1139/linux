@@ -151,4 +151,4 @@ static inline void hashtab_stat(struct hashtab *h, struct hashtab_info *info)
 }
 #endif
 
-#endif /* _SS_HASHTAB_H */
+#endif /* _SS_HASHTAB_H_ */

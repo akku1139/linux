@@ -234,4 +234,4 @@ enum mpui1610_save_state {
 };
 
 #endif /* ASSEMBLER */
-#endif /* __ASM_ARCH_OMAP_PM_H */
+#endif /* __ARCH_ARM_MACH_OMAP1_PM_H */

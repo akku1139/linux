@@ -77,4 +77,4 @@ static inline void qcom_tzmem_shm_bridge_delete(u64 handle)
 }
 #endif
 
-#endif /* __QCOM_TZMEM */
+#endif /* __QCOM_TZMEM_H */

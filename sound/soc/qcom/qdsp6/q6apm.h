@@ -153,4 +153,4 @@ int q6apm_remove_initial_silence(struct device *dev, struct q6apm_graph *graph, 
 int q6apm_remove_trailing_silence(struct device *dev, struct q6apm_graph *graph, uint32_t samples);
 int q6apm_set_real_module_id(struct device *dev, struct q6apm_graph *graph, uint32_t codec_id);
 int q6apm_get_hw_pointer(struct q6apm_graph *graph, int dir);
-#endif /* __APM_GRAPH_ */
+#endif /* __Q6APM_H__ */

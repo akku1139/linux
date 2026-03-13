@@ -111,4 +111,4 @@ static inline int kgdb_single_step_handler(struct pt_regs *regs,
 #define NUMREGBYTES	((_GP_REGS * 8) + (_FP_REGS * 16) + \
 			(_EXTRA_REGS * 4))
 
-#endif /* __ASM_KGDB_H */
+#endif /* __ARM_KGDB_H */

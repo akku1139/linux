@@ -35,4 +35,4 @@ extern void * __init relocate_kernel(void);
 extern int plat_post_relocation(long);
 #endif
 
-#endif /* __SETUP_H */
+#endif /* _MIPS_SETUP_H */

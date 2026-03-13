@@ -305,4 +305,4 @@ input_system_err_t	input_system_gpfifo_channel_cfg(
     target_cfg2400_t	target
 );
 
-#endif /* __INPUT_SYSTEM_PUBLIC_H_INCLUDED__ */
+#endif /* __INPUT_SYSTEM_2400_PUBLIC_H_INCLUDED__ */

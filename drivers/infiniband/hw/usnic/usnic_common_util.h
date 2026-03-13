@@ -46,4 +46,4 @@ usnic_mac_ip_to_gid(const char *const mac, const __be32 inaddr, char *raw_gid)
 	addrconf_addr_eui48(&raw_gid[8], mac);
 }
 
-#endif /* USNIC_COMMON_UTIL_H */
+#endif /* USNIC_CMN_UTIL_H */

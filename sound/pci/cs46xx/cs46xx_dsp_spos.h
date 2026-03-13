@@ -210,4 +210,4 @@ struct dsp_spos_instance {
 	int spdif_in_sample_rate;
 };
 
-#endif /* __DSP_SPOS_H__ */
+#endif /* __CS46XX_DSP_SPOS_H__ */

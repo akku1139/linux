@@ -253,4 +253,4 @@ target_reverse_dma_direction(struct se_cmd *se_cmd)
 	}
 }
 
-#endif /* TARGET_CORE_FABRICH */
+#endif /* TARGET_CORE_FABRIC_H */

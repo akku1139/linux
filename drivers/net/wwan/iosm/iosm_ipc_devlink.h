@@ -202,4 +202,4 @@ void ipc_devlink_deinit(struct iosm_devlink *ipc_devlink);
 
 int ipc_devlink_send_cmd(struct iosm_devlink *ipc_devlink, u16 cmd, u32 entry);
 
-#endif /* _IOSM_IPC_DEVLINK_H */
+#endif /* _IOSM_IPC_DEVLINK_H_ */

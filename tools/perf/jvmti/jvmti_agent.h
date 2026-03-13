@@ -31,4 +31,4 @@ int   jvmti_write_debug_info(void *agent, uint64_t code, int nr_lines,
 }
 
 #endif
-#endif /* __JVMTI_H__ */
+#endif /* __JVMTI_AGENT_H__ */

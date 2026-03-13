@@ -485,5 +485,5 @@ bool bw_calcs(
 	int pipe_count,
 	struct dce_bw_output *calcs_output);
 
-#endif /* __BANDWIDTH_CALCS_H__ */
+#endif /* __DCE_CALCS_H__ */
 

@@ -327,4 +327,4 @@ extern u32 rtw_init_bcmc_stainfo(struct adapter *padapter);
 extern struct sta_info *rtw_get_bcmc_stainfo(struct adapter *padapter);
 extern u8 rtw_access_ctrl(struct adapter *padapter, u8 *mac_addr);
 
-#endif /* _STA_INFO_H_ */
+#endif /* __STA_INFO_H_ */

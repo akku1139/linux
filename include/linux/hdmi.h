@@ -450,4 +450,4 @@ int hdmi_infoframe_unpack(union hdmi_infoframe *frame,
 void hdmi_infoframe_log(const char *level, struct device *dev,
 			const union hdmi_infoframe *frame);
 
-#endif /* _DRM_HDMI_H */
+#endif /* __LINUX_HDMI_H_ */

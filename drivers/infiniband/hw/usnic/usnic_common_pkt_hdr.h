@@ -38,4 +38,4 @@
 #define USNIC_PROTO_VER                 (1)
 #define USNIC_ROCE_GRH_VER_SHIFT        (4)
 
-#endif /* USNIC_COMMON_PKT_HDR_H */
+#endif /* USNIC_CMN_PKT_HDR_H */

@@ -217,4 +217,4 @@ bool dw_hdmi_bus_fmt_is_420(struct dw_hdmi *hdmi);
 
 const struct dw_hdmi_plat_data *dw_hdmi_to_plat_data(struct dw_hdmi *hdmi);
 
-#endif /* __IMX_HDMI_H__ */
+#endif /* __DW_HDMI__ */

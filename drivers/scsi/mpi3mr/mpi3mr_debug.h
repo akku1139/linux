@@ -149,7 +149,7 @@
 			pr_info("%s: " fmt, (ioc)->name, ##__VA_ARGS__); \
 	} while (0)
 
-#endif /* MPT3SAS_DEBUG_H_INCLUDED */
+#endif /* MPI3SAS_DEBUG_H_INCLUDED */
 
 /**
  * dprint_dump - print contents of a memory buffer

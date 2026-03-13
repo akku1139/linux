@@ -289,4 +289,4 @@ struct sev_issue_cmd {
 #define SEV_IOC_TYPE		'S'
 #define SEV_ISSUE_CMD	_IOWR(SEV_IOC_TYPE, 0x0, struct sev_issue_cmd)
 
-#endif /* __PSP_USER_SEV_H */
+#endif /* __PSP_SEV_USER_H__ */

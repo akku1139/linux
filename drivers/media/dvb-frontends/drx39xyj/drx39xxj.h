@@ -28,4 +28,4 @@ static inline struct dvb_frontend *drx39xxj_attach(struct i2c_adapter *i2c) {
 };
 #endif
 
-#endif /* DVB_DUMMY_FE_H */
+#endif /* DRX39XXJ_H */

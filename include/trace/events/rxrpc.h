@@ -626,7 +626,7 @@ enum rxrpc_txbuf_trace		{ rxrpc_txbuf_traces } __mode(byte);
 enum rxrpc_txdata_trace		{ rxrpc_txdata_traces } __mode(byte);
 enum rxrpc_txqueue_trace	{ rxrpc_txqueue_traces } __mode(byte);
 
-#endif /* end __RXRPC_DECLARE_TRACE_ENUMS_ONCE_ONLY */
+#endif /* __NETFS_DECLARE_TRACE_ENUMS_ONCE_ONLY */
 
 /*
  * Export enum symbols via userspace.

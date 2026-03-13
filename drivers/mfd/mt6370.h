@@ -96,4 +96,4 @@ struct mt6370_info {
 	struct regmap_irq_chip_data *irq_data;
 };
 
-#endif /* __MFD_MT6375_H__ */
+#endif /* __MFD_MT6370_H__ */

@@ -926,4 +926,4 @@ struct clk *tegra210_clk_register_emc(struct device_node *np,
 
 struct clk *tegra_clk_dev_register(struct clk_hw *hw);
 
-#endif /* TEGRA_CLK_H */
+#endif /* __TEGRA_CLK_H */

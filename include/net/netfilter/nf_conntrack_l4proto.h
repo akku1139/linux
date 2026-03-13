@@ -231,4 +231,4 @@ static inline struct nf_gre_net *nf_gre_pernet(struct net *net)
 }
 #endif
 
-#endif /*_NF_CONNTRACK_PROTOCOL_H*/
+#endif /* _NF_CONNTRACK_L4PROTO_H */

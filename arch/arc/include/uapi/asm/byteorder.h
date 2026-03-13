@@ -16,4 +16,4 @@
 #include <linux/byteorder/little_endian.h>
 #endif
 
-#endif /* ASM_ARC_BYTEORDER_H */
+#endif /* __ASM_ARC_BYTEORDER_H */

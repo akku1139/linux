@@ -150,4 +150,4 @@ static inline struct aa_ns *__aa_find_ns(struct list_head *head,
 	return __aa_findn_ns(head, name, strlen(name));
 }
 
-#endif /* AA_NAMESPACE_H */
+#endif /* __AA_NAMESPACE_H */

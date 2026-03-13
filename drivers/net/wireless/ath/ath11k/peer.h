@@ -57,4 +57,4 @@ struct ath11k_peer *ath11k_peer_find_by_vdev_id(struct ath11k_base *ab,
 int ath11k_peer_rhash_tbl_init(struct ath11k_base *ab);
 void ath11k_peer_rhash_tbl_destroy(struct ath11k_base *ab);
 int ath11k_peer_rhash_delete(struct ath11k_base *ab, struct ath11k_peer *peer);
-#endif /* _PEER_H_ */
+#endif /* ATH11K_PEER_H */

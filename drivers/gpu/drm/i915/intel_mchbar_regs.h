@@ -265,4 +265,4 @@
 
 #define BXT_GT_PERF_STATUS			_MMIO(MCHBAR_MIRROR_BASE_SNB + 0x7070)
 
-#endif /* __INTEL_MCHBAR_REGS */
+#endif /* __INTEL_MCHBAR_REGS__ */

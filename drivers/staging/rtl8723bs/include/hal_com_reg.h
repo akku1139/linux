@@ -595,4 +595,4 @@
 #define BT_FUNC_EN				BIT18	/*  BT function enable */
 #define GPS_FUNC_EN			BIT22	/*  GPS function enable */
 
-#endif /* __HAL_COMMON_H__ */
+#endif /* __HAL_COMMON_REG_H__ */

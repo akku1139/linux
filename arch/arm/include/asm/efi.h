@@ -91,4 +91,4 @@ static inline void efi_capsule_flush_cache_range(void *addr, int size)
 	__cpuc_flush_dcache_area(addr, size);
 }
 
-#endif /* _ASM_ARM_EFI_H */
+#endif /* __ASM_ARM_EFI_H */

@@ -45,4 +45,4 @@ static inline void aa_free_cap_rules(struct aa_caps *caps)
 	/* NOP */
 }
 
-#endif /* __AA_CAPBILITY_H */
+#endif /* __AA_CAPABILITY_H */

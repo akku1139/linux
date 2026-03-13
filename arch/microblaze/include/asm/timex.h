@@ -10,4 +10,4 @@
 
 #define CLOCK_TICK_RATE 1000 /* Timer input freq. */
 
-#endif /* _ASM_TIMEX_H */
+#endif /* _ASM_MICROBLAZE_TIMEX_H */

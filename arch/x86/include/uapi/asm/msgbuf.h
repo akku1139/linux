@@ -32,4 +32,4 @@ struct msqid64_ds {
 
 #endif
 
-#endif /* __ASM_GENERIC_MSGBUF_H */
+#endif /* __ASM_X64_MSGBUF_H */

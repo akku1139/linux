@@ -161,4 +161,4 @@ s32 fm10k_tlv_msg_test(struct fm10k_hw *, u32 **, struct fm10k_mbx_info *);
 	FM10K_MSG_HANDLER(FM10K_TLV_MSG_ID_TEST, fm10k_tlv_msg_test_attr, func)
 #define FM10K_TLV_MSG_ERROR_HANDLER(func) \
 	FM10K_MSG_HANDLER(FM10K_TLV_ERROR, NULL, func)
-#endif /* _FM10K_MSG_H_ */
+#endif /* _FM10K_TLV_H_ */

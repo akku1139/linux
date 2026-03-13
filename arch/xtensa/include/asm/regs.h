@@ -115,4 +115,4 @@
 #define DEBUGCAUSE_IBREAK_BIT		1	/* IBREAK match */
 #define DEBUGCAUSE_ICOUNT_BIT		0	/* ICOUNT would incr. to zero */
 
-#endif /* _XTENSA_SPECREG_H */
+#endif /* _XTENSA_REGS_H */

@@ -28,4 +28,4 @@ void intel_gt_sysfs_unregister(struct intel_gt *gt);
 struct intel_gt *intel_gt_sysfs_get_drvdata(struct kobject *kobj,
 					    const char *name);
 
-#endif /* SYSFS_GT_H */
+#endif /* __SYSFS_GT_H__ */

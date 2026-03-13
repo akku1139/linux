@@ -19,4 +19,4 @@
 #define NVC97B_DMA_JUMP_OFFSET                                                    15:2
 #define NVC97B_DMA_SET_SUBDEVICE_MASK_VALUE                                       11:0
 
-#endif // _clc97b_h
+#endif /* _clc97b_h_ */

@@ -97,4 +97,4 @@ enum {
 	HT_DATA_SC_20_LOWER_OF_40MHZ = 2,
 };
 
-#endif /* _RTL8711_RF_H_ */
+#endif /* __RTW_RF_H_ */

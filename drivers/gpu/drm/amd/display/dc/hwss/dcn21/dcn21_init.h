@@ -30,4 +30,4 @@ struct dc;
 
 void dcn21_hw_sequencer_construct(struct dc *dc);
 
-#endif /* __DC_DCN20_INIT_H__ */
+#endif /* __DC_DCN21_INIT_H__ */

@@ -22,4 +22,4 @@ static inline u16 pte_to_pkey_bits(u64 pteflags)
 	return hash__pte_to_pkey_bits(pteflags);
 }
 
-#endif /*_ASM_POWERPC_KEYS_H */
+#endif /* _ASM_POWERPC_BOOK3S_64_PKEYS_H */

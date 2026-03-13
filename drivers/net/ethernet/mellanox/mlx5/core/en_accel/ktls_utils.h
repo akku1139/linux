@@ -88,4 +88,4 @@ mlx5e_ktls_build_progress_params(struct mlx5e_set_tls_progress_params_wqe *wqe,
 				 u32 next_record_tcp_sn,
 				 enum tls_offload_ctx_dir direction);
 
-#endif /* __MLX5E_TLS_UTILS_H__ */
+#endif /* __MLX5E_KTLS_UTILS_H__ */

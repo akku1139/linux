@@ -328,4 +328,4 @@ struct dmcu *dcn21_dmcu_create(
 
 void dce_dmcu_destroy(struct dmcu **dmcu);
 
-#endif /* _DCE_ABM_H_ */
+#endif /* _DCE_DMCU_H_ */

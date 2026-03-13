@@ -17,4 +17,4 @@ int __must_check vdo_create_thread(void (*thread_function)(void *), void *thread
 				   const char *name, struct thread **new_thread);
 void vdo_join_threads(struct thread *thread);
 
-#endif /* UDS_THREADS_H */
+#endif /* THREAD_UTILS_H */

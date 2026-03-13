@@ -204,4 +204,4 @@ u32 ixgbe_read_reg(struct ixgbe_hw *hw, u32 reg);
 	netif_warn(adapter, msglvl, adapter->netdev, format, ## arg)
 #define e_crit(msglvl, format, arg...) \
 	netif_crit(adapter, msglvl, adapter->netdev, format, ## arg)
-#endif /* IXGBE_COMMON */
+#endif /* _IXGBE_COMMON_H_ */

@@ -27,4 +27,4 @@ struct ibuf_rsrc_s {
 	ibuf_handle_t	handles[MAX_IBUF_HANDLES];
 };
 
-#endif /* __IBUF_CTRL_RMGR_H_INCLUDED */
+#endif /* __IBUF_CTRL_RMGR_H_INCLUDED__ */

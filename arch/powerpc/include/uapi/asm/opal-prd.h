@@ -56,4 +56,4 @@ struct opal_prd_scom {
 
 #endif /* __ASSEMBLER__ */
 
-#endif /* _UAPI_ASM_POWERPC_OPAL_PRD_H */
+#endif /* _UAPI_ASM_POWERPC_OPAL_PRD_H_ */

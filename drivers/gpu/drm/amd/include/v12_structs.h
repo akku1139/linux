@@ -3240,4 +3240,4 @@ struct v12_1_mes_mqd {
     uint32_t reserved_1023; // offset: 1023  (0x3FF)
 };
 	
-#endif /* V11_STRUCTS_H_ */
+#endif /* V12_STRUCTS_H_ */

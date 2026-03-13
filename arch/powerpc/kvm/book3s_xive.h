@@ -310,4 +310,4 @@ static inline bool kvmppc_xive_has_single_escalation(struct kvmppc_xive *xive)
 }
 
 #endif /* CONFIG_KVM_XICS */
-#endif /* _KVM_PPC_BOOK3S_XICS_H */
+#endif /* _KVM_PPC_BOOK3S_XIVE_H */

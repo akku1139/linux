@@ -79,4 +79,4 @@ int vmw_cursor_plane_prepare_fb(struct drm_plane *plane,
 void vmw_cursor_plane_cleanup_fb(struct drm_plane *plane,
 				 struct drm_plane_state *old_state);
 
-#endif /* VMWGFX_CURSOR_H */
+#endif /* VMWGFX_CURSOR_PLANE_H */

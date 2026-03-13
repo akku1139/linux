@@ -288,4 +288,4 @@ extern int ql4xenablemd;
 
 extern const struct attribute_group *qla4xxx_host_groups[];
 
-#endif /* _QLA4x_GBL_H */
+#endif /* __QLA4x_GBL_H */

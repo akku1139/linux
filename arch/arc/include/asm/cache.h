@@ -125,4 +125,4 @@ extern unsigned long perip_base, perip_end;
 #define ARC_REG_IO_COH_AP0_BASE	0x508
 #define ARC_REG_IO_COH_AP0_SIZE	0x509
 
-#endif /* _ASM_CACHE_H */
+#endif /* __ARC_ASM_CACHE_H */

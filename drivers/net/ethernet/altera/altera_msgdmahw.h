@@ -144,4 +144,4 @@ struct msgdma_response {
 #define MSGDMA_RESP_EARLY_TERM	BIT(8)
 #define MSGDMA_RESP_ERR_MASK	0xFF
 
-#endif /* __ALTERA_MSGDMA_H__*/
+#endif /* __ALTERA_MSGDMAHW_H__ */

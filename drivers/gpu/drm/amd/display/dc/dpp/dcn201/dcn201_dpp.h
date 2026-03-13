@@ -80,4 +80,4 @@ bool dpp201_construct(struct dcn201_dpp *dpp2,
 	const struct dcn201_dpp_shift *tf_shift,
 	const struct dcn201_dpp_mask *tf_mask);
 
-#endif /* __DC_HWSS_DCN201_H__ */
+#endif /* __DCN201_DPP_H__ */

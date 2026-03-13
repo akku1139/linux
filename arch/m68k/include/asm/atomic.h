@@ -218,4 +218,4 @@ static inline int arch_atomic_add_negative(int i, atomic_t *v)
 }
 #define arch_atomic_add_negative arch_atomic_add_negative
 
-#endif /* __ARCH_M68K_ATOMIC __ */
+#endif /* __ARCH_M68K_ATOMIC__ */

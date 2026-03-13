@@ -467,4 +467,4 @@ void d40_log_lli_lcla_write(struct d40_log_lli *lcla,
 			    struct d40_log_lli *lli_src,
 			    int next, unsigned int flags);
 
-#endif /* STE_DMA40_LLI_H */
+#endif /* STE_DMA40_LL_H */

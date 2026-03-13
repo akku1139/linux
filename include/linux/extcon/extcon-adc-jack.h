@@ -65,4 +65,4 @@ struct adc_jack_pdata {
 	bool wakeup_source;
 };
 
-#endif /* _EXTCON_ADC_JACK_H */
+#endif /* _EXTCON_ADC_JACK_H_ */

@@ -59,4 +59,4 @@ void cn10k_cpt_hw_ctx_clear(struct pci_dev *pdev,
 void cn10k_cpt_hw_ctx_set(union cn10k_cpt_hw_ctx *hctx, u16 ctx_sz);
 void cptvf_hw_ops_get(struct otx2_cptvf_dev *cptvf);
 
-#endif /* __CN10K_CPTLF_H */
+#endif /* __CN10K_CPT_H */

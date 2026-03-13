@@ -72,4 +72,4 @@ static inline void * __must_check ERR_CAST(__force const void *ptr)
 	/* cast away the const */
 	return (void *) ptr;
 }
-#endif /* _LINUX_ERR_H */
+#endif /* __TOOLS_LINUX_ERR_H */

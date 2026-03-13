@@ -129,4 +129,4 @@ bool dcn201_hubp_construct(
 	const struct dcn201_hubp_shift *hubp_shift,
 	const struct dcn201_hubp_mask *hubp_mask);
 
-#endif /* __DC_HWSS_DCN20_H__ */
+#endif /* __DC_MEM_INPUT_DCN201_H__ */

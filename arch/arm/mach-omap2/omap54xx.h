@@ -39,4 +39,4 @@
 #define DRA7XX_CTRL_BASE		0x4a003400
 #define DRA7XX_TAP_BASE			0x4ae0c000
 
-#endif /* __ASM_SOC_OMAP555554XX_H */
+#endif /* __ASM_SOC_OMAP54XX_H */

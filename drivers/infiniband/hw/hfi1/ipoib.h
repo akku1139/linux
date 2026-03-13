@@ -168,4 +168,4 @@ int hfi1_ipoib_rn_get_params(struct ib_device *device,
 
 void hfi1_ipoib_tx_timeout(struct net_device *dev, unsigned int q);
 
-#endif /* _IPOIB_H */
+#endif /* HFI1_IPOIB_H */

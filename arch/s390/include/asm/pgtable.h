@@ -1933,4 +1933,4 @@ extern pte_t *vmem_get_alloc_pte(unsigned long addr, bool alloc);
 #define pmd_pgtable(pmd) \
 	((pgtable_t)__va(pmd_val(pmd) & -sizeof(pte_t)*PTRS_PER_PTE))
 
-#endif /* _S390_PAGE_H */
+#endif /* _ASM_S390_PGTABLE_H */

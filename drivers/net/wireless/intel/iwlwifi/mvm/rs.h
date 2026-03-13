@@ -452,4 +452,4 @@ void iwl_mvm_tlc_update_notif(struct iwl_mvm *mvm,
 u16 rs_fw_get_max_amsdu_len(struct ieee80211_sta *sta,
 			    struct ieee80211_bss_conf *link_conf,
 			    struct ieee80211_link_sta *link_sta);
-#endif /* __rs__ */
+#endif /* __rs_h__ */

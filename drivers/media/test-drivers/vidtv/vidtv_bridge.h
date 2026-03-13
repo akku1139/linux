@@ -69,4 +69,4 @@ struct vidtv_dvb {
 #endif /* CONFIG_MEDIA_CONTROLLER_DVB */
 };
 
-#endif // VIDTV_BRIDG_H
+#endif /* VIDTV_BRIDGE_H */

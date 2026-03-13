@@ -37,4 +37,4 @@ register unsigned long current_stack_pointer __asm__("a1");
 #endif
 
 
-#endif /* XTENSA_CURRENT_H */
+#endif /* _XTENSA_CURRENT_H */

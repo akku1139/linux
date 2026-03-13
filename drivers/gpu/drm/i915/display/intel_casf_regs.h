@@ -30,4 +30,4 @@
 #define   INDEX_VALUE_MASK		REG_GENMASK(4, 0)
 #define   INDEX_VALUE(x)		REG_FIELD_PREP(INDEX_VALUE_MASK, (x))
 
-#endif /* __INTEL_CASF_REGS__ */
+#endif /* __INTEL_CASF_REGS_H__ */

@@ -81,4 +81,4 @@ enum nfnl_hook_bpf_attributes {
 };
 #define NFNLA_HOOK_BPF_MAX (__NFNLA_HOOK_BPF_MAX - 1)
 
-#endif /* _NFNL_HOOK_H */
+#endif /* _NFNL_HOOK_H_ */

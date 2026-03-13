@@ -115,4 +115,4 @@ static inline u32 ovpn_opcode_compose(u8 opcode, u8 key_id, u32 peer_id)
 	       FIELD_PREP(OVPN_OPCODE_PEERID_MASK, peer_id);
 }
 
-#endif /* _NET_OVPN_OVPNPROTO_H_ */
+#endif /* _NET_OVPN_PROTO_H_ */

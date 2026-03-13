@@ -113,4 +113,4 @@
 #define REG_PIXEL_CLOCK_SEL BIT(10)
 #define REG_HDMITX_PIXEL_CLOCK BIT(23)
 
-#endif /* MTK_HDMI_PHY_8195_H */
+#endif /* _MTK_HDMI_PHY_8195_H */

@@ -321,4 +321,4 @@ enum intel_gt_scratch_field {
 
 #define intel_gt_support_legacy_fencing(gt) ((gt)->ggtt->num_fences > 0)
 
-#endif /* __INTEL_GT_TYPES_H__ */
+#endif /* __INTEL_GT_TYPES__ */

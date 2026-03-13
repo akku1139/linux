@@ -48,4 +48,4 @@ extern const struct fm10k_tlv_attr fm10k_lport_state_msg_attr[];
 			  fm10k_lport_state_msg_attr, func)
 
 extern const struct fm10k_info fm10k_vf_info;
-#endif /* _FM10K_VF_H */
+#endif /* _FM10K_VF_H_ */

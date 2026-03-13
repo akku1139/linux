@@ -332,4 +332,4 @@ static const struct reg_default rt700_reg_defaults[] = {
 	{ 0x75206b, 0x5064 },
 };
 
-#endif /* __RT700_H__ */
+#endif /* __RT700_SDW_H__ */

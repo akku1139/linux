@@ -627,4 +627,4 @@ static inline void rtsx_usb_clear_dma_err(struct rtsx_ucr *ucr)
 			FIFO_FLUSH, FIFO_FLUSH);
 	rtsx_usb_ep0_write_register(ucr, MC_DMA_RST, DMA_RESET, DMA_RESET);
 }
-#endif /* __RTS51139_H */
+#endif /* __RTSX_USB_H */

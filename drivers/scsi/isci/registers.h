@@ -1860,4 +1860,4 @@ struct scu_registers {
 	struct scu_scratch_ram scratch_ram;
 };
 
-#endif   /* _SCU_REGISTERS_HEADER_ */
+#endif /* _SCU_REGISTERS_H_ */

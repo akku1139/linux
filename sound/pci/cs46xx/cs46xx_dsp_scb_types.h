@@ -1195,4 +1195,4 @@ struct dsp_filter_scb {
 	      b2_left
 	)
 };
-#endif /* __DSP_SCB_TYPES_H__ */
+#endif /* __CS46XX_DSP_SCB_TYPES_H__ */

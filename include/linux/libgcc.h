@@ -38,4 +38,4 @@ word_type notrace __ucmpdi2(unsigned long long a, unsigned long long b);
 #include <asm/libgcc.h>
 #endif
 
-#endif /* __ASM_LIBGCC_H */
+#endif /* __LIB_LIBGCC_H */

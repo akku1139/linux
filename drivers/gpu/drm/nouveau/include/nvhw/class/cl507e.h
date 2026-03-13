@@ -90,4 +90,4 @@
 #define NV507E_SURFACE_SET_PARAMS_PART_STRIDE                                   24:24
 #define NV507E_SURFACE_SET_PARAMS_PART_STRIDE_PARTSTRIDE_256                    (0x00000000)
 #define NV507E_SURFACE_SET_PARAMS_PART_STRIDE_PARTSTRIDE_1024                   (0x00000001)
-#endif // _cl507e_h
+#endif /* _cl507e_h_ */

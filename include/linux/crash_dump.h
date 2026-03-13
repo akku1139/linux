@@ -189,4 +189,4 @@ static inline ssize_t read_from_oldmem(struct iov_iter *iter, size_t count,
 }
 #endif /* CONFIG_PROC_VMCORE */
 
-#endif /* LINUX_CRASHDUMP_H */
+#endif /* LINUX_CRASH_DUMP_H */

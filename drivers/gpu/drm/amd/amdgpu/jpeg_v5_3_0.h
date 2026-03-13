@@ -32,4 +32,4 @@
 
 extern const struct amdgpu_ip_block_version jpeg_v5_3_0_ip_block;
 
-#endif /* __JPEG_V5_0_0_H__ */
+#endif /* __JPEG_V5_3_0_H__ */

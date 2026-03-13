@@ -388,4 +388,4 @@ extern int gic_get_c0_perfcount_int(void);
  */
 extern int gic_get_c0_fdc_int(void);
 
-#endif /* __MIPS_ASM_MIPS_CPS_H__ */
+#endif /* __MIPS_ASM_MIPS_GIC_H__ */

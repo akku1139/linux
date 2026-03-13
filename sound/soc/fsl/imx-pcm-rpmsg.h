@@ -509,4 +509,4 @@ struct rpmsg_info {
 
 #define IMX_PCM_DRV_NAME "imx_pcm_rpmsg"
 
-#endif /* IMX_PCM_RPMSG_H */
+#endif /* _IMX_PCM_RPMSG_H */

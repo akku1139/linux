@@ -23,4 +23,4 @@ STORAGE_CLASS_TIMED_CTRL_C void timed_ctrl_reg_store(
 	ia_css_device_store_uint32(TIMED_CTRL_BASE[ID] + reg * sizeof(hrt_data), value);
 }
 
-#endif /* __GP_DEVICE_PRIVATE_H_INCLUDED__ */
+#endif /* __TIMED_CTRL_PRIVATE_H_INCLUDED__ */

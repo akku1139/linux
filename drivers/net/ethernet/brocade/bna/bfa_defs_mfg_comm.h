@@ -140,4 +140,4 @@ struct bfa_mfg_vpd {
 	u8		data[BFA_MFG_VPD_LEN];	/*!< vpd data */
 } __packed;
 
-#endif /* __BFA_DEFS_MFG_H__ */
+#endif /* __BFA_DEFS_MFG_COMM_H__ */

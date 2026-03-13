@@ -103,4 +103,4 @@
 #define NV827D_HEAD_SET_VIEWPORT_POINT_IN(a,b)                                  (0x000008C0 + (a)*0x00000400 + (b)*0x00000004)
 #define NV827D_HEAD_SET_VIEWPORT_POINT_IN_X                                     14:0
 #define NV827D_HEAD_SET_VIEWPORT_POINT_IN_Y                                     30:16
-#endif // _cl827d_h
+#endif /* _cl827d_h_ */

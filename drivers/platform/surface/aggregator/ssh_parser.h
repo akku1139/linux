@@ -151,4 +151,4 @@ int sshp_parse_command(const struct device *dev, const struct ssam_span *source,
 		       struct ssh_command **command,
 		       struct ssam_span *command_data);
 
-#endif /* _SURFACE_AGGREGATOR_SSH_PARSER_h */
+#endif /* _SURFACE_AGGREGATOR_SSH_PARSER_H */

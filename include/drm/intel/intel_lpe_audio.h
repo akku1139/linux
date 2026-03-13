@@ -48,4 +48,4 @@ struct intel_hdmi_lpe_audio_pdata {
 	spinlock_t lpe_audio_slock;
 };
 
-#endif /* _I915_LPE_AUDIO_H_ */
+#endif /* _INTEL_LPE_AUDIO_H_ */

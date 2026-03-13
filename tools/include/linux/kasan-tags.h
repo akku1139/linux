@@ -12,4 +12,4 @@
 #define KASAN_TAG_MIN		0x00 /* minimum value for random tags */
 #endif
 
-#endif /* LINUX_KASAN_TAGS_H */
+#endif /* _LINUX_KASAN_TAGS_H */

@@ -70,4 +70,4 @@
 #define NV907E_SURFACE_SET_PARAMS_COLOR_SPACE_RGB                               (0x00000000)
 #define NV907E_SURFACE_SET_PARAMS_COLOR_SPACE_YUV_601                           (0x00000001)
 #define NV907E_SURFACE_SET_PARAMS_COLOR_SPACE_YUV_709                           (0x00000002)
-#endif // _cl907e_h
+#endif /* _cl907e_h_ */

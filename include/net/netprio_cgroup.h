@@ -51,4 +51,4 @@ static inline void sock_update_netprioidx(struct sock_cgroup_data *skcd)
 }
 
 #endif /* CONFIG_CGROUP_NET_PRIO */
-#endif  /* _NET_CLS_CGROUP_H */
+#endif /* _NETPRIO_CGROUP_H */

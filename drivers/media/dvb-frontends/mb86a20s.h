@@ -45,4 +45,4 @@ static inline struct dvb_frontend *mb86a20s_attach(
 }
 #endif
 
-#endif /* MB86A20S */
+#endif /* MB86A20S_H */

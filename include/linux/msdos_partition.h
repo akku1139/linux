@@ -47,4 +47,4 @@ enum msdos_sys_ind {
 	UNIXWARE_PARTITION = 0x63,	/* Same as GNU_HURD and SCO Unix */
 };
 
-#endif /* LINUX_MSDOS_PARTITION_H */
+#endif /* _LINUX_MSDOS_PARTITION_H */

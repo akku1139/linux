@@ -50,4 +50,4 @@ enum mt6328_irq_status_numbers {
 	MT6328_IRQ_STATUS_SPKL_AB,
 };
 
-#endif /* __MFD_MT6323_CORE_H__ */
+#endif /* __MFD_MT6328_CORE_H__ */

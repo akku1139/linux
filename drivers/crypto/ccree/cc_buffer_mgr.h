@@ -67,4 +67,4 @@ void cc_unmap_hash_request(struct device *dev, void *ctx,
 void cc_copy_sg_portion(struct device *dev, u8 *dest, struct scatterlist *sg,
 			u32 to_skip, u32 end, enum cc_sg_cpy_direct direct);
 
-#endif /*__BUFFER_MGR_H__*/
+#endif /* __CC_BUFFER_MGR_H__ */

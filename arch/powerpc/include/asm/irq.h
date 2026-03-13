@@ -59,5 +59,5 @@ extern void arch_trigger_cpumask_backtrace(const cpumask_t *mask,
 #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
 #endif
 
-#endif /* _ASM_IRQ_H */
+#endif /* _ASM_POWERPC_IRQ_H */
 #endif /* __KERNEL__ */

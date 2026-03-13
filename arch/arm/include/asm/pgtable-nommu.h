@@ -86,4 +86,4 @@ extern unsigned int kobjsize(const void *objp);
 
 #endif /*__ASSEMBLY__*/
 
-#endif /* _ASMARM_PGTABLE_H */
+#endif /* _ASMARM_PGTABLE_NOMMU_H */

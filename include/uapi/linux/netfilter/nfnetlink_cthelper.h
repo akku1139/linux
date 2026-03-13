@@ -53,4 +53,4 @@ enum nfnl_cthelper_tuple_type {
 };
 #define NFCTH_TUPLE_MAX (__NFCTH_TUPLE_MAX - 1)
 
-#endif /* _NFNL_CTHELPER_H */
+#endif /* _NFNL_CTHELPER_H_ */

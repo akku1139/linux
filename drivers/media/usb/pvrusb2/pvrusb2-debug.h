@@ -43,4 +43,4 @@ extern int pvrusb2_debug;
 #define PVR2_TRACE_DVB_FEED   (1 << 28) /* DVB transport feed debug */
 
 
-#endif /* __PVRUSB2_HDW_INTERNAL_H */
+#endif /* __PVRUSB2_DEBUG_H */

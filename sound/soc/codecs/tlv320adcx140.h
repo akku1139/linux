@@ -156,4 +156,4 @@
 #define ADCX140_GPIO_CFG_MAX		15
 #define ADCX140_GPIO_DRV_MAX		5
 
-#endif /* _TLV320ADCX140_ */
+#endif /* _TLV320ADCX140_H */

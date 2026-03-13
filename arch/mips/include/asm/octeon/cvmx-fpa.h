@@ -285,4 +285,4 @@ extern uint64_t cvmx_fpa_shutdown_pool(uint64_t pool);
  */
 uint64_t cvmx_fpa_get_block_size(uint64_t pool);
 
-#endif /*  __CVM_FPA_H__ */
+#endif /* __CVMX_FPA_H__ */

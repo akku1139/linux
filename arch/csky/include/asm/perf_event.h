@@ -11,4 +11,4 @@
 	asm volatile("mov %0, sp\n":"=r"((regs)->usp)); \
 }
 
-#endif /* __ASM_PERF_EVENT_ELF_H */
+#endif /* __ASM_CSKY_PERF_EVENT_H */

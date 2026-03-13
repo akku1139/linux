@@ -741,4 +741,4 @@ extern void console_init(void);
 void dummycon_register_output_notifier(struct notifier_block *nb);
 void dummycon_unregister_output_notifier(struct notifier_block *nb);
 
-#endif /* _LINUX_CONSOLE_H */
+#endif /* _LINUX_CONSOLE_H_ */

@@ -32,4 +32,4 @@ int
 efc_cmd_node_alloc(struct efc *efc, struct efc_remote_node *rnode, u32 fc_addr,
 		   struct efc_nport *nport);
 
-#endif /* __EFC_CMDS_H */
+#endif /* __EFC_CMDS_H__ */

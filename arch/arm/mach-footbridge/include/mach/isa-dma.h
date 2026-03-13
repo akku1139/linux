@@ -15,4 +15,4 @@
 #define DMA_FLOPPY		(2)
 #define DMA_ISA_CASCADE		(4)
 
-#endif /* _ASM_ARCH_DMA_H */
+#endif /* __ASM_ARCH_DMA_H */

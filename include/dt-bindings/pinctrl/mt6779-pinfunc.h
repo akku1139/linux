@@ -1239,4 +1239,4 @@
 
 #define PINMUX_GPIO209__FUNC_GPIO209 (MTK_PIN_NO(209) | 0)
 
-#endif /* __MT6779-PINFUNC_H */
+#endif /* __MT6779_PINFUNC_H */

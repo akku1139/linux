@@ -35,4 +35,4 @@ void ia_css_pipe_get_sp_func_stage_desc(
     enum ia_css_pipeline_stage_sp_func sp_func,
     unsigned int max_input_width);
 
-#endif /*__IA_CSS_PIPE_STAGEDESC__H__ */
+#endif /* __IA_CSS_PIPE_STAGEDESC_H__ */

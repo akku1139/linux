@@ -6,4 +6,4 @@
 
 /* NOTE: Use qcom,lpass.h to define any AIF ID's for LPASS */
 
-#endif /* __DT_APQ8016_LPASS_H */
+#endif /* __DT_SC7180_LPASS_H */

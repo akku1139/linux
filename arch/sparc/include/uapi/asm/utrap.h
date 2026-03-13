@@ -49,4 +49,4 @@ typedef int utrap_entry_t;
 typedef void *utrap_handler_t;
 #endif /* __ASSEMBLER__ */
 
-#endif /* !(__ASM_SPARC64_PROCESSOR_H) */
+#endif /* __ASM_SPARC64_UTRAP_H */

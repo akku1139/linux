@@ -540,4 +540,4 @@ struct quota_module_name {
 	{QFMT_VFS_V1, "quota_v2"},\
 	{0, NULL}}
 
-#endif /* _QUOTA_ */
+#endif /* _LINUX_QUOTA_ */

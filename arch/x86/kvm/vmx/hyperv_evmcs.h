@@ -163,4 +163,4 @@ static inline u64 evmcs_read_any(struct hv_enlightened_vmcs *evmcs,
 	return vmcs12_read_any((void *)evmcs, field, offset);
 }
 
-#endif /* __KVM_X86_VMX_HYPERV_H */
+#endif /* __KVM_X86_VMX_HYPERV_EVMCS_H */

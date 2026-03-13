@@ -1786,4 +1786,4 @@
 #define R300_ZB_ZPASS_DATA              0x4f58
 #define R300_ZB_ZPASS_ADDR              0x4f5c
 
-#endif /* _R300_REG_H */
+#endif /* _R300_REG_H_ */

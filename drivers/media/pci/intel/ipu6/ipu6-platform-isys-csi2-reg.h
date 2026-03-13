@@ -169,4 +169,4 @@ enum CSI_PORT_CLK_GATING_SWITCH {
 #define CSI2_SIP_TOP_CSI_RX_DLY_CNT_TERMEN_DLANE(lane)	(0xc + (lane) * 8)
 #define CSI2_SIP_TOP_CSI_RX_DLY_CNT_SETTLE_DLANE(lane)	(0x10 + (lane) * 8)
 
-#endif /* IPU6_ISYS_CSI2_REG_H */
+#endif /* IPU6_PLATFORM_ISYS_CSI2_REG_H */

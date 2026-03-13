@@ -1482,4 +1482,4 @@ void ufshcd_force_error_recovery(struct ufs_hba *hba);
 void ufshcd_pm_qos_update(struct ufs_hba *hba, bool on);
 u32 ufshcd_us_to_ahit(unsigned int timer);
 
-#endif /* End of Header */
+#endif /* _UFSHCD_H */

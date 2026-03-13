@@ -242,4 +242,4 @@ void dcn31_hpo_dp_stream_encoder_construct(
 	const struct dcn31_hpo_dp_stream_encoder_mask *hpo_se_mask);
 
 
-#endif   // __DAL_DCN31_HPO_STREAM_ENCODER_H__
+#endif /* __DAL_DCN31_HPO_DP_STREAM_ENCODER_H__ */

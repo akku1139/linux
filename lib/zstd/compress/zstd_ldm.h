@@ -107,4 +107,4 @@ size_t ZSTD_ldm_getMaxNbSeq(ldmParams_t params, size_t maxChunkSize);
 void ZSTD_ldm_adjustParameters(ldmParams_t* params,
                                ZSTD_compressionParameters const* cParams);
 
-#endif /* ZSTD_FAST_H */
+#endif /* ZSTD_LDM_H */

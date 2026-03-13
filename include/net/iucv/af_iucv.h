@@ -161,4 +161,4 @@ struct iucv_sock_list {
 	atomic_t	  autobind_name;
 };
 
-#endif /* __IUCV_H */
+#endif /* __AFIUCV_H */

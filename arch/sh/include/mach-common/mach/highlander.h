@@ -205,4 +205,4 @@ void highlander_plat_pinmux_setup(void);
 #define highlander_plat_pinmux_setup()	do { } while (0)
 #endif
 
-#endif  /* __ASM_SH_RENESAS_R7780RP */
+#endif /* __ASM_SH_RENESAS_R7780RP_H */

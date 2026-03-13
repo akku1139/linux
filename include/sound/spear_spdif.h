@@ -13,4 +13,4 @@ struct spear_spdif_platform_data {
 	void (*reset_perip)(void);
 };
 
-#endif /* SOUND_SPDIF_H */
+#endif /* __SOUND_SPDIF_H */

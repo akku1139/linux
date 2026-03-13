@@ -44,4 +44,4 @@ struct sxgbe_dma_ops {
 
 const struct sxgbe_dma_ops *sxgbe_get_dma_ops(void);
 
-#endif /* __SXGBE_CORE_H__ */
+#endif /* __SXGBE_DMA_H__ */

@@ -557,4 +557,4 @@ do {						\
 } while (0)
 #endif
 
-#endif /* _BDX__H */
+#endif /* _TEHUTI_H */

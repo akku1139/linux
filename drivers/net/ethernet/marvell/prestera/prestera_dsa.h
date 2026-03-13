@@ -33,4 +33,4 @@ struct prestera_dsa {
 int prestera_dsa_parse(struct prestera_dsa *dsa, const u8 *dsa_buf);
 int prestera_dsa_build(const struct prestera_dsa *dsa, u8 *dsa_buf);
 
-#endif /* _PRESTERA_DSA_H_ */
+#endif /* __PRESTERA_DSA_H_ */

@@ -36,4 +36,4 @@ static inline struct pci_dev *zpci_iov_find_parent_pf(struct zpci_bus *zbus, str
 	return NULL;
 }
 #endif /* CONFIG_PCI_IOV */
-#endif /* __S390_PCI_IOV_h */
+#endif /* __S390_PCI_IOV_H */

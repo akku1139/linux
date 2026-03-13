@@ -1852,4 +1852,4 @@ static inline u8 wsm_queue_id_to_wsm(u8 queue_id)
 	return queue_mapping[queue_id];
 }
 
-#endif /* CW1200_HWIO_H_INCLUDED */
+#endif /* CW1200_WSM_H_INCLUDED */

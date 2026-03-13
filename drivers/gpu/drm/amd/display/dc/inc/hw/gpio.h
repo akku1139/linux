@@ -93,4 +93,4 @@ struct gpio_funcs {
 };
 #endif
 
-#endif  /* __DAL_GPIO__ */
+#endif /* __DAL_GPIO_H__ */

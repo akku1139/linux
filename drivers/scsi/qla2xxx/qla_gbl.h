@@ -1022,4 +1022,4 @@ int qla_create_buf_pool(struct scsi_qla_host *, struct qla_qpair *);
 void qla_free_buf_pool(struct qla_qpair *);
 int qla_get_buf(struct scsi_qla_host *, struct qla_qpair *, struct qla_buf_dsc *);
 void qla_put_buf(struct qla_qpair *, struct qla_buf_dsc *);
-#endif /* _QLA_GBL_H */
+#endif /* __QLA_GBL_H */

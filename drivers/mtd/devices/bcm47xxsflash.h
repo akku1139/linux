@@ -78,4 +78,4 @@ struct bcm47xxsflash {
 	struct mtd_info mtd;
 };
 
-#endif /* BCM47XXSFLASH */
+#endif /* __BCM47XXSFLASH_H */

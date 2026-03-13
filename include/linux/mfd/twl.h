@@ -783,4 +783,4 @@ int twl4030_sih_setup(struct device *dev, int module, int irq_base);
 #define TWL6032_REG_VIO		60
 
 
-#endif /* End of __TWL4030_H */
+#endif /* __TWL_H_ */

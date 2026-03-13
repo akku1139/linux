@@ -227,4 +227,4 @@ unsigned long cpufreq_get_sysfs_value_from_table(unsigned int cpu,
 }
 #endif
 
-#endif /* _CPUFREQ_H */
+#endif /* __CPUPOWER_CPUFREQ_H__ */

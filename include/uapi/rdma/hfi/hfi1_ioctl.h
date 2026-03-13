@@ -171,4 +171,4 @@ struct hfi1_base_info {
 	__aligned_u64 subctxt_rcvegrbuf;
 	__aligned_u64 subctxt_rcvhdrbuf;
 };
-#endif /* _LINIUX__HFI1_IOCTL_H */
+#endif /* _LINUX__HFI1_IOCTL_H */

@@ -155,4 +155,4 @@ static inline void isp_mmu_flush_tlb_range(struct isp_mmu *mmu,
 		mmu->driver->tlb_flush_range(mmu, start, size);
 }
 
-#endif /* ISP_MMU_H_ */
+#endif /* __ISP_MMU_H__ */

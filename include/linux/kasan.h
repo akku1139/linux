@@ -710,4 +710,4 @@ void kasan_non_canonical_hook(unsigned long addr);
 static inline void kasan_non_canonical_hook(unsigned long addr) { }
 #endif /* CONFIG_KASAN_GENERIC || CONFIG_KASAN_SW_TAGS */
 
-#endif /* LINUX_KASAN_H */
+#endif /* _LINUX_KASAN_H */

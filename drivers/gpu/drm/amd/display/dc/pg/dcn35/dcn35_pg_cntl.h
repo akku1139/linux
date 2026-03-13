@@ -192,4 +192,4 @@ struct pg_cntl *pg_cntl35_create(
 
 void dcn_pg_cntl_destroy(struct pg_cntl **pg_cntl);
 
-#endif /* DCN35_PG_CNTL */
+#endif /* _DCN35_PG_CNTL_H_ */

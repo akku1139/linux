@@ -679,4 +679,4 @@ static inline void nfs4_xattr_cache_zap(struct inode *inode)
 
 
 #endif /* CONFIG_NFS_V4 */
-#endif /* __LINUX_FS_NFS_NFS4_FS.H */
+#endif /* __LINUX_FS_NFS_NFS4_FS_H */

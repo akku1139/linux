@@ -57,4 +57,4 @@ static inline const struct lpddr2_info
 }
 #endif /* CONFIG_OF && CONFIG_DDR */
 
-#endif /* __LINUX_MEMORY_OF_REG_ */
+#endif /* __LINUX_MEMORY_OF_REG_H */

@@ -100,4 +100,4 @@ static const struct file_operations sub## _ ##name## _ops = {		\
 	DEBUGFS_ADD(sub## _ ##name, stats)
 
 
-#endif /* WL1271_DEBUGFS_H */
+#endif /* __DEBUGFS_H__ */

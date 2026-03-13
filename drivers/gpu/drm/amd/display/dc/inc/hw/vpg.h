@@ -50,4 +50,4 @@ struct vpg {
 	int inst;
 };
 
-#endif /* DC_INC_VPG_H_ */
+#endif /* __DC_VPG_H__ */

@@ -34,4 +34,4 @@ int qcom_pmic_typec_pdphy_probe(struct platform_device *pdev,
 int qcom_pmic_typec_pdphy_stub_probe(struct platform_device *pdev,
 				     struct pmic_typec *tcpm);
 
-#endif /* __QCOM_PMIC_TYPEC_PDPHY_H__ */
+#endif /* __QCOM_PMIC_PDPHY_H__ */

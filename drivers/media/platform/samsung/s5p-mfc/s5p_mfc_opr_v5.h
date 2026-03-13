@@ -79,4 +79,4 @@ enum MFC_SHM_OFS {
 };
 
 const struct s5p_mfc_hw_ops *s5p_mfc_init_hw_ops_v5(void);
-#endif /* S5P_MFC_OPR_H_ */
+#endif /* S5P_MFC_OPR_V5_H_ */

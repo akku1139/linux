@@ -159,4 +159,4 @@
 #define NVA0B5_SET_REMAP_COMPONENTS_NUM_DST_COMPONENTS_TWO                      (0x00000001)
 #define NVA0B5_SET_REMAP_COMPONENTS_NUM_DST_COMPONENTS_THREE                    (0x00000002)
 #define NVA0B5_SET_REMAP_COMPONENTS_NUM_DST_COMPONENTS_FOUR                     (0x00000003)
-#endif // _cla0b5_h
+#endif /* _cla0b5_h_ */

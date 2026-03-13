@@ -31,4 +31,4 @@
 #define MEM_SYS_CFG_INDEP_CF		0x4000
 #define MEM_SYS_CFG_EBI_FIX_PRI_CFCON	0x30
 
-#endif /* _PLAT_REGS_CLOCK_H */
+#endif /* __PLAT_REGS_CLOCK_H */

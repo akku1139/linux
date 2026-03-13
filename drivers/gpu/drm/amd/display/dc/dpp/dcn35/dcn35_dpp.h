@@ -64,4 +64,4 @@ void dpp35_set_fgcg(struct dcn3_dpp *dpp, bool enable);
 void dpp35_program_bias_and_scale_fcnv(struct dpp *dpp_base,
 		struct dc_bias_and_scale *bias_and_scale);
 
-#endif // __DCN35_DPP_H
+#endif /* __DCN35_DPP_H__ */

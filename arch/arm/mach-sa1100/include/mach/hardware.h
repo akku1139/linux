@@ -53,4 +53,4 @@
 
 #include "SA-1100.h"
 
-#endif  /* _ASM_ARCH_HARDWARE_H */
+#endif /* __ASM_ARCH_HARDWARE_H */

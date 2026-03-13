@@ -1705,4 +1705,4 @@ static inline int of_clk_detect_critical(struct device_node *np, int index,
 
 void clk_gate_restore_context(struct clk_hw *hw);
 
-#endif /* CLK_PROVIDER_H */
+#endif /* __LINUX_CLK_PROVIDER_H */

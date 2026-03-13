@@ -269,4 +269,4 @@ do {					\
 	data; })
 
 #endif /* __KERNEL__ */
-#endif /* _ASM_POWERPC_FSP2_DCR_H_ */
+#endif /* _ASM_POWERPC_FSP_DCR_H_ */
