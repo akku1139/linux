@@ -172,6 +172,18 @@ struct alsps_hw *get_alsps_dts_func(const char *name, struct alsps_hw *hw)
 	ret = of_property_read_u32(node , "als_compensation", &als_compensation);
 	if (ret == 0)
 		hw->als_compensation		= als_compensation;
+
+	ret = of_property_read_u32(node, "black_als_range", &als_compensation);
+	if (ret == 0)
+		hw->black_als_range = als_compensation;
+
+	ret = of_property_read_u32(node, "white_als_range", &als_compensation);
+	if (ret == 0)
+		hw->white_als_range = als_compensation;
+
+	ret = of_property_read_u32(node, "is_supported_two_point_als_cali", &als_compensation);
+	if (ret == 0)
+		hw->is_supported_two_point_als_cali = !!als_compensation;
 	} else {
 		SENSOR_ERR("Device Tree: can not find alsps node!. Go to use old cust info\n");
 		return NULL;
