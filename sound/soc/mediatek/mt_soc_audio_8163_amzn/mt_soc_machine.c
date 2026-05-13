@@ -102,17 +102,17 @@ static struct dentry *mt_sco_audio_debugfs;
 #define DAC_TAS5805M_BOARD_IDS 3
 #define DAC_RT5616E_BOARD_IDS 6
 
-static char abc123_idme_max98396_bdid[DAC_MAX98396_BOARD_IDS][BOARD_ID_LEN+1] = {
+static char cronos_idme_max98396_bdid[DAC_MAX98396_BOARD_IDS][BOARD_ID_LEN+1] = {
 "01E0001430020020",
 };
 
-static char abc123_idme_tas5805m_bdid[DAC_TAS5805M_BOARD_IDS][BOARD_ID_LEN+1] = {
+static char cronos_idme_tas5805m_bdid[DAC_TAS5805M_BOARD_IDS][BOARD_ID_LEN+1] = {
 "01E0001310020020",
 "01E0001330020020",
 "01E0001410020020",
 };
 
-static char abc123_idme_rt5616e_bdid[DAC_RT5616E_BOARD_IDS][BOARD_ID_LEN+1] = {
+static char cronos_idme_rt5616e_bdid[DAC_RT5616E_BOARD_IDS][BOARD_ID_LEN+1] = {
 "01E0000000020020",
 "01E0000100020020",
 "01E0000110020020",
@@ -178,17 +178,17 @@ struct ti_priv {
 	struct work_struct error_detect_work;     /* TI amp fault handler */
 };
 
-struct ti_priv *abc123_card_data;
+struct ti_priv *cronos_card_data;
 
 extern void tas5805m_process_fault(struct snd_soc_codec *codec);
 
 static char *tas5805m_driver_name = "tas5805m";
 
 /***********************************************************************
- * abc123_get_codec
+ * cronos_get_codec
  * Helper function to get the codec information
  * *********************************************************************/
-static struct snd_soc_codec *abc123_get_codec(struct snd_soc_card *card, char *codec_name)
+static struct snd_soc_codec *cronos_get_codec(struct snd_soc_card *card, char *codec_name)
 {
 	struct snd_soc_codec *codec = NULL;
 	struct snd_soc_component *component;
@@ -204,10 +204,10 @@ static struct snd_soc_codec *abc123_get_codec(struct snd_soc_card *card, char *c
 }
 
 /***********************************************************************
- * abc123_error_detect_handler
+ * cronos_error_detect_handler
  * Handle Woofer error reporting for AMP fault/Brown out detection
  * *********************************************************************/
-static void abc123_error_detect_handler(struct work_struct *work)
+static void cronos_error_detect_handler(struct work_struct *work)
 {
 	int amp_fault_status = 0;
 	struct ti_priv *card_data = container_of(work, struct ti_priv, error_detect_work);
@@ -222,17 +222,17 @@ static void abc123_error_detect_handler(struct work_struct *work)
 	if (amp_fault_status == 0) {
 		pr_err("%s: TAS5805M AMP fault detected !\n",  __func__);
 		/* Process fault with TI 5805M */
-		tas5805m_process_fault(abc123_get_codec(card_data->card, tas5805m_driver_name));
+		tas5805m_process_fault(cronos_get_codec(card_data->card, tas5805m_driver_name));
 	}
 
 	enable_irq(ti_amp_fault_gpiopin);
 }
 
 /***********************************************************************
- * abc123_error_detect_irq_cb
+ * cronos_error_detect_irq_cb
  * Interrupt callback for Woofer AMP fault/Brown out detection
  * *********************************************************************/
-static irqreturn_t abc123_error_detect_irq_cb(int irq, void *dev)
+static irqreturn_t cronos_error_detect_irq_cb(int irq, void *dev)
 {
 	struct ti_priv *card_data;
 
@@ -254,7 +254,7 @@ static irqreturn_t abc123_error_detect_irq_cb(int irq, void *dev)
 	return IRQ_HANDLED;
 }
 
-static int abc123_irq_probe(struct snd_soc_card *card)
+static int cronos_irq_probe(struct snd_soc_card *card)
 {
 	struct ti_priv *card_data;
 	int ret = 0;
@@ -265,7 +265,7 @@ static int abc123_irq_probe(struct snd_soc_card *card)
 
 	ti_amp_fault_irq = gpio_to_irq(ti_amp_fault_gpiopin);
 
-	ret = request_irq(ti_amp_fault_irq, abc123_error_detect_irq_cb, IRQF_TRIGGER_FALLING,
+	ret = request_irq(ti_amp_fault_irq, cronos_error_detect_irq_cb, IRQF_TRIGGER_FALLING,
 			"ti-amp-fault-eint", card);
 
 	if (ret) {
@@ -277,13 +277,13 @@ static int abc123_irq_probe(struct snd_soc_card *card)
 			ti_amp_fault_debounce);
 
 	/* Setup error reporting workqueue */
-	card_data->error_detect_wq = alloc_workqueue("abc123_error_and_fault_reporting_wq", WQ_MEM_RECLAIM, 0);
+	card_data->error_detect_wq = alloc_workqueue("cronos_error_and_fault_reporting_wq", WQ_MEM_RECLAIM, 0);
 	if (card_data->error_detect_wq == NULL) {
 		pr_err("%s:Couldn't allocate TI WQ for amp faults\n", __func__);
 		return -ENOMEM;
 	}
 
-	INIT_WORK(&(card_data->error_detect_work), abc123_error_detect_handler);
+	INIT_WORK(&(card_data->error_detect_work), cronos_error_detect_handler);
 
 	pr_info("%s: AMP fault detect handlers setup done\n", __func__);
 
@@ -677,7 +677,7 @@ static int rt5616e_hw_params(struct snd_pcm_substream *substream,
 
 #if defined CONFIG_SND_SOC_TAS5805M
 
-static void abc123_bclk_on(struct ti_priv *priv) {
+static void cronos_bclk_on(struct ti_priv *priv) {
 	Afe_Set_Reg(AFE_I2S_CON1, 0x1, 0x1);
 	/* re-enable fault intr as it is now safe to do so */
 	if (ti_amp_fault_gpiopin >= 0) {
@@ -686,7 +686,7 @@ static void abc123_bclk_on(struct ti_priv *priv) {
 	}
 }
 
-static void abc123_bclk_off(void) {
+static void cronos_bclk_off(void) {
 	/* disable fault IRQ, following bclk off will trigger it */
 	if (ti_amp_fault_gpiopin >= 0) {
 		disable_irq_nosync(ti_amp_fault_gpiopin);
@@ -694,14 +694,14 @@ static void abc123_bclk_off(void) {
 	Afe_Set_Reg(AFE_I2S_CON1, 0x0, 0x1);
 }
 
-static int abc123_tas5805m_hw_params(struct snd_pcm_substream *substream,
+static int cronos_tas5805m_hw_params(struct snd_pcm_substream *substream,
 				struct snd_pcm_hw_params *params) {
 	struct snd_soc_pcm_runtime *rtd;
 	struct ti_priv *priv;
 
 	rtd = substream->private_data;
 	priv = snd_soc_card_get_drvdata(rtd->card);
-	abc123_bclk_on(priv);
+	cronos_bclk_on(priv);
 	pr_info("%s(): start \n", __FUNCTION__);
 
 	return 0;
@@ -709,17 +709,17 @@ static int abc123_tas5805m_hw_params(struct snd_pcm_substream *substream,
 
 
 
-static int abc123_hw_free(struct snd_pcm_substream * substream) {
+static int cronos_hw_free(struct snd_pcm_substream * substream) {
 	/* Turn off bclk for TI workaround */
-	abc123_bclk_off();
+	cronos_bclk_off();
 	pr_info("%s() \n", __FUNCTION__);
 
 	return 0;
 }
 
 static struct snd_soc_ops tas5805m_machine_ops = {
-	.hw_params = abc123_tas5805m_hw_params,
-	.hw_free = abc123_hw_free,
+	.hw_params = cronos_tas5805m_hw_params,
+	.hw_free = cronos_hw_free,
 };
 
 #endif
@@ -1706,7 +1706,7 @@ static int __init mt_soc_snd_init(void)
 		pr_err("of_find_node_by_path failed\n");
 
 	for (i = 0; i < DAC_MAX98396_BOARD_IDS; i++) {
-		if (strncmp(board_dac_id, abc123_idme_max98396_bdid[i], BOARD_ID_LEN) == 0) {
+		if (strncmp(board_dac_id, cronos_idme_max98396_bdid[i], BOARD_ID_LEN) == 0) {
 			mt_soc_dai_common[23].name = "MAX98396_Playback";
 			mt_soc_dai_common[23].stream_name = MT_SOC_MAXIM_PLAYBACK_STREAM_NAME;
 			mt_soc_dai_common[23].codec_dai_name = "max98396-aif1-a";
@@ -1719,7 +1719,7 @@ static int __init mt_soc_snd_init(void)
 	}
 
 	for (i = 0; i < DAC_TAS5805M_BOARD_IDS; i++) {
-		if (strncmp(board_dac_id, abc123_idme_tas5805m_bdid[i], BOARD_ID_LEN) == 0) {
+		if (strncmp(board_dac_id, cronos_idme_tas5805m_bdid[i], BOARD_ID_LEN) == 0) {
 			mt_soc_dai_common[23].name = "TAS5805m_Playback";
 			mt_soc_dai_common[23].stream_name = MT_SOC_TI_PLAYBACK_STREAM_NAME;
 			mt_soc_dai_common[23].codec_dai_name = "tas5805m-amplifier-a";
@@ -1735,7 +1735,7 @@ static int __init mt_soc_snd_init(void)
 	}
 
 	for (i = 0; i < DAC_RT5616E_BOARD_IDS; i++) {
-		if (strncmp(board_dac_id, abc123_idme_rt5616e_bdid[i], BOARD_ID_LEN) == 0) {
+		if (strncmp(board_dac_id, cronos_idme_rt5616e_bdid[i], BOARD_ID_LEN) == 0) {
 			mt_soc_dai_common[23].name = "RT5616E_Playback";
 			mt_soc_dai_common[23].stream_name = MT_SOC_RT_RT5616E_PLAYBACK_STREAM_NAME;
 			mt_soc_dai_common[23].codec_dai_name = "rt5616e-aif1";
@@ -1764,9 +1764,9 @@ static int __init mt_soc_snd_init(void)
 
 	card_data->card = card;
 
-	ret = abc123_irq_probe(card);
+	ret = cronos_irq_probe(card);
 	if (ret) {
-		dev_err(&mt_snd_device->dev, "%s abc123_irq_probe failed %d\n", __func__, ret);
+		dev_err(&mt_snd_device->dev, "%s cronos_irq_probe failed %d\n", __func__, ret);
 		return ret;
 	}
 #endif
