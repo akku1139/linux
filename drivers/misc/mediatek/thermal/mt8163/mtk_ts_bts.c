@@ -83,8 +83,8 @@ struct mtkts_bts_channel_param {
 #include "inc/mtk_ts_board_abc123.h"
 #elif defined(CONFIG_THERMAL_CHECKERS)
 #include "inc/mtk_ts_board_checkers.h"
-#elif defined(CONFIG_THERMAL_abc123)
-#include "inc/mtk_ts_board_abc123.h"
+#elif defined(CONFIG_THERMAL_CRONOS)
+#include "inc/mtk_ts_board_cronos.h"
 #elif defined(CONFIG_THERMAL_abh123)
 #include "inc/mtk_ts_board_abh123.h"
 #elif defined(CONFIG_THERMAL_abe123)

@@ -16,11 +16,11 @@ config THERMAL_CHECKERS
 	help
 	  For CHECKERS specific configurations for thermal related.
 
-config THERMAL_abc123
-	bool "THERMAL_abc123"
+config THERMAL_CRONOS
+	bool "THERMAL_CRONOS"
 	default n
 	help
-	  For abc123 specific configurations for thermal related.
+	  For CRONOS specific configurations for thermal related.
 
 config THERMAL_abc123
 	bool "THERMAL_abc123"
