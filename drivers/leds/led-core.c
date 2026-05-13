@@ -25,11 +25,22 @@ EXPORT_SYMBOL_GPL(leds_list_lock);
 LIST_HEAD(leds_list);
 EXPORT_SYMBOL_GPL(leds_list);
 
+#ifdef CONFIG_SILENT_OTA
+extern int silent_ota_bl_is_silent(void);
+#endif
+
 static int __led_set_brightness(struct led_classdev *led_cdev,
 				enum led_brightness value)
 {
 	if (!led_cdev->brightness_set)
 		return -ENOTSUPP;
+
+#ifdef CONFIG_SILENT_OTA
+	if (silent_ota_bl_is_silent()) {
+		dev_info(led_cdev->dev,"%s: ignore brightness %d in silent mode\n", __func__, value);
+		return 0;
+	}
+#endif
 
 	led_cdev->brightness_set(led_cdev, value);
 
@@ -41,6 +52,13 @@ static int __led_set_brightness_blocking(struct led_classdev *led_cdev,
 {
 	if (!led_cdev->brightness_set_blocking)
 		return -ENOTSUPP;
+
+#ifdef CONFIG_SILENT_OTA
+	if (silent_ota_bl_is_silent()) {
+		dev_info(led_cdev->dev,"%s: ignore brightness %d in silent mode\n", __func__, value);
+		return 0;
+	}
+#endif
 
 	return led_cdev->brightness_set_blocking(led_cdev, value);
 }

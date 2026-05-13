@@ -30,29 +30,10 @@
 /* Initial state of a cooling device during binding */
 #define THERMAL_NO_TARGET -1UL
 
-/*
- * This structure is used to describe the behavior of
- * a certain cooling device on a certain trip point
- * in a certain thermal zone
- */
-struct thermal_instance {
-	int id;
-	char name[THERMAL_NAME_LENGTH];
-	struct thermal_zone_device *tz;
-	struct thermal_cooling_device *cdev;
-	int trip;
-	bool initialized;
-	unsigned long upper;	/* Highest cooling state for this trip point */
-	unsigned long lower;	/* Lowest cooling state for this trip point */
-	unsigned long target;	/* expected cooling state */
-	char attr_name[THERMAL_NAME_LENGTH];
-	struct device_attribute attr;
-	char weight_attr_name[THERMAL_NAME_LENGTH];
-	struct device_attribute weight_attr;
-	struct list_head tz_node; /* node in tz->thermal_instances */
-	struct list_head cdev_node; /* node in cdev->thermal_instances */
-	unsigned int weight; /* The weight of the cooling device */
-};
+#ifdef CONFIG_AMAZON_THERMAL
+/* 10 seconds default power off delay */
+#define THERMAL_DEFAULT_POWEROFF_DELAY_MS (10000)
+#endif
 
 int thermal_register_governor(struct thermal_governor *);
 void thermal_unregister_governor(struct thermal_governor *);

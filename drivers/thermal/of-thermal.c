@@ -133,6 +133,40 @@ int of_thermal_get_ntrips(struct thermal_zone_device *tz)
 }
 EXPORT_SYMBOL_GPL(of_thermal_get_ntrips);
 
+#ifdef CONFIG_AMAZON_THERMAL
+/**
+ * of_thermal_set_ntrips - function to set number of available trip
+ *			   points.
+ * @tz: pointer to a thermal zone
+ * @trips: number of trips to set
+ *
+ * This function is a globally visible wrapper to set number of trip points
+ * stored in the local struct __thermal_zone
+ *
+ * Return: 0 on scuccess,
+ *         -ENODEV when data is not available,
+ *         -EINVAL when trips is greater than supported trips.
+ */
+static int of_thermal_set_ntrips(struct thermal_zone_device *tz, unsigned int trips)
+{
+	struct __thermal_zone *data = tz->devdata;
+
+	if (!data || IS_ERR(data))
+		return -ENODEV;
+
+	if (trips > THERMAL_MAX_TRIPS) {
+		pr_err("Trips(%u) is more than maximum supported trips(%u)\n",
+			trips, THERMAL_MAX_TRIPS);
+		return -EINVAL;
+	}
+
+	data->ntrips = trips;
+
+	return 0;
+}
+EXPORT_SYMBOL_GPL(of_thermal_set_ntrips);
+#endif
+
 /**
  * of_thermal_is_trip_valid - function to check if trip point is valid
  *
@@ -299,8 +333,14 @@ static int of_thermal_get_trip_type(struct thermal_zone_device *tz, int trip,
 	if (trip >= data->ntrips || trip < 0)
 		return -EDOM;
 
+#ifdef CONFIG_AMAZON_THERMAL
+	if (trip == (data->ntrips - 1))
+		*type = THERMAL_TRIP_CRITICAL;
+	else
+		*type = THERMAL_TRIP_PASSIVE;
+#else
 	*type = data->trips[trip].type;
-
+#endif
 	return 0;
 }
 
@@ -391,7 +431,9 @@ static struct thermal_zone_device_ops of_thermal_ops = {
 	.get_trip_hyst = of_thermal_get_trip_hyst,
 	.set_trip_hyst = of_thermal_set_trip_hyst,
 	.get_crit_temp = of_thermal_get_crit_temp,
-
+#ifdef CONFIG_AMAZON_THERMAL
+	.set_ntrips = of_thermal_set_ntrips,
+#endif
 	.bind = of_thermal_bind,
 	.unbind = of_thermal_unbind,
 };
@@ -868,10 +910,14 @@ __init *thermal_of_build_thermal_zone(struct device_node *np)
 		goto finish;
 
 	tz->ntrips = of_get_child_count(child);
-	if (tz->ntrips == 0) /* must have at least one child */
+	/* must have at least one child */
+	if (tz->ntrips == 0  || tz->ntrips > THERMAL_MAX_TRIPS) {
+		pr_err("Unsupported number of trips(%d)\n", tz->ntrips);
 		goto finish;
+	}
 
-	tz->trips = kzalloc(tz->ntrips * sizeof(*tz->trips), GFP_KERNEL);
+	/* Allocate for maximum trips as ntrips can increase from userspace */
+	tz->trips = kzalloc(THERMAL_MAX_TRIPS * sizeof(*tz->trips), GFP_KERNEL);
 	if (!tz->trips) {
 		ret = -ENOMEM;
 		goto free_tz;
