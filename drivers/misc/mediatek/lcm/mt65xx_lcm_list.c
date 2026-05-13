@@ -1007,12 +1007,12 @@ struct LCM_DRIVER *lcm_driver_list[] = {
         &ili9881c_wxga_dsi_vdo_abc123_boe_lcm_drv,
 #endif
 
-#if defined(ST7701S_WSVGA_DSI_VDO_abc123)
-	&st7701s_wsvga_dsi_vdo_abc123_st_truly_lcm_drv,
-	&st7701s_wsvga_dsi_vdo_abc123_st_kd_inx_lcm_drv,
-	&st7701s_wsvga_dsi_vdo_abc123_st_kd_hsd_lcm_drv,
-	&st7701s_wsvga_dsi_vdo_abc123_st_kd_boe_lcm_drv,
-	&gc9503np_wsvga_dsi_vdo_abc123_gc_kd_boe_lcm_drv,
+#if defined(ST7701S_WSVGA_DSI_VDO_CRONOS)
+	&st7701s_wsvga_dsi_vdo_cronos_st_truly_lcm_drv,
+	&st7701s_wsvga_dsi_vdo_cronos_st_kd_inx_lcm_drv,
+	&st7701s_wsvga_dsi_vdo_cronos_st_kd_hsd_lcm_drv,
+	&st7701s_wsvga_dsi_vdo_cronos_st_kd_boe_lcm_drv,
+	&gc9503np_wsvga_dsi_vdo_cronos_gc_kd_boe_lcm_drv,
 #endif
 
 #if defined(HX8394C_WXGA_DSI_VDO)
