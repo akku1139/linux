@@ -25,6 +25,7 @@
 #define IF_RA_RCVD	0x20
 #define IF_RS_SENT	0x10
 #define IF_READY	0x80000000
+#define IF_RS_VZW_SENT 0x01  /*add for VzW feature*/
 
 /* prefix flags */
 #define IF_PREFIX_ONLINK	0x01
@@ -55,6 +56,7 @@ struct inet6_ifaddr {
 	__u8			stable_privacy_retry;
 
 	__u16			scope;
+	__u64			dad_nonce;
 
 	unsigned long		cstamp;	/* created timestamp */
 	unsigned long		tstamp; /* updated timestamp */

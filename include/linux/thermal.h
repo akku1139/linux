@@ -66,6 +66,8 @@
 #define DEFAULT_THERMAL_GOVERNOR       "user_space"
 #elif defined(CONFIG_THERMAL_DEFAULT_GOV_POWER_ALLOCATOR)
 #define DEFAULT_THERMAL_GOVERNOR       "power_allocator"
+#elif defined(CONFIG_THERMAL_DEFAULT_GOV_BACKWARD_COMPATIBLE)
+#define DEFAULT_THERMAL_GOVERNOR       "backward_compatible"
 #endif
 
 struct thermal_zone_device;
@@ -121,6 +123,9 @@ struct thermal_zone_device_ops {
 	int (*get_trip_hyst) (struct thermal_zone_device *, int, int *);
 	int (*set_trip_hyst) (struct thermal_zone_device *, int, int);
 	int (*get_crit_temp) (struct thermal_zone_device *, int *);
+#ifdef CONFIG_AMAZON_THERMAL
+	int (*set_ntrips) (struct thermal_zone_device *, unsigned int);
+#endif
 	int (*set_emul_temp) (struct thermal_zone_device *, int);
 	int (*get_trend) (struct thermal_zone_device *, int,
 			  enum thermal_trend *);
@@ -451,8 +456,9 @@ int thermal_zone_unbind_cooling_device(struct thermal_zone_device *, int,
 				       struct thermal_cooling_device *);
 void thermal_zone_device_update(struct thermal_zone_device *,
 				enum thermal_notify_event);
+#ifndef CONFIG_AMAZON_THERMAL
 void thermal_zone_set_trips(struct thermal_zone_device *);
-
+#endif
 struct thermal_cooling_device *thermal_cooling_device_register(char *, void *,
 		const struct thermal_cooling_device_ops *);
 struct thermal_cooling_device *
@@ -504,8 +510,11 @@ static inline int thermal_zone_unbind_cooling_device(
 static inline void thermal_zone_device_update(struct thermal_zone_device *tz,
 					      enum thermal_notify_event event)
 { }
+
+#ifndef CONFIG_AMAZON_THERMAL
 static inline void thermal_zone_set_trips(struct thermal_zone_device *tz)
 { }
+#endif
 static inline struct thermal_cooling_device *
 thermal_cooling_device_register(char *type, void *devdata,
 	const struct thermal_cooling_device_ops *ops)
@@ -552,5 +561,29 @@ static inline int thermal_generate_netlink_event(struct thermal_zone_device *tz,
 	return 0;
 }
 #endif
+
+/*
+ * This structure is used to describe the behavior of
+ * a certain cooling device on a certain trip point
+ * in a certain thermal zone
+ */
+struct thermal_instance {
+	int id;
+	char name[THERMAL_NAME_LENGTH];
+	struct thermal_zone_device *tz;
+	struct thermal_cooling_device *cdev;
+	int trip;
+	bool initialized;
+	unsigned long upper;	/* Highest cooling state for this trip point */
+	unsigned long lower;	/* Lowest cooling state for this trip point */
+	unsigned long target;	/* expected cooling state */
+	char attr_name[THERMAL_NAME_LENGTH];
+	struct device_attribute attr;
+	char weight_attr_name[THERMAL_NAME_LENGTH];
+	struct device_attribute weight_attr;
+	struct list_head tz_node; /* node in tz->thermal_instances */
+	struct list_head cdev_node; /* node in cdev->thermal_instances */
+	unsigned int weight; /* The weight of the cooling device */
+};
 
 #endif /* __THERMAL_H__ */

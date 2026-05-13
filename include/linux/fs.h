@@ -1857,7 +1857,6 @@ struct super_operations {
 #else
 #define S_DAX		0	/* Make all the DAX code disappear */
 #endif
-#define S_ENCRYPTED	16384	/* Encrypted file (using fs/crypto/) */
 
 /*
  * Note that nosuid etc flags are inode-specific: setting some file-system
@@ -1874,7 +1873,8 @@ struct super_operations {
  */
 #define __IS_FLG(inode, flg)	((inode)->i_sb->s_flags & (flg))
 
-#define IS_RDONLY(inode)	((inode)->i_sb->s_flags & MS_RDONLY)
+static inline bool sb_rdonly(const struct super_block *sb) { return sb->s_flags & MS_RDONLY; }
+#define IS_RDONLY(inode)	sb_rdonly((inode)->i_sb)
 #define IS_SYNC(inode)		(__IS_FLG(inode, MS_SYNCHRONOUS) || \
 					((inode)->i_flags & S_SYNC))
 #define IS_DIRSYNC(inode)	(__IS_FLG(inode, MS_SYNCHRONOUS|MS_DIRSYNC) || \
@@ -1896,7 +1896,6 @@ struct super_operations {
 #define IS_AUTOMOUNT(inode)	((inode)->i_flags & S_AUTOMOUNT)
 #define IS_NOSEC(inode)		((inode)->i_flags & S_NOSEC)
 #define IS_DAX(inode)		((inode)->i_flags & S_DAX)
-#define IS_ENCRYPTED(inode)	((inode)->i_flags & S_ENCRYPTED)
 
 #define IS_WHITEOUT(inode)	(S_ISCHR(inode->i_mode) && \
 				 (inode)->i_rdev == WHITEOUT_DEV)

@@ -76,10 +76,6 @@ extern int mmap_rnd_compat_bits __read_mostly;
 #define page_to_virt(x)	__va(PFN_PHYS(page_to_pfn(x)))
 #endif
 
-#ifndef lm_alias
-#define lm_alias(x)	__va(__pa_symbol(x))
-#endif
-
 /*
  * To prevent common memory management code establishing
  * a zero page mapping on a read fault.
@@ -206,11 +202,18 @@ extern unsigned int kobjsize(const void *objp);
 #define VM_HIGH_ARCH_BIT_1	33	/* bit only usable on 64-bit architectures */
 #define VM_HIGH_ARCH_BIT_2	34	/* bit only usable on 64-bit architectures */
 #define VM_HIGH_ARCH_BIT_3	35	/* bit only usable on 64-bit architectures */
+#define VM_HIGH_ARCH_BIT_5  37  /* bit only usable on 64-bit architectures */
 #define VM_HIGH_ARCH_0	BIT(VM_HIGH_ARCH_BIT_0)
 #define VM_HIGH_ARCH_1	BIT(VM_HIGH_ARCH_BIT_1)
 #define VM_HIGH_ARCH_2	BIT(VM_HIGH_ARCH_BIT_2)
 #define VM_HIGH_ARCH_3	BIT(VM_HIGH_ARCH_BIT_3)
+#define VM_HIGH_ARCH_5  BIT(VM_HIGH_ARCH_BIT_5)
 #endif /* CONFIG_ARCH_USES_HIGH_VMA_FLAGS */
+
+#ifdef VM_HIGH_ARCH_5
+/* Forbid ksm to autopickup VMA and try dedup it */
+#define VM_UNMERGEABLE VM_HIGH_ARCH_5
+#endif
 
 #if defined(CONFIG_X86)
 # define VM_PAT		VM_ARCH_1	/* PAT reserves whole VMA at once (x86) */
@@ -229,6 +232,11 @@ extern unsigned int kobjsize(const void *objp);
 # define VM_GROWSUP	VM_ARCH_1
 #elif defined(CONFIG_IA64)
 # define VM_GROWSUP	VM_ARCH_1
+#elif defined(CONFIG_ARM)
+# define VM_UNMERGEABLE VM_ARCH_1
+#ifdef CONFIG_KSM_MERGEABLE_ALWAYS_STAT
+# define VM_MERGEABLE_ALWAYS VM_ARCH_2
+#endif
 #elif !defined(CONFIG_MMU)
 # define VM_MAPPED_COPY	VM_ARCH_1	/* T if mapped copy of data (nommu mmap) */
 #endif
@@ -284,6 +292,7 @@ extern pgprot_t protection_map[16];
 #define FAULT_FLAG_USER		0x40	/* The fault originated in userspace */
 #define FAULT_FLAG_REMOTE	0x80	/* faulting for non current tsk/mm */
 #define FAULT_FLAG_INSTRUCTION  0x100	/* The fault was during an instruction fetch */
+#define FAULT_FLAG_NO_CMA	0x200   /* don't use CMA pages */
 
 /*
  * vm_fault is filled by the the pagefault handler and passed to the vma's
@@ -1142,6 +1151,8 @@ extern void pagefault_out_of_memory(void);
 
 extern void show_free_areas(unsigned int flags);
 extern bool skip_free_areas_node(unsigned int flags, int nid);
+extern void show_task_mem(void);
+extern void oom_dump_extra_info(void);
 
 void shmem_set_file(struct vm_area_struct *vma, struct file *file);
 int shmem_zero_setup(struct vm_area_struct *);
@@ -1284,6 +1295,9 @@ long get_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
 			    unsigned int gup_flags, struct page **pages,
 			    struct vm_area_struct **vmas);
 long get_user_pages(unsigned long start, unsigned long nr_pages,
+			    unsigned int gup_flags, struct page **pages,
+			    struct vm_area_struct **vmas);
+long get_user_pages_durable(unsigned long start, unsigned long nr_pages,
 			    unsigned int gup_flags, struct page **pages,
 			    struct vm_area_struct **vmas);
 long get_user_pages_locked(unsigned long start, unsigned long nr_pages,
@@ -1747,6 +1761,8 @@ static inline spinlock_t *pmd_lock(struct mm_struct *mm, pmd_t *pmd)
 	spin_lock(ptl);
 	return ptl;
 }
+
+extern void __init pagecache_init(void);
 
 extern void free_area_init(unsigned long * zones_size);
 extern void free_area_init_node(int nid, unsigned long * zones_size,
@@ -2234,6 +2250,8 @@ static inline struct page *follow_page(struct vm_area_struct *vma,
 #define FOLL_MLOCK	0x1000	/* lock present pages */
 #define FOLL_REMOTE	0x2000	/* we are working on non-current tsk/mm */
 #define FOLL_COW	0x4000	/* internal GUP flag */
+#define FOLL_DURABLE	0x10000 /* get the page reference for a long time */
+#define FOLL_ANON	0x8000	/* don't do file mappings */
 
 typedef int (*pte_fn_t)(pte_t *pte, pgtable_t token, unsigned long addr,
 			void *data);
