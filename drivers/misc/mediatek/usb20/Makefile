@@ -48,7 +48,7 @@ endif
 ifeq ($(CONFIG_MTK_MUSB_QMU_SUPPORT),y)
 subdir-ccflags-$(CONFIG_MACH_MT8167) += -DMUSB_QMU_LIMIT_SUPPORT -DMUSB_QMU_LIMIT_RXQ_NUM=4 -DMUSB_QMU_LIMIT_TXQ_NUM=4
 endif
-ifneq (, $(filter $(CONFIG_ARCH_MTK_PROJECT), "abc123" "checkers" "abc123"))
+ifneq (, $(filter $(CONFIG_ARCH_MTK_PROJECT), "abc123" "abc123" "cronos"))
 subdir-ccflags-y += -DOTG_WITHOUT_VBUS_CHECK
 subdir-ccflags-y += -DCONFIG_NO_CHARGER_KPOC
 endif

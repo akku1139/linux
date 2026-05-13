@@ -58,7 +58,7 @@ config SND_SOC_MT8163_AMZN
 		If you say Y, enable MT_SND_SOC_8163_AMZN driver.
 
 config FPGA_POWER_SEQUENCE
-	bool "Enable power settings for checkers project"
+	bool "Enable power settings for abc123 project"
 	default n
 
 config SND_I2S_MCLK
