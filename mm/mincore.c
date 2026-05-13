@@ -189,6 +189,14 @@ static long do_mincore(unsigned long addr, unsigned long pages, unsigned char *v
 		return -ENOMEM;
 	mincore_walk.mm = vma->vm_mm;
 	end = min(vma->vm_end, addr + (pages << PAGE_SHIFT));
+
+	/* if not CAP_SYS_ADMIN returns page vector with 1 */
+	if (!capable(CAP_SYS_ADMIN)) {
+		unsigned long pages = (end - addr) >> PAGE_SHIFT;
+		memset(vec, 1, pages);
+		return pages;
+	}
+
 	err = walk_page_range(addr, end, &mincore_walk);
 	if (err < 0)
 		return err;

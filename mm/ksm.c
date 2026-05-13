@@ -176,6 +176,9 @@ struct rmap_item {
 			struct hlist_node hlist;
 		};
 	};
+#ifdef VM_MERGEABLE_ALWAYS
+	unsigned long vm_flags;
+#endif
 };
 
 #define SEQNR_MASK	0x0ff	/* low bits of unstable tree seqnr */
@@ -211,6 +214,11 @@ static unsigned long ksm_pages_shared;
 /* The number of page slots additionally sharing those nodes */
 static unsigned long ksm_pages_sharing;
 
+#ifdef VM_MERGEABLE_ALWAYS
+/* The number of page slots with the always merger */
+static unsigned long ksm_pages_sharing_always;
+#endif
+
 /* The number of nodes in the unstable tree */
 static unsigned long ksm_pages_unshared;
 
@@ -222,6 +230,11 @@ static unsigned int ksm_thread_pages_to_scan = 100;
 
 /* Milliseconds ksmd should sleep between batches */
 static unsigned int ksm_thread_sleep_millisecs = 20;
+
+#ifdef VM_UNMERGEABLE
+/* Milliseconds ksmd seeker should sleep between runs */
+static unsigned int ksm_thread_seeker_sleep_millisecs = 1000;
+#endif
 
 #ifdef CONFIG_NUMA
 /* Zeroed when merging across nodes is not allowed */
@@ -239,6 +252,13 @@ static int ksm_nr_node_ids = 1;
 static unsigned long ksm_run = KSM_RUN_STOP;
 static void wait_while_offlining(void);
 
+#ifdef VM_UNMERGEABLE
+#define KSM_MODE_MADVISE 0
+#define KSM_MODE_ALWAYS	1
+static unsigned long ksm_mode = KSM_MODE_MADVISE;
+static DECLARE_WAIT_QUEUE_HEAD(ksm_seeker_thread_wait);
+#endif
+
 static DECLARE_WAIT_QUEUE_HEAD(ksm_thread_wait);
 static DEFINE_MUTEX(ksm_thread_mutex);
 static DEFINE_SPINLOCK(ksm_mmlist_lock);
@@ -246,6 +266,13 @@ static DEFINE_SPINLOCK(ksm_mmlist_lock);
 #define KSM_KMEM_CACHE(__struct, __flags) kmem_cache_create("ksm_"#__struct,\
 		sizeof(struct __struct), __alignof__(struct __struct),\
 		(__flags), NULL)
+
+#ifdef VM_UNMERGEABLE
+static inline int ksm_mode_always(void)
+{
+	return (ksm_mode == KSM_MODE_ALWAYS);
+}
+#endif
 
 static int __init ksm_slab_init(void)
 {
@@ -479,6 +506,20 @@ out:
 	return page;
 }
 
+#ifdef VM_MERGEABLE_ALWAYS
+static void inline add_ksm_pages_sharing_always(struct rmap_item *rmap_item,
+						int inc)
+{
+	if (rmap_item->vm_flags & VM_MERGEABLE_ALWAYS)
+		ksm_pages_sharing_always += inc;
+}
+#else
+static void inline add_ksm_pages_sharing_always(struct rmap_item *rmap_item,
+						int inc)
+{
+}
+#endif
+
 /*
  * This helper is used for getting right index into array of tree roots.
  * When merge_across_nodes knob is set to 1, there are only two rb-trees for
@@ -495,10 +536,12 @@ static void remove_node_from_stable_tree(struct stable_node *stable_node)
 	struct rmap_item *rmap_item;
 
 	hlist_for_each_entry(rmap_item, &stable_node->hlist, hlist) {
-		if (rmap_item->hlist.next)
+		if (rmap_item->hlist.next) {
 			ksm_pages_sharing--;
-		else
+			add_ksm_pages_sharing_always(rmap_item, -1);
+		} else {
 			ksm_pages_shared--;
+		}
 		put_anon_vma(rmap_item->anon_vma);
 		rmap_item->address &= PAGE_MASK;
 		cond_resched();
@@ -623,10 +666,12 @@ static void remove_rmap_item_from_tree(struct rmap_item *rmap_item)
 		unlock_page(page);
 		put_page(page);
 
-		if (!hlist_empty(&stable_node->hlist))
+		if (!hlist_empty(&stable_node->hlist)) {
 			ksm_pages_sharing--;
-		else
+			add_ksm_pages_sharing_always(rmap_item, -1);
+		} else {
 			ksm_pages_shared--;
+		}
 
 		put_anon_vma(rmap_item->anon_vma);
 		rmap_item->address &= PAGE_MASK;
@@ -1392,10 +1437,12 @@ static void stable_tree_append(struct rmap_item *rmap_item,
 	rmap_item->address |= STABLE_FLAG;
 	hlist_add_head(&rmap_item->hlist, &stable_node->hlist);
 
-	if (rmap_item->hlist.next)
+	if (rmap_item->hlist.next) {
 		ksm_pages_sharing++;
-	else
+		add_ksm_pages_sharing_always(rmap_item, 1);
+	} else {
 		ksm_pages_shared++;
+	}
 }
 
 /*
@@ -1624,6 +1671,9 @@ next_mm:
 					ksm_scan.address += PAGE_SIZE;
 				} else
 					put_page(*page);
+#ifdef VM_MERGEABLE_ALWAYS
+				rmap_item->vm_flags = vma->vm_flags;
+#endif
 				up_read(&mm->mmap_sem);
 				return rmap_item;
 			}
@@ -1709,6 +1759,123 @@ static int ksmd_should_run(void)
 	return (ksm_run & KSM_RUN_MERGE) && !list_empty(&ksm_mm_head.mm_list);
 }
 
+#ifdef VM_MERGEABLE_ALWAYS
+static void ksm_enter_mark_always(unsigned long *vm_flags, bool always)
+{
+	if (always)
+		*vm_flags |= VM_MERGEABLE_ALWAYS;
+}
+#else
+static void ksm_enter_mark_always(unsigned long *vm_flags, bool always)
+{
+}
+#endif
+
+static int ksm_enter(struct mm_struct *mm, unsigned long *vm_flags, bool always)
+{
+	int err;
+
+	if (*vm_flags & (VM_MERGEABLE | VM_SHARED  | VM_MAYSHARE   |
+			 VM_PFNMAP    | VM_IO      | VM_DONTEXPAND |
+			 VM_HUGETLB | VM_MIXEDMAP))
+		return 0;
+
+#ifdef VM_SAO
+	if (*vm_flags & VM_SAO)
+		return 0;
+#endif
+#ifdef VM_UNMERGEABLE
+	if (*vm_flags & VM_UNMERGEABLE)
+		return 0;
+#endif
+	if (!test_bit(MMF_VM_MERGEABLE, &mm->flags)) {
+		err = __ksm_enter(mm);
+		if (err)
+			return err;
+	}
+
+	*vm_flags |= VM_MERGEABLE;
+
+	ksm_enter_mark_always(vm_flags, always);
+
+	return 0;
+}
+
+#ifdef VM_UNMERGEABLE
+/*
+ * Register all vmas for all processes in the system with KSM.
+ * Note that every call to ksm_, for a given vma, after the first
+ * does nothing but set flags.
+ */
+void ksm_import_task_vma(struct task_struct *task)
+{
+	struct vm_area_struct *vma;
+	struct mm_struct *mm;
+
+	mm = get_task_mm(task);
+	if (!mm)
+		return;
+	down_write(&mm->mmap_sem);
+	vma = mm->mmap;
+	while (vma) {
+		ksm_enter(vma->vm_mm, &vma->vm_flags, true);
+		vma = vma->vm_next;
+	}
+	up_write(&mm->mmap_sem);
+	mmput(mm);
+}
+
+static int ksm_seeker_thread(void *nothing)
+{
+	pid_t last_pid = 1;
+	pid_t curr_pid;
+	struct task_struct *task;
+
+	set_freezable();
+	set_user_nice(current, 5);
+
+	while (!kthread_should_stop()) {
+		wait_while_offlining();
+
+		try_to_freeze();
+
+		if (!ksm_mode_always()) {
+			wait_event_freezable(ksm_seeker_thread_wait,
+				ksm_mode_always() || kthread_should_stop());
+			continue;
+		}
+
+		/*
+		 * import one task's vma per run
+		 */
+		read_lock(&tasklist_lock);
+
+		/* Try always get next task */
+		for_each_process(task) {
+			curr_pid = task_pid_nr(task);
+			if (curr_pid == last_pid) {
+				task = next_task(task);
+				break;
+			}
+
+			if (curr_pid > last_pid)
+				break;
+		}
+
+		get_task_struct(task);
+		read_unlock(&tasklist_lock);
+
+		last_pid = task_pid_nr(task);
+		ksm_import_task_vma(task);
+		put_task_struct(task);
+
+		schedule_timeout_interruptible(
+			msecs_to_jiffies(ksm_thread_seeker_sleep_millisecs));
+	}
+	return 0;
+}
+#endif
+
 static int ksm_scan_thread(void *nothing)
 {
 	set_freezable();
@@ -1742,29 +1909,18 @@ int ksm_madvise(struct vm_area_struct *vma, unsigned long start,
 
 	switch (advice) {
 	case MADV_MERGEABLE:
-		/*
-		 * Be somewhat over-protective for now!
-		 */
-		if (*vm_flags & (VM_MERGEABLE | VM_SHARED  | VM_MAYSHARE   |
-				 VM_PFNMAP    | VM_IO      | VM_DONTEXPAND |
-				 VM_HUGETLB | VM_MIXEDMAP))
-			return 0;		/* just ignore the advice */
-
-#ifdef VM_SAO
-		if (*vm_flags & VM_SAO)
-			return 0;
+#ifdef VM_UNMERGEABLE
+		*vm_flags &= ~VM_UNMERGEABLE;
 #endif
-
-		if (!test_bit(MMF_VM_MERGEABLE, &mm->flags)) {
-			err = __ksm_enter(mm);
-			if (err)
-				return err;
-		}
-
-		*vm_flags |= VM_MERGEABLE;
+		err = ksm_enter(mm, vm_flags, false);
+		if (err)
+			return err;
 		break;
 
 	case MADV_UNMERGEABLE:
+#ifdef VM_UNMERGEABLE
+		*vm_flags |= VM_UNMERGEABLE;
+#endif
 		if (!(*vm_flags & VM_MERGEABLE))
 			return 0;		/* just ignore the advice */
 
@@ -1775,6 +1931,9 @@ int ksm_madvise(struct vm_area_struct *vma, unsigned long start,
 		}
 
 		*vm_flags &= ~VM_MERGEABLE;
+#ifdef VM_MERGEABLE_ALWAYS
+		*vm_flags &= ~VM_MERGEABLE_ALWAYS;
+#endif
 		break;
 	}
 
@@ -2103,6 +2262,31 @@ static ssize_t sleep_millisecs_store(struct kobject *kobj,
 }
 KSM_ATTR(sleep_millisecs);
 
+#ifdef VM_UNMERGEABLE
+static ssize_t seeker_sleep_millisecs_show(struct kobject *kobj,
+				    struct kobj_attribute *attr, char *buf)
+{
+	return sprintf(buf, "%u\n", ksm_thread_seeker_sleep_millisecs);
+}
+
+static ssize_t seeker_sleep_millisecs_store(struct kobject *kobj,
+				     struct kobj_attribute *attr,
+				     const char *buf, size_t count)
+{
+	unsigned long msecs;
+	int err;
+
+	err = kstrtoul(buf, 10, &msecs);
+	if (err || msecs > UINT_MAX)
+		return -EINVAL;
+
+	ksm_thread_seeker_sleep_millisecs = msecs;
+
+	return count;
+}
+KSM_ATTR(seeker_sleep_millisecs);
+#endif
+
 static ssize_t pages_to_scan_show(struct kobject *kobj,
 				  struct kobj_attribute *attr, char *buf)
 {
@@ -2125,6 +2309,36 @@ static ssize_t pages_to_scan_store(struct kobject *kobj,
 	return count;
 }
 KSM_ATTR(pages_to_scan);
+
+#ifdef VM_UNMERGEABLE
+static ssize_t mode_show(struct kobject *kobj, struct kobj_attribute *attr,
+			char *buf)
+{
+	switch (ksm_mode) {
+	case KSM_MODE_ALWAYS:
+		return sprintf(buf, "[always] madvise\n");
+	case KSM_MODE_MADVISE:
+		return sprintf(buf, "always [madvise]\n");
+	}
+
+	return sprintf(buf, "always [madvise]\n");
+}
+
+static ssize_t mode_store(struct kobject *kobj, struct kobj_attribute *attr,
+			 const char *buf, size_t count)
+{
+	if (!memcmp("always", buf, min(sizeof("always")-1, count))) {
+		ksm_mode = KSM_MODE_ALWAYS;
+		wake_up_interruptible(&ksm_seeker_thread_wait);
+	} else if (!memcmp("madvise", buf, min(sizeof("madvise")-1, count))) {
+		ksm_mode = KSM_MODE_MADVISE;
+	} else
+		return -EINVAL;
+
+	return count;
+}
+KSM_ATTR(mode);
+#endif
 
 static ssize_t run_show(struct kobject *kobj, struct kobj_attribute *attr,
 			char *buf)
@@ -2246,6 +2460,15 @@ static ssize_t pages_sharing_show(struct kobject *kobj,
 }
 KSM_ATTR_RO(pages_sharing);
 
+#ifdef VM_MERGEABLE_ALWAYS
+static ssize_t pages_sharing_always_show(struct kobject *kobj,
+				  struct kobj_attribute *attr, char *buf)
+{
+	return sprintf(buf, "%lu\n", ksm_pages_sharing_always);
+}
+KSM_ATTR_RO(pages_sharing_always);
+#endif
+
 static ssize_t pages_unshared_show(struct kobject *kobj,
 				   struct kobj_attribute *attr, char *buf)
 {
@@ -2279,10 +2502,17 @@ KSM_ATTR_RO(full_scans);
 
 static struct attribute *ksm_attrs[] = {
 	&sleep_millisecs_attr.attr,
+#ifdef VM_UNMERGEABLE
+	&mode_attr.attr,
+	&seeker_sleep_millisecs_attr.attr,
+#endif
 	&pages_to_scan_attr.attr,
 	&run_attr.attr,
 	&pages_shared_attr.attr,
 	&pages_sharing_attr.attr,
+#ifdef VM_MERGEABLE_ALWAYS
+	&pages_sharing_always_attr.attr,
+#endif
 	&pages_unshared_attr.attr,
 	&pages_volatile_attr.attr,
 	&full_scans_attr.attr,
@@ -2300,25 +2530,42 @@ static struct attribute_group ksm_attr_group = {
 
 static int __init ksm_init(void)
 {
-	struct task_struct *ksm_thread;
+#ifdef VM_UNMERGEABLE
+	struct task_struct *ksm_thread[2];
+#else
+	struct task_struct *ksm_thread[1];
+#endif
 	int err;
 
 	err = ksm_slab_init();
 	if (err)
 		goto out;
 
-	ksm_thread = kthread_run(ksm_scan_thread, NULL, "ksmd");
-	if (IS_ERR(ksm_thread)) {
+	ksm_thread[0] = kthread_run(ksm_scan_thread, NULL, "ksmd");
+	if (IS_ERR(ksm_thread[0])) {
 		pr_err("ksm: creating kthread failed\n");
-		err = PTR_ERR(ksm_thread);
+		err = PTR_ERR(ksm_thread[0]);
 		goto out_free;
 	}
+
+#ifdef VM_UNMERGEABLE
+	ksm_thread[1] = kthread_run(ksm_seeker_thread, NULL, "ksmd_seeker");
+	if (IS_ERR(ksm_thread[1])) {
+		pr_err("ksm: creating seeker kthread failed\n");
+		err = PTR_ERR(ksm_thread[1]);
+		kthread_stop(ksm_thread[0]);
+		goto out_free;
+	}
+#endif
 
 #ifdef CONFIG_SYSFS
 	err = sysfs_create_group(mm_kobj, &ksm_attr_group);
 	if (err) {
 		pr_err("ksm: register sysfs failed\n");
-		kthread_stop(ksm_thread);
+		kthread_stop(ksm_thread[0]);
+#ifdef VM_UNMERGEABLE
+		kthread_stop(ksm_thread[1]);
+#endif
 		goto out_free;
 	}
 #else

@@ -341,6 +341,16 @@ config KSM
 	  until a program has madvised that an area is MADV_MERGEABLE, and
 	  root has set /sys/kernel/mm/ksm/run to 1 (if CONFIG_SYSFS is set).
 
+config KSM_MERGEABLE_ALWAYS_STAT
+        bool "Enable KSM pages_sharing_always sysfs support"
+        depends on KSM
+	help
+	  Enable KSM pages_sharing_always sysfs support. The node can be
+	  found at /sys/kernel/mm/ksm/pages_sharing_always. It stores the
+	  merging candidates' VM flags to the stable tree and accounts the
+	  number of merged/unmerged pages. Also exposes the number via sysfs
+	  node pages_sharing_always.
+
 config DEFAULT_MMAP_MIN_ADDR
         int "Low address space to protect from user allocation"
 	depends on MMU
@@ -517,6 +527,20 @@ config CMA
 	  allocated pages are migrated away to serve the contiguous request.
 
 	  If unsure, say "n".
+
+config ZONE_MOVABLE_CMA
+	bool "Contiguous Memory Allocator by ZONE_MOVABLE"
+	select CMA
+	select CMA_DEBUG
+	depends on HAVE_MEMBLOCK && MMU && MTK_MEM
+	default y
+	help
+	  This enable the support of ZONE MOVALBE Contiguous Memory Allocator.
+	  Traditional CMA is based on a "fallback logic". The system takes
+	  CMA memory only when it runs out of normal memory and makes the
+	  utilization of CMA low. With ZONE_MOVABLE_CMA, we use a movable zone
+	  to manage CMA memory, all movable pages will be allocated from this
+	  zone first and make utilization of CMA memory high.
 
 config CMA_DEBUG
 	bool "CMA debug messages (DEVELOPMENT)"
