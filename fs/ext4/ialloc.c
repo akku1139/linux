@@ -157,6 +157,7 @@ static struct buffer_head *
 ext4_read_inode_bitmap(struct super_block *sb, ext4_group_t block_group)
 {
 	struct ext4_group_desc *desc;
+	struct ext4_sb_info *sbi = EXT4_SB(sb);
 	struct buffer_head *bh = NULL;
 	ext4_fsblk_t bitmap_blk;
 	int err;
@@ -166,6 +167,12 @@ ext4_read_inode_bitmap(struct super_block *sb, ext4_group_t block_group)
 		return ERR_PTR(-EFSCORRUPTED);
 
 	bitmap_blk = ext4_inode_bitmap(sb, desc);
+	if ((bitmap_blk <= le32_to_cpu(sbi->s_es->s_first_data_block)) ||
+	    (bitmap_blk >= ext4_blocks_count(sbi->s_es))) {
+		ext4_error(sb, "Invalid inode bitmap blk %llu in "
+			   "block_group %u", bitmap_blk, block_group);
+		return ERR_PTR(-EFSCORRUPTED);
+	}
 	bh = sb_getblk(sb, bitmap_blk);
 	if (unlikely(!bh)) {
 		ext4_error(sb, "Cannot read inode bitmap - "
@@ -1093,17 +1100,6 @@ got:
 	if (err)
 		goto fail_drop;
 
-	/*
-	 * Since the encryption xattr will always be unique, create it first so
-	 * that it's less likely to end up in an external xattr block and
-	 * prevent its deduplication.
-	 */
-	if (encrypt) {
-		err = fscrypt_inherit_context(dir, inode, handle, true);
-		if (err)
-			goto fail_free_drop;
-	}
-
 	err = ext4_init_acl(handle, inode, dir);
 	if (err)
 		goto fail_free_drop;
@@ -1123,6 +1119,13 @@ got:
 	if (ext4_handle_valid(handle)) {
 		ei->i_sync_tid = handle->h_transaction->t_tid;
 		ei->i_datasync_tid = handle->h_transaction->t_tid;
+	}
+
+	if (encrypt) {
+		/* give pointer to avoid set_context with journal ops. */
+		err = fscrypt_inherit_context(dir, inode, &encrypt, true);
+		if (err)
+			goto fail_free_drop;
 	}
 
 	err = ext4_mark_inode_dirty(handle, inode);
