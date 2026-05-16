@@ -449,6 +449,8 @@ patternProperties:
     description: Data Modul AG
   "^doestek,.*":
     description: Doestek Co., Ltd.
+  "^doke,.*":
+    description: Shenzhen Doke Electronic Co., Ltd.
   "^domintech,.*":
     description: Domintech Co., Ltd.
   "^dongwoon,.*":

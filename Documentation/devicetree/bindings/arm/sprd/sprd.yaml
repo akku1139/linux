@@ -37,6 +37,7 @@ properties:
 
       - items:
           - enum:
+              - doke,blackview-tab15pro
               - reeder,s19mps
           - const: sprd,ums9230
 
