@@ -1380,7 +1380,7 @@ patternProperties:
   "^realtek,.*":
     description: Realtek Semiconductor Corp.
   "^reeder,.*":
-    description: Reeder Teknoloji Sanayi Ve Ticaret Anonim Şirketi
+    description: Reeder Teknoloji Sanayi Ve Ticaret A.Ş.
   "^relfor,.*":
     description: Relfor Labs Pvt. Ltd.
   "^remarkable,.*":
