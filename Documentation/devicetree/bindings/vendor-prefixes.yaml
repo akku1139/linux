@@ -1375,12 +1375,12 @@ patternProperties:
     description: Raydium Semiconductor Corp.
   "^raystar,.*":
     description: Raystar Optronics, Inc.
-  "^reeder,.*":
-    description: Reeder Teknoloji Sanayi Ve Ticaret Anonim Şirketi
   "^rda,.*":
     description: Unisoc Communications, Inc.
   "^realtek,.*":
     description: Realtek Semiconductor Corp.
+  "^reeder,.*":
+    description: Reeder Teknoloji Sanayi Ve Ticaret Anonim Şirketi
   "^relfor,.*":
     description: Relfor Labs Pvt. Ltd.
   "^remarkable,.*":
