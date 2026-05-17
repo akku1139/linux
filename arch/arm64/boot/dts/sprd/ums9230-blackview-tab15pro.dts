@@ -24,8 +24,8 @@
 		framebuffer {
 			compatible = "simple-framebuffer";
 			memory-region = <&framebuffer_region>;
-			width = <1920>;
-			height = <1200>;
+			width = <1200>;
+			height = <1920>;
 			stride = <(1920 * 4)>;
 			format = "a8r8g8b8";
 
