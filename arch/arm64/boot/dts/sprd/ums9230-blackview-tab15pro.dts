@@ -303,3 +303,8 @@
 		};
 	};
 };
+
+&usb {
+	dr_mode = "peripheral";
+	status = "okay";
+};
