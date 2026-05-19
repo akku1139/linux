@@ -1,0 +1,128 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Copyright (C) 2026 Akari Tsuyukusa <akkun11.open@gmail.com>
+ */
+
+/dts-v1/;
+
+#include <dt-bindings/input/input.h>
+#include <dt-bindings/leds/common.h>
+#include <dt-bindings/media/sprd-camsys.h>
+#include <dt-bindings/usb/pd.h>
+#include "ums9230.dtsi"
+#include "sc2730.dtsi"
+
+/ {
+	model = "Blackview Tab 15 Pro";
+
+	compatible = "doke,blackview-tab15pro", "sprd,ums9230";
+
+	aliases {
+	};
+
+	chosen {
+		bootargs = "clk_ignore_unused pd_ignore_unused regulator_ignore_unused";
+
+		framebuffer {
+			compatible = "simple-framebuffer";
+			memory-region = <&framebuffer_region>;
+			width = <1200>;
+			height = <1920>;
+			stride = <(1200 * 2)>;
+			format = "r5g6b5";
+
+			status = "okay";
+		};
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x00 0x80000000 0x01 0xfffff000>;
+	};
+
+	reserved-memory {
+		framebuffer_region: framebuffer-region@9e000000 {
+			compatible = "framebuffer";
+			reg = <0 0x9e000000 0 (1200 * 1920 * 2)>;
+			iommu-addresses = <&dpu 0x9e000000 (1200 * 1920 * 2)>;
+			no-map;
+		};
+
+		ramoops@fff80000 {
+			compatible = "ramoops";
+			reg = <0x0 0xfff80000 0x0 0x40000>;
+			console-size = <0x8000>;
+			record-size = <0x8000>;
+			pmsg-size = <0x8000>;
+		};
+
+		linux,cma {
+			compatible = "shared-dma-pool";
+			size = <0x0 0x8000000>;
+			reusable;
+			linux,cma-default;
+		};
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+
+		key-power {
+			label = "Power Key";
+			linux,code = <KEY_POWER>;
+			gpios = <&pmic_eic 1 GPIO_ACTIVE_LOW>;
+			debounce-interval = <0x02>;
+			wakeup-source;
+		};
+
+		key-volumeup {
+			label = "Volume Up Key";
+			linux,code = <KEY_VOLUMEUP>;
+			gpios = <&ap_gpio 125 GPIO_ACTIVE_LOW>;
+			debounce-interval = <2>;
+			wakeup-source;
+		};
+
+		key-volumedown {
+			label = "Volume Down Key";
+			linux,code = <KEY_VOLUMEDOWN>;
+			gpios = <&ap_gpio 124 GPIO_ACTIVE_LOW>;
+			debounce-interval = <2>;
+			wakeup-source;
+		};
+	};
+};
+
+&usb {
+	dr_mode = "peripheral";
+	status = "okay";
+};
+
+&hsphy {
+	phy-supply = <&vddusb33>;
+	status = "okay";
+};
+
+&ufs {
+	status = "okay";
+	vcc-supply = <&vddemmccore>;
+};
+
+/* SD Card */
+&sdio0 {
+	status = "okay";
+
+	vmmc-supply = <&vddsdcore>;
+	vqmmc-supply = <&vddsdio>;
+	cd-gpios = <&eic_async 35 GPIO_ACTIVE_HIGH>;
+
+	bus-width = <4>;
+	no-sdio;
+	no-mmc;
+	sprd,phy-delay-sd-uhs-sdr104 = <0x7f 0x73 0x72 0x72>;
+	sprd,phy-delay-sd-uhs-sdr50 = <0x6e 0x7f 0x01 0x01>;
+	sprd,phy-delay-sd-highspeed = <0x7f 0x1a 0x9a 0x9a>;
+	sprd,phy-delay-legacy = <0x7f 0x1a 0x9a 0x9a>;
+	sd-uhs-sdr104;
+	sd-uhs-sdr50;
+};
