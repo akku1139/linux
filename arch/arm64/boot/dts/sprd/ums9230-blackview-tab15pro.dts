@@ -44,7 +44,7 @@
 		framebuffer_region: framebuffer-region@9e000000 {
 			compatible = "framebuffer";
 			reg = <0 0x9e000000 0 (1200 * 1920 * 2)>;
-			//iommu-addresses = <&dpu 0x9e000000 (1200 * 1920 * 2)>;
+			iommu-addresses = <&dpu 0x9e000000 (1200 * 1920 * 2)>;
 			no-map;
 		};
 
