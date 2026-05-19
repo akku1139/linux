@@ -26,18 +26,23 @@
 			memory-region = <&framebuffer_region>;
 			width = <1200>;
 			height = <1920>;
-			stride = <(1920 * 4)>;
+			stride = <(1920 * 2)>;
 			format = "r5g6b5";
 
 			status = "okay";
 		};
 	};
 
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x00 0x80000000 0x01 0xfffff000>;
+	};
+
 	reserved-memory {
 		framebuffer_region: framebuffer-region@9e000000 {
 			compatible = "framebuffer";
-			reg = <0 0x9e000000 0 (1920 * 1200 * 4)>;
-			iommu-addresses = <&dpu 0x9e000000 (1920 * 1200 * 4)>;
+			reg = <0 0x9e000000 0 (1200 * 1920 * 2)>;
+			//iommu-addresses = <&dpu 0x9e000000 (1200 * 1920 * 2)>;
 			no-map;
 		};
 
