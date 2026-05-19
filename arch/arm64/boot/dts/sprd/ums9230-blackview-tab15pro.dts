@@ -21,7 +21,7 @@
 	};
 
 	chosen {
-		bootargs = "clk_ignore_unused";
+		bootargs = "clk_ignore_unused pd_ignore_unused regulator_ignore_unused";
 
 		framebuffer {
 			compatible = "simple-framebuffer";
@@ -96,4 +96,33 @@
 &usb {
 	dr_mode = "peripheral";
 	status = "okay";
+};
+
+&hsphy {
+	phy-supply = <&vddusb33>;
+	status = "okay";
+};
+
+&ufs {
+	status = "okay";
+	vcc-supply = <&vddemmccore>;
+};
+
+/* SD Card */
+&sdio0 {
+	status = "okay";
+
+	vmmc-supply = <&vddsdcore>;
+	vqmmc-supply = <&vddsdio>;
+	cd-gpios = <&eic_async 35 GPIO_ACTIVE_HIGH>;
+
+	bus-width = <4>;
+	no-sdio;
+	no-mmc;
+	sprd,phy-delay-sd-uhs-sdr104 = <0x7f 0x73 0x72 0x72>;
+	sprd,phy-delay-sd-uhs-sdr50 = <0x6e 0x7f 0x01 0x01>;
+	sprd,phy-delay-sd-highspeed = <0x7f 0x1a 0x9a 0x9a>;
+	sprd,phy-delay-legacy = <0x7f 0x1a 0x9a 0x9a>;
+	sd-uhs-sdr104;
+	sd-uhs-sdr50;
 };
