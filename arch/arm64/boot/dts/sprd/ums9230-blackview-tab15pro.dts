@@ -21,6 +21,8 @@
 	};
 
 	chosen {
+		bootargs = "clk_ignore_unused";
+
 		framebuffer {
 			compatible = "simple-framebuffer";
 			memory-region = <&framebuffer_region>;
