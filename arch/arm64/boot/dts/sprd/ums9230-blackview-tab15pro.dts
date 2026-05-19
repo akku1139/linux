@@ -27,7 +27,7 @@
 			width = <1200>;
 			height = <1920>;
 			stride = <(1920 * 4)>;
-			format = "a8r8g8b8";
+			format = "r5g6b5";
 
 			status = "okay";
 		};
