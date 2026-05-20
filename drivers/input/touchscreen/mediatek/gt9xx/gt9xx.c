@@ -408,8 +408,23 @@ w:  input pressure
 static void gtp_touch_down(struct goodix_ts_data *ts,
 		s32 id, s32 x, s32 y, s32 w)
 {
-#if GTP_CHANGE_X2Y
-	GTP_SWAP(x, y);
+#if defined(CONFIG_TOUCHSCREEN_GTP9XX_ROTATE_90)
+        {
+                s32 tmp = x;
+                x = ts->abs_x_max - y;
+                y = tmp;
+        }
+#elif defined(CONFIG_TOUCHSCREEN_GTP9XX_ROTATE_180)
+        x = ts->abs_x_max - x;
+        y = ts->abs_y_max - y;
+#elif defined(CONFIG_TOUCHSCREEN_GTP9XX_ROTATE_270)
+        {
+                s32 tmp = x;
+                x = y;
+                y = ts->abs_y_max - tmp;
+        }
+#elif GTP_CHANGE_X2Y
+        GTP_SWAP(x, y);
 #endif
 #if GTP_ICS_SLOT_REPORT
 	input_mt_slot(ts->input_dev, id);
@@ -2143,8 +2158,11 @@ static s8 gtp_request_input_dev(struct goodix_ts_data *ts)
 	input_set_capability(ts->input_dev,
 	EV_KEY, KEY_POWER);
 #endif
-#if GTP_CHANGE_X2Y
-	GTP_SWAP(ts->abs_x_max, ts->abs_y_max);
+#if defined(CONFIG_TOUCHSCREEN_GTP9XX_ROTATE_90) || \
+    defined(CONFIG_TOUCHSCREEN_GTP9XX_ROTATE_270)
+        GTP_SWAP(ts->abs_x_max, ts->abs_y_max);
+#elif GTP_CHANGE_X2Y
+        GTP_SWAP(ts->abs_x_max, ts->abs_y_max);
 #endif
 	input_set_abs_params(ts->input_dev,
 	ABS_MT_POSITION_X,

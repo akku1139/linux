@@ -38,6 +38,31 @@ config GTP9XX_SLEEP_MODE
 
 	 If unsure, say N.
 
+choice
+        prompt "Goodix GTP 9xx touchscreen rotation"
+        depends on TOUCHSCREEN_GTP9XX
+        default TOUCHSCREEN_GTP9XX_ROTATE_0
+        help
+          Select the physical rotation to apply to touch coordinates so
+          they match the rotated display. Useful on devices like the
+          Amazon Echo Show 5 where the touch panel is mounted with a
+          fixed offset relative to the LCM. Rotation is clockwise.
+
+config TOUCHSCREEN_GTP9XX_ROTATE_0
+        bool "0 degrees (no rotation)"
+
+config TOUCHSCREEN_GTP9XX_ROTATE_90
+        bool "90 degrees clockwise"
+
+config TOUCHSCREEN_GTP9XX_ROTATE_180
+        bool "180 degrees"
+
+config TOUCHSCREEN_GTP9XX_ROTATE_270
+        bool "270 degrees clockwise"
+
+endchoice
+
+
 config TOUCHSCREEN_GT967
 	tristate "Goodix GTP 967 touchscreen"
 	depends on I2C
