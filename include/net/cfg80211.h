@@ -1761,9 +1761,11 @@ const u8 *ieee80211_bss_get_ie(struct cfg80211_bss *bss, u8 ie);
  * @key_len: length of WEP key for shared key authentication
  * @key_idx: index of WEP key for shared key authentication
  * @key: WEP key for shared key authentication
- * @sae_data: Non-IE data to use with SAE or %NULL. This starts with
- *	Authentication transaction sequence number field.
- * @sae_data_len: Length of sae_data buffer in octets
+ * @auth_data: Fields and elements in Authentication frames. This contains
+ *	the authentication frame body (non-IE and IE data), excluding the
+ *	Authentication algorithm number, i.e., starting at the Authentication
+ *	transaction sequence number field.
+ * @auth_data_len: Length of auth_data buffer in octets
  */
 struct cfg80211_auth_request {
 	struct cfg80211_bss *bss;
@@ -1772,8 +1774,8 @@ struct cfg80211_auth_request {
 	enum nl80211_auth_type auth_type;
 	const u8 *key;
 	u8 key_len, key_idx;
-	const u8 *sae_data;
-	size_t sae_data_len;
+	const u8 *auth_data;
+	size_t auth_data_len;
 };
 
 /**
@@ -1782,11 +1784,16 @@ struct cfg80211_auth_request {
  * @ASSOC_REQ_DISABLE_HT:  Disable HT (802.11n)
  * @ASSOC_REQ_DISABLE_VHT:  Disable VHT
  * @ASSOC_REQ_USE_RRM: Declare RRM capability in this association
+ * @CONNECT_REQ_EXTERNAL_AUTH_SUPPORT: User space indicates external
+ *	authentication capability. Drivers can offload authentication to
+ *	userspace if this flag is set. Only applicable for cfg80211_connect()
+ *	request (connect callback).
  */
 enum cfg80211_assoc_req_flags {
-	ASSOC_REQ_DISABLE_HT		= BIT(0),
-	ASSOC_REQ_DISABLE_VHT		= BIT(1),
-	ASSOC_REQ_USE_RRM		= BIT(2),
+	ASSOC_REQ_DISABLE_HT			= BIT(0),
+	ASSOC_REQ_DISABLE_VHT			= BIT(1),
+	ASSOC_REQ_USE_RRM			= BIT(2),
+	CONNECT_REQ_EXTERNAL_AUTH_SUPPORT	= BIT(3),
 };
 
 /**
@@ -2406,6 +2413,33 @@ struct cfg80211_nan_func {
 };
 
 /**
+ * struct cfg80211_external_auth_params - Trigger External authentication.
+ *
+ * Commonly used across the external auth request and event interfaces.
+ *
+ * @action: action type / trigger for external authentication. Only significant
+ *	for the authentication request event interface (driver to user space).
+ * @bssid: BSSID of the peer with which the authentication has
+ *	to happen. Used by both the authentication request event and
+ *	authentication response command interface.
+ * @ssid: SSID of the AP.  Used by both the authentication request event and
+ *	authentication response command interface.
+ * @key_mgmt_suite: AKM suite of the respective authentication. Used by the
+ *	authentication request event interface.
+ * @status: status code, %WLAN_STATUS_SUCCESS for successful authentication,
+ *	use %WLAN_STATUS_UNSPECIFIED_FAILURE if user space cannot give you
+ *	the real status code for failures. Used only for the authentication
+ *	response command interface (user space to driver).
+ */
+struct cfg80211_external_auth_params {
+	enum nl80211_external_auth_action action;
+	u8 bssid[ETH_ALEN] __aligned(2);
+	struct cfg80211_ssid ssid;
+	unsigned int key_mgmt_suite;
+	u16 status;
+};
+
+/**
  * struct cfg80211_ops - backend description for wireless configuration
  *
  * This struct is registered by fullmac card drivers and/or wireless stacks
@@ -2706,6 +2740,9 @@ struct cfg80211_nan_func {
  * @nan_change_conf: changes NAN configuration. The changed parameters must
  *	be specified in @changes (using &enum cfg80211_nan_conf_changes);
  *	All other parameters must be ignored.
+ *
+ * @external_auth: indicates result of offloaded authentication processing from
+ *     user space
  */
 struct cfg80211_ops {
 	int	(*suspend)(struct wiphy *wiphy, struct cfg80211_wowlan *wow);
@@ -2982,6 +3019,8 @@ struct cfg80211_ops {
 				   struct wireless_dev *wdev,
 				   struct cfg80211_nan_conf *conf,
 				   u32 changes);
+	int	(*external_auth)(struct wiphy *wiphy, struct net_device *dev,
+				 struct cfg80211_external_auth_params *params);
 };
 
 /*
@@ -3764,6 +3803,9 @@ struct cfg80211_cached_keys;
  * @conn: (private) cfg80211 software SME connection state machine data
  * @connect_keys: (private) keys to set after connection is established
  * @conn_bss_type: connecting/connected BSS type
+ * @conn_owner_nlportid: (private) connection owner socket port ID
+ * @disconnect_wk: (private) auto-disconnect work
+ * @disconnect_bssid: (private) the BSSID to use for auto-disconnect
  * @ibss_fixed: (private) IBSS is using fixed BSSID
  * @ibss_dfs_possible: (private) IBSS may change to a DFS channel
  * @event_list: (private) list for internal event processing
@@ -3795,6 +3837,10 @@ struct wireless_dev {
 	struct cfg80211_conn *conn;
 	struct cfg80211_cached_keys *connect_keys;
 	enum ieee80211_bss_type conn_bss_type;
+	u32 conn_owner_nlportid;
+
+	struct work_struct disconnect_wk;
+	u8 disconnect_bssid[ETH_ALEN];
 
 	struct list_head event_list;
 	spinlock_t event_lock;
@@ -5795,6 +5841,17 @@ void cfg80211_nan_func_terminated(struct wireless_dev *wdev,
 
 /* ethtool helper */
 void cfg80211_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info);
+
+/**
+ * cfg80211_external_auth_request - userspace request for authentication
+ * @netdev: network device
+ * @params: External authentication parameters
+ * @gfp: allocation flags
+ * Returns: 0 on success, < 0 on error
+ */
+int cfg80211_external_auth_request(struct net_device *netdev,
+				   struct cfg80211_external_auth_params *params,
+				   gfp_t gfp);
 
 /* Logging, debugging and troubleshooting/diagnostic helpers. */
 

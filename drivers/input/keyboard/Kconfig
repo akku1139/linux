@@ -231,6 +231,15 @@ config KEYBOARD_GPIO_POLLED
 	  To compile this driver as a module, choose M here: the
 	  module will be called gpio_keys_polled.
 
+config KEYBOARD_GPIO_PRIVACY
+	tristate "GPIO Privacy"
+	depends on GPIOLIB || COMPILE_TEST
+	default n
+	help
+	  This driver implements key events for toggle switches
+	  connected to GPIO pins which are used by privacy mode.
+	  Also implements enabling and reading of privacy state.
+
 config KEYBOARD_TCA6416
 	tristate "TCA6416/TCA6408A Keypad Support"
 	depends on I2C
@@ -734,4 +743,5 @@ config KEYBOARD_BCM
 	  To compile this driver as a module, choose M here: the
 	  module will be called bcm-keypad.
 
+source "drivers/input/keyboard/mediatek/Kconfig"
 endif

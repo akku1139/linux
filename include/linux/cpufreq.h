@@ -924,6 +924,12 @@ int cpufreq_generic_init(struct cpufreq_policy *policy,
 
 struct sched_domain;
 unsigned long cpufreq_scale_freq_capacity(struct sched_domain *sd, int cpu);
+
+#ifdef CONFIG_AMAZON_THERMAL
+/* the following function is for cpufreq core use only */
+struct cpufreq_frequency_table *cpufreq_frequency_get_table(unsigned int cpu);
+#endif
+
 unsigned long cpufreq_scale_max_freq_capacity(struct sched_domain *sd, int cpu);
 unsigned long cpufreq_scale_min_freq_capacity(struct sched_domain *sd, int cpu);
 #endif /* _LINUX_CPUFREQ_H */

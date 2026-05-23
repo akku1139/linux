@@ -260,6 +260,8 @@ static int mmc_read_ssr(struct mmc_card *card)
 	for (i = 0; i < 16; i++)
 		card->raw_ssr[i] = be32_to_cpu(raw_ssr[i]);
 
+	card->sd_speed_class = card->raw_ssr[2]>>24;
+
 	kfree(raw_ssr);
 
 	/*
@@ -698,7 +700,8 @@ MMC_DEV_ATTR(name, "%s\n", card->cid.prod_name);
 MMC_DEV_ATTR(oemid, "0x%04x\n", card->cid.oemid);
 MMC_DEV_ATTR(serial, "0x%08x\n", card->cid.serial);
 MMC_DEV_ATTR(ocr, "0x%08x\n", card->ocr);
-
+MMC_DEV_ATTR(sclass, "0x%0x\n", card->sd_speed_class);
+MMC_DEV_ATTR(timing, "%u\n", (&card->host->ios)->timing);
 
 static ssize_t mmc_dsr_show(struct device *dev,
                            struct device_attribute *attr,
@@ -732,6 +735,8 @@ static struct attribute *sd_std_attrs[] = {
 	&dev_attr_serial.attr,
 	&dev_attr_ocr.attr,
 	&dev_attr_dsr.attr,
+	&dev_attr_sclass.attr,
+	&dev_attr_timing.attr,
 	NULL,
 };
 ATTRIBUTE_GROUPS(sd_std);
@@ -963,7 +968,7 @@ unsigned mmc_sd_get_max_clock(struct mmc_card *card)
  * In the case of a resume, "oldcard" will contain the card
  * we're trying to reinitialise.
  */
-static int mmc_sd_init_card(struct mmc_host *host, u32 ocr,
+int mmc_sd_init_card(struct mmc_host *host, u32 ocr,
 	struct mmc_card *oldcard)
 {
 	struct mmc_card *card;
@@ -1109,6 +1114,7 @@ static void mmc_sd_detect(struct mmc_host *host)
 {
 	int err = 0;
 #ifdef CONFIG_MMC_PARANOID_SD_INIT
+	int reinit_err = 0;
 	int retries = 5;
 #endif
 
@@ -1124,6 +1130,10 @@ static void mmc_sd_detect(struct mmc_host *host)
 	while(retries) {
 		err = mmc_send_status(host->card, NULL);
 		if (err) {
+			mmc_power_cycle(host, host->card->ocr);
+			reinit_err = mmc_sd_init_card(host, host->card->ocr, host->card);
+			printk(KERN_ERR "%s(%s): Re-init card rc = %d (retries = %d)\n",
+					__func__, mmc_hostname(host), reinit_err, retries);
 			retries--;
 			udelay(5);
 			continue;
@@ -1142,7 +1152,6 @@ static void mmc_sd_detect(struct mmc_host *host)
 
 	if (err) {
 		mmc_sd_remove(host);
-
 		mmc_claim_host(host);
 		mmc_detach_bus(host);
 		mmc_power_off(host);
@@ -1373,7 +1382,6 @@ int mmc_attach_sd(struct mmc_host *host)
 	err = mmc_add_card(host->card);
 	if (err)
 		goto remove_card;
-
 	mmc_claim_host(host);
 	return 0;
 

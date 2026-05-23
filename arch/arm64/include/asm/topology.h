@@ -43,6 +43,9 @@ extern unsigned long cpufreq_scale_min_freq_capacity(struct sched_domain *sd, in
 #define arch_scale_cpu_capacity scale_cpu_capacity
 extern unsigned long scale_cpu_capacity(struct sched_domain *sd, int cpu);
 
+/* Extras of CPU & Cluster functions */
+extern int arch_get_cluster_id(unsigned int cpu);
+
 #include <asm-generic/topology.h>
 
 #endif /* _ASM_ARM_TOPOLOGY_H */

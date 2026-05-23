@@ -1,0 +1,66 @@
+/*
+ * Copyright (C) 2019 Amazon.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ */
+
+/dts-v1/;
+
+#include <dt-bindings/input/input.h>
+#include "crown.dtsi"
+
+/ {
+	model = "Amazon Crown Evt_1_1";
+	compatible = "amzn,crown-evt_1_1";
+	version = "evt_1_1";
+};
+
+&kd_camera_hw1 {
+	reg-vcamd-supply = <&mt6323_vgp2_reg>;
+	cam-pwr-en-gpios = <&pio 45 GPIO_ACTIVE_HIGH>;
+};
+
+&touch {
+	vtouch-supply = <&mt6323_vgp1_reg>;
+};
+
+&pwrap {
+	pmic: mt6323 {
+		regulators {
+			mt6323_vgp1_reg: ldo_vgp1 {
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-always-on;
+				regulator-boot-on;
+			};
+
+			mt6323_vgp2_reg: ldo_vgp2 {
+				regulator-min-microvolt = <1200000>;
+				regulator-max-microvolt = <3300000>;
+				/delete-property/ regulator-always-on;
+				/delete-property/ regulator-boot-on;
+			};
+		};
+	};
+};
+
+&gpio_keys {
+	camera_lens_cover {
+		label = "Camera Lens Cover";
+		gpios = <&pio 142 GPIO_ACTIVE_LOW>;
+		linux,input-type = <EV_SW>;
+		linux,code = <SW_CAMERA_LENS_COVER>;
+	};
+};
+
+&cust_als {
+	white_als_range = <4>;	/* White device als range change to 4 */
+};

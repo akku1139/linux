@@ -1,0 +1,28 @@
+menu "Amazon"
+
+config ROOK
+	bool "Rook MTK platform project"
+	help
+	isolate amazon Rook changes for MTK Platform
+
+config CHECKERS
+	bool "Checkers MTK platform project"
+	help
+	isolate amazon Checkers changes for MTK Platform
+
+config DOUGLAS
+	bool "Douglas MTK platform project"
+	help
+	isolate amazon Douglas changes for MTK Platform
+
+config CROWN
+	bool "Crown MTK platform project"
+	help
+	isolate amazon Crown changes for MTK Platform
+
+config CRONOS
+	bool "Cronos MTK platform project"
+	help
+	isolate amazon Cronos changes for MTK Platform
+
+endmenu

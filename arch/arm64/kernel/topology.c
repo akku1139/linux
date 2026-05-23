@@ -282,7 +282,7 @@ static void update_cpu_capacity(unsigned int cpu)
 
 	set_capacity_scale(cpu, capacity);
 
-	pr_info("CPU%d: update cpu_capacity %lu\n",
+	pr_debug("CPU%d: update cpu_capacity %lu\n",
 		cpu, arch_scale_cpu_capacity(NULL, cpu));
 }
 
@@ -349,6 +349,8 @@ topology_populated:
 	update_siblings_masks(cpuid);
 	update_cpu_capacity(cpuid);
 }
+
+#include "topology_mtk.c"
 
 static void __init reset_cpu_topology(void)
 {

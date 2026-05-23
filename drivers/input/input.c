@@ -2458,7 +2458,6 @@ static int __init input_init(void)
 		pr_err("unable to register char major %d", INPUT_MAJOR);
 		goto fail2;
 	}
-
 	return 0;
 
  fail2:	input_proc_exit();

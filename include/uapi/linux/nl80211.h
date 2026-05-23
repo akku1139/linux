@@ -370,10 +370,18 @@
  * @NL80211_CMD_NEW_SURVEY_RESULTS: survey data notification (as a reply to
  *	NL80211_CMD_GET_SURVEY and on the "scan" multicast group)
  *
- * @NL80211_CMD_SET_PMKSA: Add a PMKSA cache entry, using %NL80211_ATTR_MAC
- *	(for the BSSID) and %NL80211_ATTR_PMKID.
+ * @NL80211_CMD_SET_PMKSA: Add a PMKSA cache entry using %NL80211_ATTR_MAC
+ *	(for the BSSID), %NL80211_ATTR_PMKID, and optionally %NL80211_ATTR_PMK
+ *	(PMK is used for PTKSA derivation in case of FILS shared key offload) or
+ *	using %NL80211_ATTR_SSID, %NL80211_ATTR_FILS_CACHE_ID,
+ *	%NL80211_ATTR_PMKID, and %NL80211_ATTR_PMK in case of FILS
+ *	authentication where %NL80211_ATTR_FILS_CACHE_ID is the identifier
+ *	advertized by a FILS capable AP identifying the scope of PMKSA in an
+ *	ESS.
  * @NL80211_CMD_DEL_PMKSA: Delete a PMKSA cache entry, using %NL80211_ATTR_MAC
- *	(for the BSSID) and %NL80211_ATTR_PMKID.
+ *	(for the BSSID) and %NL80211_ATTR_PMKID or using %NL80211_ATTR_SSID,
+ *	%NL80211_ATTR_FILS_CACHE_ID, and %NL80211_ATTR_PMKID in case of FILS
+ *	authentication.
  * @NL80211_CMD_FLUSH_PMKSA: Flush all PMKSA cache entries.
  *
  * @NL80211_CMD_REG_CHANGE: indicates to userspace the regulatory domain
@@ -502,6 +510,12 @@
  *	well to remain backwards compatible.
  * @NL80211_CMD_ROAM: request that the card roam (currently not implemented),
  *	sent as an event when the card/driver roamed by itself.
+ *	When used as an event, and the driver roamed in a network that requires
+ *	802.1X authentication, %NL80211_ATTR_PORT_AUTHORIZED should be set
+ *	if the 802.1X authentication was done by the driver or if roaming was
+ *	done using Fast Transition protocol (in which case 802.1X authentication
+ *	is not needed). If %NL80211_ATTR_PORT_AUTHORIZED is not set, user space
+ *	is responsible for the 802.1X authentication.
  * @NL80211_CMD_DISCONNECT: drop a given connection; also used to notify
  *	userspace that a connection was dropped by the AP or due to other
  *	reasons, for this the %NL80211_ATTR_DISCONNECTED_BY_AP and
@@ -599,6 +613,20 @@
  *	precedence when they are used.
  *
  * @NL80211_CMD_SET_WDS_PEER: Set the MAC address of the peer on a WDS interface.
+ *
+ * @NL80211_CMD_SET_MULTICAST_TO_UNICAST: Configure if this AP should perform
+ *	multicast to unicast conversion. When enabled, all multicast packets
+ *	with ethertype ARP, IPv4 or IPv6 (possibly within an 802.1Q header)
+ *	will be sent out to each station once with the destination (multicast)
+ *	MAC address replaced by the station's MAC address. Note that this may
+ *	break certain expectations of the receiver, e.g. the ability to drop
+ *	unicast IP packets encapsulated in multicast L2 frames, or the ability
+ *	to not send destination unreachable messages in such cases.
+ *	This can only be toggled per BSS. Configure this on an interface of
+ *	type %NL80211_IFTYPE_AP. It applies to all its VLAN interfaces
+ *	(%NL80211_IFTYPE_AP_VLAN), except for those in 4addr (WDS) mode.
+ *	If %NL80211_ATTR_MULTICAST_TO_UNICAST_ENABLED is not present with this
+ *	command, the feature is disabled.
  *
  * @NL80211_CMD_JOIN_MESH: Join a mesh. The mesh ID must be given, and initial
  *	mesh config parameters may be given.
@@ -874,6 +902,49 @@
  *	This will contain a %NL80211_ATTR_NAN_MATCH nested attribute and
  *	%NL80211_ATTR_COOKIE.
  *
+ * @NL80211_CMD_UPDATE_CONNECT_PARAMS: Update one or more connect parameters
+ *	for subsequent roaming cases if the driver or firmware uses internal
+ *	BSS selection. This command can be issued only while connected and it
+ *	does not result in a change for the current association. Currently,
+ *	only the %NL80211_ATTR_IE data is used and updated with this command.
+ *
+ * @NL80211_CMD_SET_PMK: For offloaded 4-Way handshake, set the PMK or PMK-R0
+ *	for the given authenticator address (specified with &NL80211_ATTR_MAC).
+ *	When &NL80211_ATTR_PMKR0_NAME is set, &NL80211_ATTR_PMK specifies the
+ *	PMK-R0, otherwise it specifies the PMK.
+ * @NL80211_CMD_DEL_PMK: For offloaded 4-Way handshake, delete the previously
+ *	configured PMK for the authenticator address identified by
+ *	&NL80211_ATTR_MAC.
+ * @NL80211_CMD_PORT_AUTHORIZED: An event that indicates that the 4 way
+ *	handshake was completed successfully by the driver. The BSSID is
+ *	specified with &NL80211_ATTR_MAC. Drivers that support 4 way handshake
+ *	offload should send this event after indicating 802.11 association with
+ *	&NL80211_CMD_CONNECT or &NL80211_CMD_ROAM. If the 4 way handshake failed
+ *	&NL80211_CMD_DISCONNECT should be indicated instead.
+ *
+ * @NL80211_CMD_RELOAD_REGDB: Request that the regdb firmware file is reloaded.
+ *
+ * @NL80211_CMD_EXTERNAL_AUTH: This interface is exclusively defined for host
+ *	drivers that do not define separate commands for authentication and
+ *	association, but rely on user space for the authentication to happen.
+ *	This interface acts both as the event request (driver to user space)
+ *	to trigger the authentication and command response (userspace to
+ *	driver) to indicate the authentication status.
+ *
+ *	User space uses the %NL80211_CMD_CONNECT command to the host driver to
+ *	trigger a connection. The host driver selects a BSS and further uses
+ *	this interface to offload only the authentication part to the user
+ *	space. Authentication frames are passed between the driver and user
+ *	space through the %NL80211_CMD_FRAME interface. Host driver proceeds
+ *	further with the association after getting successful authentication
+ *	status. User space indicates the authentication status through
+ *	%NL80211_ATTR_STATUS_CODE attribute in %NL80211_CMD_EXTERNAL_AUTH
+ *	command interface.
+ *
+ *	Host driver reports this status on an authentication failure to the
+ *	user space through the connect result as the user space would have
+ *	initiated the connection through the connect request.
+ *
  * @NL80211_CMD_MAX: highest used command number
  * @__NL80211_CMD_AFTER_LAST: internal use
  */
@@ -1068,6 +1139,19 @@ enum nl80211_commands {
 	NL80211_CMD_DEL_NAN_FUNCTION,
 	NL80211_CMD_CHANGE_NAN_CONFIG,
 	NL80211_CMD_NAN_MATCH,
+
+	NL80211_CMD_SET_MULTICAST_TO_UNICAST,
+
+	NL80211_CMD_UPDATE_CONNECT_PARAMS,
+
+	NL80211_CMD_SET_PMK,
+	NL80211_CMD_DEL_PMK,
+
+	NL80211_CMD_PORT_AUTHORIZED,
+
+	NL80211_CMD_RELOAD_REGDB,
+
+	NL80211_CMD_EXTERNAL_AUTH,
 
 	/* add new commands above here */
 
@@ -1638,8 +1722,16 @@ enum nl80211_commands {
  *	the connection request from a station. nl80211_connect_failed_reason
  *	enum has different reasons of connection failure.
  *
- * @NL80211_ATTR_SAE_DATA: SAE elements in Authentication frames. This starts
- *	with the Authentication transaction sequence number field.
+ * @NL80211_ATTR_AUTH_DATA: Fields and elements in Authentication frames.
+ *	This contains the authentication frame body (non-IE and IE data),
+ *	excluding the Authentication algorithm number, i.e., starting at the
+ *	Authentication transaction sequence number field. It is used with
+ *	authentication algorithms that need special fields to be added into
+ *	the frames (SAE and FILS). Currently, only the SAE cases use the
+ *	initial two fields (Authentication transaction sequence number and
+ *	Status code). However, those fields are included in the attribute data
+ *	for all authentication algorithms to keep the attribute definition
+ *	consistent.
  *
  * @NL80211_ATTR_VHT_CAPABILITY: VHT Capability information element (from
  *	association request when used with NL80211_CMD_NEW_STATION)
@@ -1788,6 +1880,8 @@ enum nl80211_commands {
  *	and remove functions. NAN notifications will be sent in unicast to that
  *	socket. Without this attribute, any socket can add functions and the
  *	notifications will be sent to the %NL80211_MCGRP_NAN multicast group.
+ *	If set during %NL80211_CMD_ASSOCIATE or %NL80211_CMD_CONNECT the
+ *	station will deauthenticate when the socket is closed.
  *
  * @NL80211_ATTR_TDLS_INITIATOR: flag attribute indicating the current end is
  *	the TDLS link initiator.
@@ -1936,9 +2030,74 @@ enum nl80211_commands {
  *	attribute.
  * @NL80211_ATTR_NAN_MATCH: used to report a match. This is a nested attribute.
  *	See &enum nl80211_nan_match_attributes.
+ * @NL80211_ATTR_FILS_KEK: KEK for FILS (Re)Association Request/Response frame
+ *	protection.
+ * @NL80211_ATTR_FILS_NONCES: Nonces (part of AAD) for FILS (Re)Association
+ *	Request/Response frame protection. This attribute contains the 16 octet
+ *	STA Nonce followed by 16 octets of AP Nonce.
+ *
+ * @NL80211_ATTR_MULTICAST_TO_UNICAST_ENABLED: Indicates whether or not multicast
+ *	packets should be send out as unicast to all stations (flag attribute).
  *
  * @NL80211_ATTR_BSSID: The BSSID of the AP. Note that %NL80211_ATTR_MAC is also
  *	used in various commands/events for specifying the BSSID.
+ *
+ * @NL80211_ATTR_SCHED_SCAN_RELATIVE_RSSI: Relative RSSI threshold by which
+ *	other BSSs has to be better or slightly worse than the current
+ *	connected BSS so that they get reported to user space.
+ *	This will give an opportunity to userspace to consider connecting to
+ *	other matching BSSs which have better or slightly worse RSSI than
+ *	the current connected BSS by using an offloaded operation to avoid
+ *	unnecessary wakeups.
+ *
+ * @NL80211_ATTR_SCHED_SCAN_RSSI_ADJUST: When present the RSSI level for BSSs in
+ *	the specified band is to be adjusted before doing
+ *	%NL80211_ATTR_SCHED_SCAN_RELATIVE_RSSI based comparision to figure out
+ *	better BSSs. The attribute value is a packed structure
+ *	value as specified by &struct nl80211_bss_select_rssi_adjust.
+ *
+ * @NL80211_ATTR_TIMEOUT_REASON: The reason for which an operation timed out.
+ *	u32 attribute with an &enum nl80211_timeout_reason value. This is used,
+ *	e.g., with %NL80211_CMD_CONNECT event.
+ *
+ * @NL80211_ATTR_FILS_ERP_USERNAME: EAP Re-authentication Protocol (ERP)
+ *	username part of NAI used to refer keys rRK and rIK. This is used with
+ *	%NL80211_CMD_CONNECT.
+ *
+ * @NL80211_ATTR_FILS_ERP_REALM: EAP Re-authentication Protocol (ERP) realm part
+ *	of NAI specifying the domain name of the ER server. This is used with
+ *	%NL80211_CMD_CONNECT.
+ *
+ * @NL80211_ATTR_FILS_ERP_NEXT_SEQ_NUM: Unsigned 16-bit ERP next sequence number
+ *	to use in ERP messages. This is used in generating the FILS wrapped data
+ *	for FILS authentication and is used with %NL80211_CMD_CONNECT.
+ *
+ * @NL80211_ATTR_FILS_ERP_RRK: ERP re-authentication Root Key (rRK) for the
+ *	NAI specified by %NL80211_ATTR_FILS_ERP_USERNAME and
+ *	%NL80211_ATTR_FILS_ERP_REALM. This is used for generating rIK and rMSK
+ *	from successful FILS authentication and is used with
+ *	%NL80211_CMD_CONNECT.
+ *
+ * @NL80211_ATTR_FILS_CACHE_ID: A 2-octet identifier advertized by a FILS AP
+ *	identifying the scope of PMKSAs. This is used with
+ *	@NL80211_CMD_SET_PMKSA and @NL80211_CMD_DEL_PMKSA.
+ *
+ * @NL80211_ATTR_PMK: PMK for the PMKSA identified by %NL80211_ATTR_PMKID.
+ *	This is used with @NL80211_CMD_SET_PMKSA.
+ * @NL80211_ATTR_PORT_AUTHORIZED: flag attribute used in %NL80211_CMD_ROAMED
+ *	notification indicating that that 802.1X authentication was done by
+ *	the driver or is not needed (because roaming used the Fast Transition
+ *	protocol).
+ *
+ * @NL80211_ATTR_EXTERNAL_AUTH_ACTION: Identify the requested external
+ *     authentication operation (u32 attribute with an
+ *     &enum nl80211_external_auth_action value). This is used with the
+ *     &NL80211_CMD_EXTERNAL_AUTH request event.
+ * @NL80211_ATTR_EXTERNAL_AUTH_SUPPORT: Flag attribute indicating that the user
+ *     space supports external authentication. This attribute shall be used
+ *     only with %NL80211_CMD_CONNECT request. The driver may offload
+ *     authentication processing to user space if this capability is indicated
+ *     in NL80211_CMD_CONNECT requests from the user space.
  *
  * @NUM_NL80211_ATTR: total number of nl80211_attrs available
  * @NL80211_ATTR_MAX: highest attribute number currently defined
@@ -2198,7 +2357,7 @@ enum nl80211_attrs {
 
 	NL80211_ATTR_CONN_FAILED_REASON,
 
-	NL80211_ATTR_SAE_DATA,
+	NL80211_ATTR_AUTH_DATA,
 
 	NL80211_ATTR_VHT_CAPABILITY,
 
@@ -2339,7 +2498,35 @@ enum nl80211_attrs {
 	NL80211_ATTR_NAN_FUNC,
 	NL80211_ATTR_NAN_MATCH,
 
+	NL80211_ATTR_FILS_KEK,
+	NL80211_ATTR_FILS_NONCES,
+
+	NL80211_ATTR_MULTICAST_TO_UNICAST_ENABLED,
+
 	NL80211_ATTR_BSSID,
+
+	NL80211_ATTR_SCHED_SCAN_RELATIVE_RSSI,
+	NL80211_ATTR_SCHED_SCAN_RSSI_ADJUST,
+
+	NL80211_ATTR_TIMEOUT_REASON,
+
+	NL80211_ATTR_FILS_ERP_USERNAME,
+	NL80211_ATTR_FILS_ERP_REALM,
+	NL80211_ATTR_FILS_ERP_NEXT_SEQ_NUM,
+	NL80211_ATTR_FILS_ERP_RRK,
+	NL80211_ATTR_FILS_CACHE_ID,
+
+	NL80211_ATTR_PMK,
+
+	NL80211_ATTR_SCHED_SCAN_MULTI,
+	NL80211_ATTR_SCHED_SCAN_MAX_REQS,
+
+	NL80211_ATTR_WANT_1X_4WAY_HS,
+	NL80211_ATTR_PMKR0_NAME,
+	NL80211_ATTR_PORT_AUTHORIZED,
+
+	NL80211_ATTR_EXTERNAL_AUTH_ACTION,
+	NL80211_ATTR_EXTERNAL_AUTH_SUPPORT,
 
 	/* add attributes here, update the policy in nl80211.c */
 
@@ -2352,6 +2539,7 @@ enum nl80211_attrs {
 #define NL80211_ATTR_SCAN_GENERATION NL80211_ATTR_GENERATION
 #define	NL80211_ATTR_MESH_PARAMS NL80211_ATTR_MESH_CONFIG
 #define NL80211_ATTR_IFACE_SOCKET_OWNER NL80211_ATTR_SOCKET_OWNER
+#define NL80211_ATTR_SAE_DATA NL80211_ATTR_AUTH_DATA
 
 /*
  * Allow user space programs to use #ifdef on new attributes by defining them
@@ -3714,6 +3902,7 @@ enum nl80211_mfp {
 enum nl80211_wpa_versions {
 	NL80211_WPA_VERSION_1 = 1 << 0,
 	NL80211_WPA_VERSION_2 = 1 << 1,
+	NL80211_WPA_VERSION_3 = 1 << 2,
 };
 
 /**
@@ -5128,6 +5317,17 @@ enum nl80211_nan_match_attributes {
 	/* keep last */
 	NUM_NL80211_NAN_MATCH_ATTR,
 	NL80211_NAN_MATCH_ATTR_MAX = NUM_NL80211_NAN_MATCH_ATTR - 1
+};
+
+/**
+ * nl80211_external_auth_action - Action to perform with external
+ *     authentication request. Used by NL80211_ATTR_EXTERNAL_AUTH_ACTION.
+ * @NL80211_EXTERNAL_AUTH_START: Start the authentication.
+ * @NL80211_EXTERNAL_AUTH_ABORT: Abort the ongoing authentication.
+ */
+enum nl80211_external_auth_action {
+	NL80211_EXTERNAL_AUTH_START,
+	NL80211_EXTERNAL_AUTH_ABORT,
 };
 
 #endif /* __LINUX_NL80211_H */

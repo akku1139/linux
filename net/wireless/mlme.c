@@ -216,14 +216,14 @@ int cfg80211_mlme_auth(struct cfg80211_registered_device *rdev,
 		       const u8 *ssid, int ssid_len,
 		       const u8 *ie, int ie_len,
 		       const u8 *key, int key_len, int key_idx,
-		       const u8 *sae_data, int sae_data_len)
+		       const u8 *auth_data, int auth_data_len)
 {
 	struct wireless_dev *wdev = dev->ieee80211_ptr;
 	struct cfg80211_auth_request req = {
 		.ie = ie,
 		.ie_len = ie_len,
-		.sae_data = sae_data,
-		.sae_data_len = sae_data_len,
+		.auth_data = auth_data,
+		.auth_data_len = auth_data_len,
 		.auth_type = auth_type,
 		.key = key,
 		.key_len = key_len,
@@ -344,6 +344,11 @@ int cfg80211_mlme_deauth(struct cfg80211_registered_device *rdev,
 	    (!wdev->current_bss ||
 	     !ether_addr_equal(wdev->current_bss->pub.bssid, bssid)))
 		return 0;
+
+	if (ether_addr_equal(wdev->disconnect_bssid, bssid) ||
+	    (wdev->current_bss &&
+	     ether_addr_equal(wdev->current_bss->pub.bssid, bssid)))
+		wdev->conn_owner_nlportid = 0;
 
 	return rdev_deauth(rdev, dev, &req);
 }

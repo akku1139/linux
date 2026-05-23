@@ -601,8 +601,11 @@ fail:
 	pr_err("acc_bind() could not allocate requests\n");
 	while ((req = req_get(dev, &dev->tx_idle)))
 		acc_request_free(req, dev->ep_in);
-	for (i = 0; i < RX_REQ_MAX; i++)
+	for (i = 0; i < RX_REQ_MAX; i++) {
 		acc_request_free(dev->rx_req[i], dev->ep_out);
+		dev->rx_req[i] = NULL;
+	}
+
 	return -1;
 }
 
@@ -631,6 +634,12 @@ static ssize_t acc_read(struct file *fp, char __user *buf,
 	ret = wait_event_interruptible(dev->read_wq, dev->online);
 	if (ret < 0) {
 		r = ret;
+		goto done;
+	}
+
+	if (!dev->rx_req[0]) {
+		pr_warn("acc_read: USB request already handled/freed");
+		r = -EINVAL;
 		goto done;
 	}
 
@@ -702,6 +711,9 @@ static ssize_t acc_write(struct file *fp, const char __user *buf,
 	struct usb_request *req = 0;
 	ssize_t r = count;
 	unsigned xfer;
+#if defined(CONFIG_MACH_MT8163)
+	int sendZLP = 0;
+#endif
 	int ret;
 
 	pr_debug("acc_write(%zu)\n", count);
@@ -711,7 +723,22 @@ static ssize_t acc_write(struct file *fp, const char __user *buf,
 		return -ENODEV;
 	}
 
+
+#if defined(CONFIG_MACH_MT8163)
+	/* we need to send a zero length packet to signal the end of transfer
+	 * if the transfer size is aligned to a packet boundary.
+	 */
+	if ((count & (dev->ep_in->maxpacket - 1)) == 0)
+		sendZLP = 1;
+
+	while (count > 0 || sendZLP) {
+		/* so we exit after sending ZLP */
+		if (count == 0)
+			sendZLP = 0;
+#else
 	while (count > 0) {
+#endif
+
 		if (!dev->online) {
 			pr_debug("acc_write dev->error\n");
 			r = -EIO;
@@ -845,6 +872,9 @@ static const struct file_operations acc_fops = {
 	.read = acc_read,
 	.write = acc_write,
 	.unlocked_ioctl = acc_ioctl,
+#ifdef CONFIG_COMPAT
+	.compat_ioctl = acc_ioctl,
+#endif
 	.open = acc_open,
 	.release = acc_release,
 };
@@ -996,6 +1026,26 @@ err:
 }
 EXPORT_SYMBOL_GPL(acc_ctrlrequest);
 
+int acc_ctrlrequest_composite(struct usb_composite_dev *cdev,
+			      const struct usb_ctrlrequest *ctrl)
+{
+	u16 w_length = le16_to_cpu(ctrl->wLength);
+
+	if (w_length > USB_COMP_EP0_BUFSIZ) {
+		if (ctrl->bRequestType & USB_DIR_IN) {
+			/* Cast away the const, we are going to overwrite on purpose. */
+			__le16 *temp = (__le16 *)&ctrl->wLength;
+
+			*temp = cpu_to_le16(USB_COMP_EP0_BUFSIZ);
+			w_length = USB_COMP_EP0_BUFSIZ;
+		} else {
+			return -EINVAL;
+		}
+	}
+	return acc_ctrlrequest(cdev, ctrl);
+}
+EXPORT_SYMBOL_GPL(acc_ctrlrequest_composite);
+
 static int
 __acc_function_bind(struct usb_configuration *c,
 			struct usb_function *f, bool configfs)
@@ -1098,8 +1148,10 @@ acc_function_unbind(struct usb_configuration *c, struct usb_function *f)
 
 	while ((req = req_get(dev, &dev->tx_idle)))
 		acc_request_free(req, dev->ep_in);
-	for (i = 0; i < RX_REQ_MAX; i++)
+	for (i = 0; i < RX_REQ_MAX; i++) {
 		acc_request_free(dev->rx_req[i], dev->ep_out);
+		dev->rx_req[i] = NULL;
+	}
 
 	acc_hid_unbind(dev);
 }
