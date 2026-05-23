@@ -4621,8 +4621,8 @@ static ssize_t cmdq_write_test_proc_config(struct file *file,
 
 #ifdef CMDQ_USE_CCF
 	if (trick_test) {
-		char node_name[25];
-		char clk_name[20];
+		char node_name[26];
+		char clk_name[21];
 		int clk_enable = 0;
 		struct clk *clk_module;
 		/* trick to control clock by test node for testing */
