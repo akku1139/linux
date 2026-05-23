@@ -388,3 +388,7 @@ CONFIG_CRYPTO_LZ4=y
 # CONFIG_CRYPTO_HW is not set
 CONFIG_CRYPTO_SHA2_ARM64_CE=y
 CONFIG_CRYPTO_AES_ARM64_CE_BLK=y
+
+## akku fix
+## kallsyms failure: relative symbol value 0xffffff8008081000 out of range in relative mode
+CONFIG_KALLSYMS=n
