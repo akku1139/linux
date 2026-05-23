@@ -18,6 +18,7 @@
 #include "display_recorder.h"
 #include <linux/printk.h>
 #include <mt-plat/aee.h>
+#include <stdarg.h>
 
 #ifndef LOG_TAG
 #define LOG_TAG
@@ -75,13 +76,23 @@
 		DISP_LOG_E(fmt, ##args);                                       \
 	}
 
+static __maybe_unused noinline void __ddpdump_helper(const char *fmt, ...)
+{
+	char log[512];
+	va_list args;
+
+	va_start(args, fmt);
+	vsnprintf(log, sizeof(log), fmt, args);
+	va_end(args);
+
+	dprec_logger_dump(log);
+}
+
 #if 1
 #define DDPDUMP(fmt, ...)                                                      \
 	do {                                                                   \
 		if (ddp_debug_analysis_to_buffer()) {                          \
-			char log[512] = {'\0'};                                \
-			sprintf(log, fmt, ##__VA_ARGS__);                      \
-			dprec_logger_dump(log);                                \
+			__ddpdump_helper(fmt, ##__VA_ARGS__);                  \
 		} else                                                         \
 			pr_debug("[DDP/" LOG_TAG "]" fmt, ##__VA_ARGS__);      \
 	} while (0)
@@ -89,9 +100,7 @@
 #define DDPDUMP(fmt, ...)                                                      \
 	do {                                                                   \
 		if (ddp_debug_analysis_to_buffer()) {                          \
-			char log[512] = {'\0'};                                \
-			snprintf(log, 511, fmt, ##__VA_ARGS__);                \
-			dprec_logger_dump(log);                                \
+			__ddpdump_helper(fmt, ##__VA_ARGS__);                  \
 		} else                                                         \
 			pr_notice("[DDP/" LOG_TAG "]" fmt, ##__VA_ARGS__);     \
 	} while (0)

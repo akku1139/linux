@@ -29,7 +29,11 @@
 
 #include "m4u.h"
 #include "mtk_smi.h"
+#ifdef __clang__
+#pragma clang optimize off
+#else
 #pragma GCC optimize("O0")
+#endif
 
 struct module_map_t {
 	enum DISP_MODULE_ENUM module;

@@ -21,6 +21,8 @@
 #ifndef __DP_DATA_TYPE_H__
 #define __DP_DATA_TYPE_H__
 
+#include <linux/types.h>
+
 #ifndef MAX
     #define MAX(x, y)   (((x) >= (y)) ? (x) : (y))
 #endif /* MAX */
