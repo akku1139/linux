@@ -270,6 +270,11 @@ int ini_get_key_data(char *filedata)
     int iEqualSign = 0;
     int i = 0;
     char *tmsection_name = kzalloc(MAX_CFG_BUF + 1, GFP_KERNEL);
+    if (!buf1) return -ENOMEM;
+    if (!tmsection_name) {
+        kfree(buf1);
+        return -ENOMEM;
+    }
 
     FTS_TEST_FUNC_ENTER();
     ret = init_key_data();
