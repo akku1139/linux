@@ -555,7 +555,7 @@ irqreturn_t AudDrv_IRQ_handler(int irq, void *dev_id)
 			Auddrv_UL2_Interrupt_Handler();
 	}
 	if (u4RegValue & INTERRUPT_IRQ7_MCU) {
-		if ((mAudioMEMIF[Soc_Aud_Digital_Block_MEM_DL2]->mState == true))
+		if (mAudioMEMIF[Soc_Aud_Digital_Block_MEM_DL2]->mState == true)
 			Auddrv_DL2_Interrupt_Handler();
 	}
 	if (u4RegValue & INTERRUPT_IRQ5_MCU) {

@@ -263,18 +263,25 @@ Note:
 *************************************************************/
 int ini_get_key_data(char *filedata)
 {
-    char buf1[MAX_CFG_BUF + 1] = {0};
+    char *buf1 = kzalloc(MAX_CFG_BUF + 1, GFP_KERNEL);
     int n = 0;
     int ret = 0;
     int dataoff = 0;
     int iEqualSign = 0;
     int i = 0;
-    char tmsection_name[MAX_CFG_BUF + 1] = {0};
+    char *tmsection_name = kzalloc(MAX_CFG_BUF + 1, GFP_KERNEL);
+    if (!buf1) return -ENOMEM;
+    if (!tmsection_name) {
+        kfree(buf1);
+        return -ENOMEM;
+    }
 
     FTS_TEST_FUNC_ENTER();
     ret = init_key_data();
     if (ret < 0) {
         FTS_TEST_ERROR("init key data failed");
+        kfree(buf1);
+        kfree(tmsection_name);
         return -1;
     }
 
@@ -357,11 +364,15 @@ int ini_get_key_data(char *filedata)
 
     FTS_TEST_FUNC_EXIT();
 
+    kfree(buf1);
+    kfree(tmsection_name);
     return 0;
 
 cfg_scts_end:
 
     FTS_TEST_FUNC_EXIT();
+    kfree(buf1);
+    kfree(tmsection_name);
     return ret;
 }
 

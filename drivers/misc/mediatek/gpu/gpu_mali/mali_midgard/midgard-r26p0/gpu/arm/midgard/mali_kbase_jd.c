@@ -20,7 +20,8 @@
  *
  */
 
-
+/* 71 |         return u64_to_user_ptr(p); */
+#pragma clang diagnostic ignored "-Wdefault-const-init-var-unsafe"
 
 #if defined(CONFIG_DMA_SHARED_BUFFER)
 #include <linux/dma-buf.h>

@@ -1,5 +1,6 @@
 # drivers/video/mtk/Makefile
 
+ccflags-y += -Wno-typedef-redefinition -Wno-non-literal-null-conversion
 
 obj-$(CONFIG_MTK_FB) += mtkfb_console.o        \
 						disp_assert_layer.o    \
@@ -28,7 +29,8 @@ ccflags-y += -I$(srctree)/drivers/misc/mediatek/video/$(MTK_PLATFORM)/dispsys/  
              -I$(srctree)/drivers/misc/mediatek/ext_disp/$(MTK_PLATFORM) \
              -I$(srctree)/drivers/misc/mediatek/lcm/inc/      \
              -I$(srctree)/drivers/misc/mediatek/mach/$(MTK_PLATFORM)/include/mach/ \
-             -I$(srctree)/drivers/misc/mediatek/base/power/$(MTK_PLATFORM)
+             -I$(srctree)/drivers/misc/mediatek/base/power/$(MTK_PLATFORM) \
+             -I$(srctree)/drivers/misc/mediatek/video/$(MTK_PLATFORM)/videox/
 
 ccflags-y += -I$(srctree)/drivers/staging/android/ion \
              -I$(srctree)/drivers/staging/android/ion/mtk
