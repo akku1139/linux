@@ -33,7 +33,7 @@
 #include <linux/mutex.h>
 #include <linux/thermal_framework.h>
 #include <linux/cpufreq.h>
-#include <thermal_core.h>
+#include "thermal_core.h"
 
 #define DMF 1000
 #define NUM_OF_MOVING_AVG_PROP 4
@@ -335,7 +335,7 @@ static ssize_t _store_params(struct device *dev,
 				      const char *buf,
 				      size_t count)
 {
-	char param[20], sensor[20];
+	char param[21], sensor[21];
 	int value;
 	struct virtual_thermal_zone *vtz = dev_get_drvdata(dev);
 	struct virtual_thermal_dev *vtdev;
