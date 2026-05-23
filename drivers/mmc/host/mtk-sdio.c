@@ -37,7 +37,7 @@
 #include <linux/mmc/slot-gpio.h>
 
 #include <mt-plat/mtk_boot_common.h>
-#include <mtk-sdio.h>
+#include "mtk-sdio.h"
 
 static void sdr_set_bits(void __iomem *reg, u32 bs)
 {
