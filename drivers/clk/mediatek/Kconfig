@@ -477,6 +477,56 @@ config COMMON_CLK_MT8135
 	help
 	  This driver supports MediaTek MT8135 clocks.
 
+config COMMON_CLK_MT8163
+	tristate "Clock driver for MediaTek MT8163"
+	depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
+	select COMMON_CLK_MEDIATEK
+	default ARCH_MEDIATEK
+	help
+	  This driver supports MediaTek MT8163 basic clocks.
+
+config COMMON_CLK_MT8163_AUDSYS
+	tristate "Clock driver for MediaTek MT8163 audiosys"
+	depends on COMMON_CLK_MT8163
+	default COMMON_CLK_MT8163
+	help
+	  This driver supports MediaTek MT8163 audiosys clocks.
+
+config COMMON_CLK_MT8163_IMGSYS
+	tristate "Clock driver for MediaTek MT8163 imgsys"
+	depends on COMMON_CLK_MT8163
+	default COMMON_CLK_MT8163
+	help
+	  This driver supports MediaTek MT8163 imgsys clocks.
+
+config COMMON_CLK_MT8163_MFGCFG
+	tristate "Clock driver for MediaTek MT8163 mfgcfg"
+	depends on COMMON_CLK_MT8163
+	default COMMON_CLK_MT8163
+	help
+	  This driver supports MediaTek MT8163 mfgcfg clocks.
+
+config COMMON_CLK_MT8163_MMSYS
+	tristate "Clock driver for MediaTek MT8163 mmsys"
+	depends on COMMON_CLK_MT8163
+	default COMMON_CLK_MT8163
+	help
+	  This driver supports MediaTek MT8163 mmsys clocks.
+
+config COMMON_CLK_MT8163_VDECSYS
+	tristate "Clock driver for MediaTek MT8163 vdecsys"
+	depends on COMMON_CLK_MT8163
+	default COMMON_CLK_MT8163
+	help
+	  This driver supports MediaTek MT8163 vdecsys clocks.
+
+config COMMON_CLK_MT8163_VENCSYS
+	tristate "Clock driver for MediaTek MT8163 vencsys"
+	depends on COMMON_CLK_MT8163
+	default COMMON_CLK_MT8163
+	help
+	  This driver supports MediaTek MT8163 vencsys clocks.
+
 config COMMON_CLK_MT8167
 	tristate "Clock driver for MediaTek MT8167"
 	depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
@@ -1006,6 +1056,7 @@ config COMMON_CLK_MT8196
 	tristate "Clock driver for MediaTek MT8196"
 	depends on ARM64 || COMPILE_TEST
 	select COMMON_CLK_MEDIATEK
+	select REGMAP_MMIO
 	default ARCH_MEDIATEK
 	help
 	  This driver supports MediaTek MT8196 basic clocks.
