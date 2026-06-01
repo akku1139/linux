@@ -3,6 +3,8 @@
  * Copyright (c) 2015 MediaTek Inc.
  */
 
+#include <linux/reset.h>
+
 #include "phy-mtk-mipi-dsi.h"
 
 inline struct mtk_mipi_tx *mtk_mipi_tx_from_clk_hw(struct clk_hw *hw)
@@ -155,6 +157,10 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
 	if (ret < 0)
 		return dev_err_probe(dev, ret, "Failed to read clock-output-names\n");
 
+	ret = device_reset_optional(dev);
+	if (ret < 0)
+		return ret;
+
 	clk_init.ops = mipi_tx->driver_data->mipi_tx_clk_ops;
 
 	mipi_tx->pll_hw.init = &clk_init;
@@ -181,6 +187,7 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
 
 static const struct of_device_id mtk_mipi_tx_match[] = {
 	{ .compatible = "mediatek,mt2701-mipi-tx", .data = &mt2701_mipitx_data },
+	{ .compatible = "mediatek,mt8163-mipi-tx", .data = &mt8163_mipitx_data },
 	{ .compatible = "mediatek,mt8173-mipi-tx", .data = &mt8173_mipitx_data },
 	{ .compatible = "mediatek,mt8183-mipi-tx", .data = &mt8183_mipitx_data },
 	{ /* sentinel */ }

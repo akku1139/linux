@@ -1,0 +1,84 @@
+// SPDX-License-Identifier: GPL-2.0-only OR MIT
+/*
+ * Copyright (c) 2025-2026 Ben Grisdale <bengris32@protonmail.ch>
+ */
+
+/dts-v1/;
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+#include <dt-bindings/leds/common.h>
+
+#include "mt8163-amazon-common.dtsi"
+#include "mt8163-headless.dtsi"
+
+/ {
+	model = "Amazon Echo Dot (2016)";
+	compatible = "amazon,biscuit", "mediatek,mt8163";
+	chassis-type = "embedded";
+
+	/* Needed by stock bootloader */
+	version = "evt";
+
+	gpio-keys {
+		compatible = "gpio-keys";
+		pinctrl-names = "default";
+		pinctrl-0 = <&gpio_keys_pins_default>;
+
+		key-volume-up {
+			label = "Volume Up";
+			linux,code = <KEY_VOLUMEUP>;
+			gpios = <&pio 50 GPIO_ACTIVE_LOW>;
+			debounce-interval = <20>;
+		};
+	};
+};
+
+&keypad {
+	linux,keymap = <MATRIX_KEY(0x00, 0x00, KEY_ASSISTANT)
+			MATRIX_KEY(0x00, 0x01, KEY_VOLUMEDOWN)>;
+
+	keypad,num-rows = <1>;
+	keypad,num-columns = <2>;
+	debounce-delay-ms = <20>;
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&keypad_pins_default>;
+
+	status = "okay";
+};
+
+&mt6323_vusb_reg {
+	regulator-always-on;
+};
+
+&thermal {
+	status = "disabled";
+};
+
+&u2phy0 {
+	status = "okay";
+};
+
+&usb0 {
+	/* No 5V supply for OTG support. */
+	dr_mode = "peripheral";
+	status = "okay";
+};
+
+&pio {
+	gpio_keys_pins_default: gpio-keys-pins {
+		pins {
+			pinmux = <MT8163_PIN_50_EINT18__FUNC_GPIO50>;
+			bias-pull-up;
+			input-enable;
+		};
+	};
+
+	keypad_pins_default: keypad-pins {
+		pins {
+			pinmux = <MT8163_PIN_36_KPCOL0__FUNC_KPCOL0>,
+				 <MT8163_PIN_37_KPCOL1__FUNC_KPCOL1>;
+			input-enable;
+		};
+	};
+};

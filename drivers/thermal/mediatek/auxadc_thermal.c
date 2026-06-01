@@ -296,6 +296,29 @@ enum mtk_thermal_version {
 #define MT8365_TS2 1
 #define MT8365_TS3 2
 
+/* MT8163 thermal sensors */
+#define MT8163_TS1	0
+#define MT8163_TS2	1
+#define MT8163_TS3	2
+
+/* AUXADC channel 11 is used for the temperature sensors */
+#define MT8163_TEMP_AUXADC_CHANNEL	11
+
+/* The total number of temperature sensors in the MT8163 */
+#define MT8163_NUM_SENSORS		3
+
+/* The number of banks in the MT8163 */
+#define MT8163_NUM_ZONES		3
+
+/* The number of sensing points per bank */
+#define MT8163_NUM_SENSORS_PER_ZONE	3
+
+/* The number of controller in the MT8163 */
+#define MT8163_NUM_CONTROLLER		1
+
+/* The calibration coefficient of sensor  */
+#define MT8163_CALIBRATION	165
+
 struct mtk_thermal;
 
 struct thermal_bank_cfg {
@@ -467,6 +490,28 @@ static const int mt8365_mux_values[MT8365_NUM_SENSORS] = { 0, 1, 2 };
 static const int mt8365_tc_offset[MT8365_NUM_CONTROLLER] = { 0 };
 
 static const int mt8365_vts_index[MT8365_NUM_SENSORS] = { VTS1, VTS2, VTS3 };
+
+/* MT8163 thermal sensor data */
+static const int mt8163_bank_data[MT8163_NUM_ZONES][3] = {
+	{ MT8163_TS1, MT8163_TS2 },
+	{ MT8163_TS2 },
+	{ MT8163_TS1, MT8163_TS2, MT8163_TS3 },
+};
+
+static const int mt8163_msr[MT8163_NUM_SENSORS_PER_ZONE] = {
+	TEMP_MSR0, TEMP_MSR1, TEMP_MSR2
+};
+
+static const int mt8163_adcpnp[MT8163_NUM_SENSORS_PER_ZONE] = {
+	TEMP_ADCPNP0, TEMP_ADCPNP1, TEMP_ADCPNP2
+};
+
+static const int mt8163_mux_values[MT8163_NUM_SENSORS] = { 0, 1, 2 };
+static const int mt8163_tc_offset[MT8163_NUM_CONTROLLER] = { 0x0, };
+
+static const int mt8163_vts_index[MT8163_NUM_SENSORS] = {
+	VTS1, VTS2, VTS3
+};
 
 /*
  * The MT8173 thermal controller has four banks. Each bank can read up to
@@ -695,6 +740,39 @@ static const struct mtk_thermal_data mt7986_thermal_data = {
 	.apmixed_buffer_ctl_set = BIT(0),
 };
 
+/*
+ * The MT8163 thermal controller has three banks. Each bank can read up to
+ * four temperature sensors simultaneously. The MT8163 has a total of 5
+ * temperature sensors. We use each bank to measure a certain area of the
+ * SoC.
+ */
+static const struct mtk_thermal_data mt8163_thermal_data = {
+	.auxadc_channel = MT8163_TEMP_AUXADC_CHANNEL,
+	.num_banks = MT8163_NUM_ZONES,
+	.num_sensors = MT8163_NUM_SENSORS,
+	.vts_index = mt8163_vts_index,
+	.cali_val = MT8163_CALIBRATION,
+	.num_controller = MT8163_NUM_CONTROLLER,
+	.controller_offset = mt8163_tc_offset,
+	.need_switch_bank = true,
+	.bank_data = {
+		{
+			.num_sensors = 2,
+			.sensors = mt8163_bank_data[0],
+		}, {
+			.num_sensors = 1,
+			.sensors = mt8163_bank_data[1],
+		}, {
+			.num_sensors = 3,
+			.sensors = mt8163_bank_data[2],
+		},
+	},
+	.msr = mt8163_msr,
+	.adcpnp = mt8163_adcpnp,
+	.sensor_mux_values = mt8163_mux_values,
+	.version = MTK_THERMAL_V1,
+};
+
 static bool mtk_thermal_temp_is_valid(int temp)
 {
 	return (temp >= MT8173_TEMP_MIN) && (temp <= MT8173_TEMP_MAX);
@@ -847,21 +925,13 @@ static int mtk_thermal_bank_temperature(struct mtk_thermal_bank *bank)
 
 static int mtk_read_temp(struct thermal_zone_device *tz, int *temperature)
 {
-	struct mtk_thermal *mt = thermal_zone_device_priv(tz);
-	int i;
-	int tempmax = INT_MIN;
+	struct mtk_thermal_bank *bank = thermal_zone_device_priv(tz);
 
-	for (i = 0; i < mt->conf->num_banks; i++) {
-		struct mtk_thermal_bank *bank = &mt->banks[i];
+	mtk_thermal_get_bank(bank);
 
-		mtk_thermal_get_bank(bank);
+	*temperature = mtk_thermal_bank_temperature(bank);
 
-		tempmax = max(tempmax, mtk_thermal_bank_temperature(bank));
-
-		mtk_thermal_put_bank(bank);
-	}
-
-	*temperature = tempmax;
+	mtk_thermal_put_bank(bank);
 
 	return 0;
 }
@@ -1134,6 +1204,10 @@ out:
 
 static const struct of_device_id mtk_thermal_of_match[] = {
 	{
+		.compatible = "mediatek,mt8163-thermal",
+		.data = (void *)&mt8163_thermal_data,
+	},
+	{
 		.compatible = "mediatek,mt8173-thermal",
 		.data = (void *)&mt8173_thermal_data,
 	},
@@ -1285,14 +1359,18 @@ static int mtk_thermal_probe(struct platform_device *pdev)
 			mtk_thermal_init_bank(mt, i, apmixed_phys_base,
 					      auxadc_phys_base, ctrl_id);
 
-	tzdev = devm_thermal_of_zone_register(&pdev->dev, 0, mt,
-					      &mtk_thermal_ops);
-	if (IS_ERR(tzdev))
-		return PTR_ERR(tzdev);
+	for (i = 0; i < mt->conf->num_banks; i++) {
+		struct mtk_thermal_bank *bank = &mt->banks[i];
 
-	ret = devm_thermal_add_hwmon_sysfs(&pdev->dev, tzdev);
-	if (ret)
-		dev_warn(&pdev->dev, "error in thermal_add_hwmon_sysfs");
+		tzdev = devm_thermal_of_zone_register(&pdev->dev, i, bank,
+						      &mtk_thermal_ops);
+		if (IS_ERR(tzdev))
+			return PTR_ERR(tzdev);
+
+		ret = devm_thermal_add_hwmon_sysfs(&pdev->dev, tzdev);
+		if (ret)
+			dev_warn(&pdev->dev, "error in thermal_add_hwmon_sysfs");
+	}
 
 	return 0;
 }
