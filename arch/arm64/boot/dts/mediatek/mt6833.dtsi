@@ -8,7 +8,7 @@
 #include <dt-bindings/interrupt-controller/irq.h>
 #include <dt-bindings/phy/phy.h>
 #include <dt-bindings/thermal/thermal.h>
-#include <dt-bindings/clock/mt6833-clk.h>
+#include <dt-bindings/clock/mediatek,mt6833-clk.h>
 
 /* #include <dt-bindings/gce/mediatek,mt6833-gce.h>
  * #include <dt-bindings/memory/mt6833-larb-port.h
