@@ -22,7 +22,7 @@
 #define MT6833_INTEGER_BITS	8
 
 #define PLL_B(_id, _name, _reg, _en_reg, _en_mask, _pwr_reg,		\
-			_iso_mask, _pwron_mask, _flags, _rst_bar_reg,	\
+			_pwron_mask, _flags, _rst_bar_reg,		\
 			_rst_bar_mask, _pd_reg, _pd_shift, _tuner_reg,	\
 			_tuner_en_reg, _tuner_en_bit, _pcw_reg,		\
 			_pcw_shift, _pcwbits, _div_table) {		\
@@ -32,7 +32,6 @@
 		.en_reg = _en_reg,					\
 		.en_mask = _en_mask,					\
 		.pwr_reg = _pwr_reg,					\
-		.iso_mask = _iso_mask,					\
 		.pwron_mask = _pwron_mask,				\
 		.flags = (_flags),					\
 		.rst_bar_reg = _rst_bar_reg,				\
@@ -52,12 +51,12 @@
 	}
 
 #define PLL(_id, _name, _reg, _en_reg, _en_mask, _pwr_reg,		\
-			_iso_mask, _pwron_mask, _flags, _rst_bar_reg,	\
+			_pwron_mask, _flags, _rst_bar_reg,		\
 			_rst_bar_mask, _pd_reg, _pd_shift, _tuner_reg,	\
 			_tuner_en_reg, _tuner_en_bit, _pcw_reg,		\
 			_pcw_shift, _pcwbits)				\
 		PLL_B(_id, _name, _reg, _en_reg, _en_mask, _pwr_reg,	\
-			_iso_mask, _pwron_mask, _flags, _rst_bar_reg,	\
+			_pwron_mask, _flags, _rst_bar_reg,		\
 			_rst_bar_mask, _pd_reg, _pd_shift, _tuner_reg,	\
 			_tuner_en_reg, _tuner_en_bit, _pcw_reg,		\
 			_pcw_shift, _pcwbits, NULL)			\
@@ -65,105 +64,105 @@
 static const struct mtk_pll_data plls[] = {
 	PLL(CLK_APMIXED_ARMPLL_LL, "armpll_ll", 0x0208,
 		0x0208, 0x00000001,
-		0x0214, 0x00000002, 0x00000001,
+		0x0214, 0x00000001,
 		PLL_AO, 0, BIT(0),
 		0x020c, 24,
 		0, 0, 0,
 		0x020c, 0, 22),
 	PLL(CLK_APMIXED_ARMPLL_BL0, "armpll_bl0", 0x0218,
 		0x0218, 0x00000001,
-		0x0224, 0x00000002, 0x00000001,
+		0x0224, 0x00000001,
 		PLL_AO, 0, BIT(0),
 		0x021c, 24,
 		0, 0, 0,
 		0x021c, 0, 22),
 	PLL(CLK_APMIXED_CCIPLL, "ccipll", 0x0258,
 		0x0258, 0x00000001,
-		0x0264, 0x00000002, 0x00000001,
+		0x0264, 0x00000001,
 		PLL_AO, 0, BIT(0),
 		0x025c, 24,
 		0, 0, 0,
 		0x025c, 0, 22),
 	PLL(CLK_APMIXED_MPLL, "mpll", 0x0390,
 		0x0390, 0x00000001,
-		0x039c, 0x00000002, 0x00000001,
+		0x039c, 0x00000001,
 		PLL_AO, 0, BIT(0),
 		0x0394, 24,
 		0, 0, 0,
 		0x0394, 0, 22),
 	PLL(CLK_APMIXED_MAINPLL, "mainpll", 0x0340,
 		0x0340, 0x00000001,
-		0x034c, 0x00000002, 0x00000001,
+		0x034c, 0x00000001,
 		HAVE_RST_BAR | PLL_AO, 0x0340, BIT(23),
 		0x0344, 24,
 		0, 0, 0,
 		0x0344, 0, 22),
 	PLL(CLK_APMIXED_UNIVPLL, "univpll", 0x0308,
 		0x0308, 0x00000001,
-		0x0314, 0x00000002, 0x00000001,
+		0x0314, 0x00000001,
 		HAVE_RST_BAR, 0x0308, BIT(23),
 		0x030c, 24,
 		0, 0, 0,
 		0x030c, 0, 22),
 	PLL(CLK_APMIXED_MSDCPLL, "msdcpll", 0x0350,
 		0x0350, 0x00000001,
-		0x035c, 0x00000002, 0x00000001,
+		0x035c, 0x00000001,
 		0, 0, BIT(0),
 		0x0354, 24,
 		0, 0, 0,
 		0x0354, 0, 22),
 	PLL(CLK_APMIXED_MMPLL, "mmpll", 0x0360,
 		0x0360, 0x00000001,
-		0x036c, 0x00000002, 0x00000001,
+		0x036c, 0x00000001,
 		HAVE_RST_BAR, 0x0360, BIT(23),
 		0x0364, 24,
 		0, 0, 0,
 		0x0364, 0, 22),
 	PLL(CLK_APMIXED_ADSPPLL, "adsppll", 0x0370,
 		0x0370, 0x00000001,
-		0x037c, 0x00000002, 0x00000001,
+		0x037c, 0x00000001,
 		0, 0, BIT(0),
 		0x0374, 24,
 		0, 0, 0,
 		0x0374, 0, 22),
 	PLL(CLK_APMIXED_MFGPLL, "mfgpll", 0x0268,
 		0x0268, 0x00000001,
-		0x0274, 0x00000002, 0x00000001,
+		0x0274, 0x00000001,
 		0, 0, BIT(0),
 		0x026c, 24,
 		0, 0, 0,
 		0x026c, 0, 22),
 	PLL(CLK_APMIXED_TVDPLL, "tvdpll", 0x0380,
 		0x0380, 0x00000001,
-		0x038c, 0x00000002, 0x00000001,
+		0x038c, 0x00000001,
 		0, 0, BIT(0),
 		0x0384, 24,
 		0, 0, 0,
 		0x0384, 0, 22),
 	PLL(CLK_APMIXED_APLL1, "apll1", 0x0318,
 		0x0318, 0x00000001,
-		0x0328, 0x00000002, 0x00000001,
+		0x0328, 0x00000001,
 		0, 0, BIT(0),
 		0x031c, 24,
 		0x0040, 0x000C, 0,
 		0x0320, 0, 32),
 	PLL(CLK_APMIXED_APLL2, "apll2", 0x032c,
 		0x032c, 0x00000001,
-		0x033c, 0x00000002, 0x00000001,
+		0x033c, 0x00000001,
 		0, 0, BIT(0),
 		0x0330, 24,
 		0x0044, 0x000C, 5,
 		0x0334, 0, 32),
 	PLL(CLK_APMIXED_NPUPLL, "npupll", 0x03B4,
 		0x03B4, 0x00000001,
-		0x03C0, 0x00000002, 0x00000001,
+		0x03C0, 0x00000001,
 		0, 0, BIT(0),
 		0x03B8, 24,
 		0, 0, 0,
 		0x03B8, 0, 22),
 	PLL(CLK_APMIXED_USBPLL, "usbpll", 0x03C4,
 		0x03CC, 0x00000004,
-		0x03CC, 0x00000002, 0x00000001,
+		0x03CC, 0x00000001,
 		0, 0, BIT(0),
 		0x03C4, 24,
 		0, 0, 0,
