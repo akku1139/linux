@@ -249,12 +249,6 @@
 		compatible = "simple-bus";
 		ranges;
 
-		apmixedsys: clock-controller@1000c000 {
-			compatible = "mediatek,mt6833-apmixedsys", "syscon";
-			reg = <0 0x1000c000 0 0x1000>;
-			#clock-cells = <1>;
-		};
-
 		topckgen: clock-controller@10000000 {
 			compatible = "mediatek,mt6833-topckgen", "syscon";
 			reg = <0 0x10000000 0 0x1000>;
