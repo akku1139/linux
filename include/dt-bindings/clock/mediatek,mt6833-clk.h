@@ -653,6 +653,10 @@
 #define CLK_MDP_IMG_DL_RELAY1_ASYNC1	19
 #define CLK_MDP_NR_CLK			20
 
+/* MSDC0 */
+
+#define CLK_MSDC0_AXI_WRAP_CKEN		0
+
 /* SCP_SYS */
 #define SCP_SYS_MD1	0
 #define SCP_SYS_CONN	1
