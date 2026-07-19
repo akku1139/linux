@@ -102,3 +102,6 @@ static struct platform_driver clk_mt6833_mm_drv = {
 };
 
 module_platform_driver(clk_mt6833_mm_drv);
+
+MODULE_DESCRIPTION("MediaTek MT6833 mmsys_config clocks driver");
+MODULE_LICENSE("GPL");

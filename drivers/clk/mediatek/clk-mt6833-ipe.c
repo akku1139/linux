@@ -66,3 +66,6 @@ static struct platform_driver clk_mt6833_ipe_drv = {
 };
 
 module_platform_driver(clk_mt6833_ipe_drv);
+
+MODULE_DESCRIPTION("MediaTek MT6833 ipesys clocks driver");
+MODULE_LICENSE("GPL");

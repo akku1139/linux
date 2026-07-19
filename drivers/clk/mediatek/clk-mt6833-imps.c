@@ -60,3 +60,6 @@ static struct platform_driver clk_mt6833_imps_drv = {
 };
 
 module_platform_driver(clk_mt6833_imps_drv);
+
+MODULE_DESCRIPTION("MediaTek MT6833 imp_iic_wrap_s clocks driver");
+MODULE_LICENSE("GPL");

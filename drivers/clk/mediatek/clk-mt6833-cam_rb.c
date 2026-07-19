@@ -61,3 +61,6 @@ static struct platform_driver clk_mt6833_cam_rb_drv = {
 };
 
 module_platform_driver(clk_mt6833_cam_rb_drv);
+
+MODULE_DESCRIPTION("MediaTek MT6833 camsys_rawb clocks driver");
+MODULE_LICENSE("GPL");

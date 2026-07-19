@@ -79,3 +79,6 @@ static struct platform_driver clk_mt6833_vdec_drv = {
 };
 
 module_platform_driver(clk_mt6833_vdec_drv);
+
+MODULE_DESCRIPTION("MediaTek MT6833 vdec_gcon clocks driver");
+MODULE_LICENSE("GPL");
