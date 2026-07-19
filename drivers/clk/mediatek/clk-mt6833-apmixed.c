@@ -169,7 +169,7 @@ static const struct mtk_pll_data plls[] = {
 
 static int clk_mt6833_apmixed_probe(struct platform_device *pdev)
 {
-	struct clk_onecell_data *clk_data;
+	struct clk_hw_onecell_data *clk_data;
 	int r;
 	struct device_node *node = pdev->dev.of_node;
 
@@ -182,7 +182,7 @@ static int clk_mt6833_apmixed_probe(struct platform_device *pdev)
 		return PTR_ERR(base);
 	}
 
-	clk_data = mtk_alloc_clk_data(CLK_APMIXED_NR_CLK);
+	clk_data = mtk_devm_alloc_clk_data(&pdev->dev, CLK_APMIXED_NR_CLK);
 	if (!clk_data)
 		return -ENOMEM;
 
@@ -221,7 +221,7 @@ static struct platform_driver clk_mt6833_apmixed_drv = {
 	.driver = {
 		.name = "clk-mt6833-apmixedsys",
 		.owner = THIS_MODULE,
-		.of_match_table = of_match_clk_mt6833,
+		.of_match_table = of_match_clk_mt6833_apmixedsys,
 	},
 };
 module_platform_driver(clk_mt6833_apmixed_drv);
