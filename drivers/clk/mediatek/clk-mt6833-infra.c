@@ -235,7 +235,7 @@ static const struct mtk_clk_desc infra_desc = {
 static const struct of_device_id of_match_clk_mt6833_infra[] = {
 	{
 		.compatible = "mediatek,mt6833-infracfg_ao",
-		.data = ifrao_desc,
+		.data = &infra_desc,
 	}, {
 		/* sentinel */
 	}

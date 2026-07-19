@@ -39,7 +39,7 @@ static const struct mtk_clk_desc impw_desc = {
 };
 
 static const struct of_device_id of_match_clk_mt6833_impw[] = {
-	{ .compatible = "mediatek,mt6833-imp_iic_wrap_w", .data = impw_desc },
+	{ .compatible = "mediatek,mt6833-imp_iic_wrap_w", .data = &impw_desc },
 	{}
 };
 MODULE_DEVICE_TABLE(of, of_match_clk_mt6833_impw);
