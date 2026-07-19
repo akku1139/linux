@@ -37,9 +37,9 @@ static const struct mtk_gate_regs imps_cg_regs = {
 
 static const struct mtk_gate imps_clks[] = {
 	GATE_IMPS(CLK_IMPS_AP_CLOCK_RO_I2C8, "imps_ap_i2c8",
-			"i2c_pseudo"/* parent */, 0),
+			"i2c_pseudo", 0),
 	GATE_IMPS(CLK_IMPS_AP_CLOCK_RO_I2C9, "imps_ap_i2c9",
-			"i2c_pseudo"/* parent */, 1),
+			"i2c_pseudo", 1),
 };
 
 static int clk_mt6833_imps_probe(struct platform_device *pdev)

@@ -37,13 +37,13 @@ static const struct mtk_gate_regs venc_cg_regs = {
 
 static const struct mtk_gate venc_clks[] = {
 	GATE_VENC(CLK_VENC_SET0_LARB, "venc_set0_larb",
-			"venc_ck"/* parent */, 0),
+			"venc_ck", 0),
 	GATE_VENC(CLK_VENC_SET1_VENC, "venc_set1_venc",
-			"venc_ck"/* parent */, 4),
+			"venc_ck", 4),
 	GATE_VENC(CLK_VENC_SET2_JPGENC, "jpgenc",
-			"venc_ck"/* parent */, 8),
+			"venc_ck", 8),
 	GATE_VENC(CLK_VENC_SET5_GALS, "venc_set5_gals",
-			"venc_ck"/* parent */, 28),
+			"venc_ck", 28),
 };
 
 static int clk_mt6833_venc_probe(struct platform_device *pdev)

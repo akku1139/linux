@@ -37,11 +37,11 @@ static const struct mtk_gate_regs impw_cg_regs = {
 
 static const struct mtk_gate impw_clks[] = {
 	GATE_IMPW(CLK_IMPW_AP_CLOCK_RO_I2C0, "impw_ap_i2c0",
-			"i2c_pseudo"/* parent */, 0),
+			"i2c_pseudo", 0),
 	GATE_IMPW(CLK_IMPW_AP_CLOCK_RO_I2C5, "impw_ap_i2c5",
-			"i2c_pseudo"/* parent */, 1),
+			"i2c_pseudo", 1),
 	GATE_IMPW(CLK_IMPW_AP_CLOCK_RO_I2C7, "impw_ap_i2c7",
-			"i2c_pseudo"/* parent */, 2),
+			"i2c_pseudo", 2),
 };
 
 static int clk_mt6833_impw_probe(struct platform_device *pdev)
