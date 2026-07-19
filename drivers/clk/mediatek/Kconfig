@@ -477,12 +477,6 @@ config COMMON_CLK_MT6833_MMSYS_CONFIG
 	help
 	  This driver supports MediaTek MT6833 mmsys_config clocks.
 
-config COMMON_CLK_MT6833_MSDC0SYS
-	tristate "Clock driver for MediaTek MT6833 msdc0sys"
-	depends on COMMON_CLK_MT6833
-	help
-	  This driver supports MediaTek MT6833 msdc0sys clocks.
-
 config COMMON_CLK_MT6833_VDEC_GCON
 	tristate "Clock driver for MediaTek MT6833 vdec_gcon"
 	depends on COMMON_CLK_MT6833
