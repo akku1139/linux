@@ -17,7 +17,7 @@
 #include "clk-mtk.h"
 #include "clk-gate.h"
 
-#include <dt-bindings/clock/mt6833-clk.h>
+#include <dt-bindings/clock/mediatek,mt6833-clk.h>
 
 #define MT_CLKMGR_MODULE_INIT	0
 

@@ -26,7 +26,7 @@
 #include "clk-gate.h"
 #include "clkdbg-mt6833.h"
 
-#include <dt-bindings/clock/mt6833-clk.h>
+#include <dt-bindings/clock/mediatek,mt6833-clk.h>
 
 /* bringup config */
 #define MT_CCF_BRINGUP		1
