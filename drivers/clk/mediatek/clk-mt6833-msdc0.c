@@ -11,8 +11,6 @@
 
 #include <dt-bindings/clock/mediatek,mt6833-clk.h>
 
-#define MT_CLKMGR_MODULE_INIT	0
-
 static const struct mtk_gate_regs msdc0_cg_regs = {
 	.set_ofs = 0xb4,
 	.clr_ofs = 0xb4,
@@ -57,8 +55,6 @@ static const struct of_device_id of_match_clk_mt6833_msdc0[] = {
 	{}
 };
 
-#if MT_CLKMGR_MODULE_INIT
-
 static struct platform_driver clk_mt6833_msdc0_drv = {
 	.probe = clk_mt6833_msdc0_probe,
 	.driver = {
@@ -68,20 +64,3 @@ static struct platform_driver clk_mt6833_msdc0_drv = {
 };
 
 builtin_platform_driver(clk_mt6833_msdc0_drv);
-
-#else
-
-static struct platform_driver clk_mt6833_msdc0_drv = {
-	.probe = clk_mt6833_msdc0_probe,
-	.driver = {
-		.name = "clk-mt6833-msdc0",
-		.of_match_table = of_match_clk_mt6833_msdc0,
-	},
-};
-static int __init clk_mt6833_msdc0_platform_init(void)
-{
-	return platform_driver_register(&clk_mt6833_msdc0_drv);
-}
-arch_initcall_sync(clk_mt6833_msdc0_platform_init);
-
-#endif	/* MT_CLKMGR_MODULE_INIT */

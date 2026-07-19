@@ -11,8 +11,6 @@
 
 #include <dt-bindings/clock/mediatek,mt6833-clk.h>
 
-#define MT_CLKMGR_MODULE_INIT	0
-
 #define INV_OFS			-1
 
 /* get spm power status struct to register inside clk_data */
@@ -130,8 +128,6 @@ static const struct of_device_id of_match_clk_mt6833_audsys[] = {
 	{}
 };
 
-#if MT_CLKMGR_MODULE_INIT
-
 static struct platform_driver clk_mt6833_audsys_drv = {
 	.probe = clk_mt6833_audsys_probe,
 	.driver = {
@@ -141,20 +137,3 @@ static struct platform_driver clk_mt6833_audsys_drv = {
 };
 
 builtin_platform_driver(clk_mt6833_audsys_drv);
-
-#else
-
-static struct platform_driver clk_mt6833_audsys_drv = {
-	.probe = clk_mt6833_audsys_probe,
-	.driver = {
-		.name = "clk-mt6833-audsys",
-		.of_match_table = of_match_clk_mt6833_audsys,
-	},
-};
-static int __init clk_mt6833_audsys_platform_init(void)
-{
-	return platform_driver_register(&clk_mt6833_audsys_drv);
-}
-arch_initcall(clk_mt6833_audsys_platform_init);
-
-#endif	/* MT_CLKMGR_MODULE_INIT */

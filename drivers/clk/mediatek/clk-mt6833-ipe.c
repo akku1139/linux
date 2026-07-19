@@ -11,8 +11,6 @@
 
 #include <dt-bindings/clock/mediatek,mt6833-clk.h>
 
-#define MT_CLKMGR_MODULE_INIT	0
-
 #define INV_OFS			-1
 
 /* get spm power status struct to register inside clk_data */
@@ -71,8 +69,6 @@ static const struct of_device_id of_match_clk_mt6833_ipe[] = {
 	{}
 };
 
-#if MT_CLKMGR_MODULE_INIT
-
 static struct platform_driver clk_mt6833_ipe_drv = {
 	.probe = clk_mt6833_ipe_probe,
 	.driver = {
@@ -82,20 +78,3 @@ static struct platform_driver clk_mt6833_ipe_drv = {
 };
 
 builtin_platform_driver(clk_mt6833_ipe_drv);
-
-#else
-
-static struct platform_driver clk_mt6833_ipe_drv = {
-	.probe = clk_mt6833_ipe_probe,
-	.driver = {
-		.name = "clk-mt6833-ipe",
-		.of_match_table = of_match_clk_mt6833_ipe,
-	},
-};
-static int __init clk_mt6833_ipe_platform_init(void)
-{
-	return platform_driver_register(&clk_mt6833_ipe_drv);
-}
-arch_initcall(clk_mt6833_ipe_platform_init);
-
-#endif	/* MT_CLKMGR_MODULE_INIT */
