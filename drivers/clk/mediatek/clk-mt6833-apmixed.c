@@ -101,7 +101,7 @@ static const struct mtk_pll_data plls[] = {
 	PLL(CLK_APMIXED_UNIVPLL, "univpll", 0x0308,
 		0x0308, 0x00000001,
 		0x0314, 0x00000002, 0x00000001,
-		HAVE_RST_BAR_4_TIMES, 0x0308, BIT(23),
+		HAVE_RST_BAR, 0x0308, BIT(23),
 		0x030c, 24,
 		0, 0, 0,
 		0x030c, 0, 22),
