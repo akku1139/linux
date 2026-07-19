@@ -653,24 +653,5 @@
 #define CLK_MDP_IMG_DL_RELAY1_ASYNC1	19
 #define CLK_MDP_NR_CLK			20
 
-/* SCP_SYS */
-#define SCP_SYS_MD1	0
-#define SCP_SYS_CONN	1
-#define SCP_SYS_MFG0	2
-#define SCP_SYS_MFG1	3
-#define SCP_SYS_MFG2	4
-#define SCP_SYS_MFG3	5
-#define SCP_SYS_ISP	6
-#define SCP_SYS_ISP2	7
-#define SCP_SYS_IPE	8
-#define SCP_SYS_VDEC	9
-#define SCP_SYS_VENC	10
-#define SCP_SYS_DIS	11
-#define SCP_SYS_AUDIO	12
-#define SCP_SYS_CAM	13
-#define SCP_SYS_CAM_RAWA	14
-#define SCP_SYS_CAM_RAWB	15
-#define SCP_NR_SYSS	16
-
 #endif /* _DT_BINDINGS_CLOCK_MEDIATEK_MT6833_H */
 
