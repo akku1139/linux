@@ -1388,7 +1388,7 @@ static const struct mtk_gate_regs ifrao7_cg_regs = {
 		.id = _id,				\
 		.name = _name,				\
 		.parent_name = _parent,			\
-		.regs = &ifrao0_cg_regs,			\
+		.regs = &ifrao0_cg_regs,		\
 		.shift = _shift,			\
 		.ops = &mtk_clk_gate_ops_no_setclr,	\
 	}
@@ -1397,7 +1397,7 @@ static const struct mtk_gate_regs ifrao7_cg_regs = {
 		.id = _id,				\
 		.name = _name,				\
 		.parent_name = _parent,			\
-		.regs = &ifrao1_cg_regs,			\
+		.regs = &ifrao1_cg_regs,		\
 		.shift = _shift,			\
 		.ops = &mtk_clk_gate_ops_no_setclr,	\
 	}
@@ -1406,7 +1406,7 @@ static const struct mtk_gate_regs ifrao7_cg_regs = {
 		.id = _id,				\
 		.name = _name,				\
 		.parent_name = _parent,			\
-		.regs = &ifrao2_cg_regs,			\
+		.regs = &ifrao2_cg_regs,		\
 		.shift = _shift,			\
 		.ops = &mtk_clk_gate_ops_setclr,	\
 	}
@@ -1415,7 +1415,7 @@ static const struct mtk_gate_regs ifrao7_cg_regs = {
 		.id = _id,				\
 		.name = _name,				\
 		.parent_name = _parent,			\
-		.regs = &ifrao3_cg_regs,			\
+		.regs = &ifrao3_cg_regs,		\
 		.shift = _shift,			\
 		.ops = &mtk_clk_gate_ops_setclr,	\
 	}
@@ -1424,7 +1424,7 @@ static const struct mtk_gate_regs ifrao7_cg_regs = {
 		.id = _id,				\
 		.name = _name,				\
 		.parent_name = _parent,			\
-		.regs = &ifrao4_cg_regs,			\
+		.regs = &ifrao4_cg_regs,		\
 		.shift = _shift,			\
 		.ops = &mtk_clk_gate_ops_setclr,	\
 	}
@@ -1433,7 +1433,7 @@ static const struct mtk_gate_regs ifrao7_cg_regs = {
 		.id = _id,				\
 		.name = _name,				\
 		.parent_name = _parent,			\
-		.regs = &ifrao5_cg_regs,			\
+		.regs = &ifrao5_cg_regs,		\
 		.shift = _shift,			\
 		.ops = &mtk_clk_gate_ops_setclr,	\
 	}
@@ -1442,7 +1442,7 @@ static const struct mtk_gate_regs ifrao7_cg_regs = {
 		.id = _id,				\
 		.name = _name,				\
 		.parent_name = _parent,			\
-		.regs = &ifrao6_cg_regs,			\
+		.regs = &ifrao6_cg_regs,		\
 		.shift = _shift,			\
 		.ops = &mtk_clk_gate_ops_setclr,	\
 	}
@@ -1451,7 +1451,7 @@ static const struct mtk_gate_regs ifrao7_cg_regs = {
 		.id = _id,				\
 		.name = _name,				\
 		.parent_name = _parent,			\
-		.regs = &ifrao7_cg_regs,			\
+		.regs = &ifrao7_cg_regs,		\
 		.shift = _shift,			\
 		.ops = &mtk_clk_gate_ops_setclr,	\
 	}
@@ -1608,7 +1608,7 @@ static const struct mtk_gate apmixed_clks[] = {
 		.pd_reg = _pd_reg,					\
 		.pd_shift = _pd_shift,					\
 		.tuner_reg = _tuner_reg,				\
-		.tuner_en_reg = _tuner_en_reg,			\
+		.tuner_en_reg = _tuner_en_reg,				\
 		.tuner_en_bit = _tuner_en_bit,				\
 		.pcw_reg = _pcw_reg,					\
 		.pcw_shift = _pcw_shift,				\
