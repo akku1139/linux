@@ -45,6 +45,24 @@ properties:
               - mediatek,mt6797-imgsys
               - mediatek,mt6797-vdecsys
               - mediatek,mt6797-vencsys
+              - mediatek,mt6833-camsys_main
+              - mediatek,mt6833-camsys_rawa
+              - mediatek,mt6833-camsys_rawb
+              - mediatek,mt6833-imgsys1
+              - mediatek,mt6833-imgsys2
+              - mediatek,mt6833-imp_iic_wrap_c
+              - mediatek,mt6833-imp_iic_wrap_e
+              - mediatek,mt6833-imp_iic_wrap_n
+              - mediatek,mt6833-imp_iic_wrap_s
+              - mediatek,mt6833-imp_iic_wrap_w
+              - mediatek,mt6833-imp_iic_wrap_ws
+              - mediatek,mt6833-ipesys
+              - mediatek,mt6833-mdpsys_config
+              - mediatek,mt6833-mfgsys
+              - mediatek,mt6833-msdc0sys
+              - mediatek,mt6833-scpsys
+              - mediatek,mt6833-vdec_gcon
+              - mediatek,mt6833-venc_gcon
               - mediatek,mt8167-imgsys
               - mediatek,mt8167-mfgcfg
               - mediatek,mt8167-vdecsys
