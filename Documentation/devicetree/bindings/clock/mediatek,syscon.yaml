@@ -58,7 +58,7 @@ properties:
               - mediatek,mt6833-imp_iic_wrap_ws
               - mediatek,mt6833-ipesys
               - mediatek,mt6833-mdpsys
-              - mediatek,mt6833-mfgsys
+              - mediatek,mt6833-mfgcfg
               - mediatek,mt6833-msdc0sys
               - mediatek,mt6833-scpsys
               - mediatek,mt6833-vdec_gcon
