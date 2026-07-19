@@ -167,32 +167,6 @@ static const struct mtk_pll_data plls[] = {
 		0x03C4, 0, 22),
 };
 
-void pll_off(u32 i)
-{
-	void __iomem *rst_reg, *en_reg, *pwr_reg;
-
-	/* do not pwrdn the AO PLLs */
-	if ((plls[i].flags & PLL_AO) != PLL_AO) {
-
-		if ((plls[i].flags & HAVE_RST_BAR) == HAVE_RST_BAR) {
-			rst_reg = apmixed_base + plls[i].rst_bar_reg;
-			writel(readl(rst_reg) & ~plls[i].rst_bar_mask,
-				rst_reg);
-		}
-
-		en_reg = apmixed_base + plls[i].en_reg;
-
-		pwr_reg = apmixed_base + plls[i].pwr_reg;
-
-		writel(readl(en_reg) & ~plls[i].en_mask,
-			en_reg);
-		writel(readl(pwr_reg) | plls[i].iso_mask,
-			pwr_reg);
-		writel(readl(pwr_reg) & ~plls[i].pwron_mask,
-			pwr_reg);
-	}
-}
-
 static int clk_mt6833_apmixed_probe(struct platform_device *pdev)
 {
 	struct clk_onecell_data *clk_data;
@@ -223,8 +197,6 @@ static int clk_mt6833_apmixed_probe(struct platform_device *pdev)
 		pr_notice("%s(): could not register clock provider: %d\n",
 			__func__, r);
 
-	pll_off(11);//apll1
-	pll_off(12);//apll2
 	return r;
 }
 
