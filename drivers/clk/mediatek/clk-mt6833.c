@@ -22,7 +22,6 @@
 
 /* bringup config */
 #define MT_CCF_MUX_DISABLE	0
-#define MT_CCF_PLL_DISABLE	0
 
 /* Regular Number Definition */
 #define INV_OFS	-1
@@ -1971,12 +1970,6 @@ static const struct mtk_gate apmixed_clks[] = {
 #define MT6833_PLL_FMIN		(1500UL * MHZ)
 #define MT6833_INTEGER_BITS	8
 
-#if MT_CCF_PLL_DISABLE
-#define PLL_CFLAGS		PLL_AO
-#else
-#define PLL_CFLAGS		(0)
-#endif
-
 #define PLL_B(_id, _name, _reg, _en_reg, _en_mask, _pwr_reg,		\
 			_iso_mask, _pwron_mask, _flags, _rst_bar_reg,	\
 			_rst_bar_mask, _pd_reg, _pd_shift, _tuner_reg,	\
@@ -1990,7 +1983,7 @@ static const struct mtk_gate apmixed_clks[] = {
 		.pwr_reg = _pwr_reg,					\
 		.iso_mask = _iso_mask,					\
 		.pwron_mask = _pwron_mask,				\
-		.flags = (_flags | PLL_CFLAGS),				\
+		.flags = (_flags),					\
 		.rst_bar_reg = _rst_bar_reg,				\
 		.rst_bar_mask = _rst_bar_mask,				\
 		.fmax = MT6833_PLL_FMAX,				\
