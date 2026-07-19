@@ -36,22 +36,14 @@ static const struct mtk_gate_regs ipe_cg_regs = {
 	}
 
 static const struct mtk_gate ipe_clks[] = {
-	GATE_IPE(CLK_IPE_LARB19, "ipe_larb19",
-			"ipe_ck", 0),
-	GATE_IPE(CLK_IPE_LARB20, "ipe_larb20",
-			"ipe_ck", 1),
-	GATE_IPE(CLK_IPE_SMI_SUBCOM, "ipe_smi_subcom",
-			"ipe_ck", 2),
-	GATE_IPE(CLK_IPE_FD, "ipe_fd",
-			"ipe_ck", 3),
-	GATE_IPE(CLK_IPE_FE, "ipe_fe",
-			"ipe_ck", 4),
-	GATE_IPE(CLK_IPE_RSC, "ipe_rsc",
-			"ipe_ck", 5),
-	GATE_IPE(CLK_IPE_DPE, "ipe_dpe",
-			"dpe_ck", 6),
-	GATE_IPE(CLK_IPE_GALS, "ipe_gals",
-			"img2_ck", 8),
+	GATE_IPE(CLK_IPE_LARB19, "ipe_larb19", "ipe_ck", 0),
+	GATE_IPE(CLK_IPE_LARB20, "ipe_larb20", "ipe_ck", 1),
+	GATE_IPE(CLK_IPE_SMI_SUBCOM, "ipe_smi_subcom", "ipe_ck", 2),
+	GATE_IPE(CLK_IPE_FD, "ipe_fd", "ipe_ck", 3),
+	GATE_IPE(CLK_IPE_FE, "ipe_fe", "ipe_ck", 4),
+	GATE_IPE(CLK_IPE_RSC, "ipe_rsc", "ipe_ck", 5),
+	GATE_IPE(CLK_IPE_DPE, "ipe_dpe", "dpe_ck", 6),
+	GATE_IPE(CLK_IPE_GALS, "ipe_gals", "img2_ck", 8),
 };
 
 static int clk_mt6833_ipe_probe(struct platform_device *pdev)

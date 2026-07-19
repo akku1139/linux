@@ -29,8 +29,7 @@ static const struct mtk_gate_regs msdc0_cg_regs = {
 	}
 
 static const struct mtk_gate msdc0_clks[] = {
-	GATE_MSDC0(CLK_MSDC0_AXI_WRAP_CKEN, "msdc0_axi_wrap_cken",
-			"axi_ck", 22),
+	GATE_MSDC0(CLK_MSDC0_AXI_WRAP_CKEN, "msdc0_axi_wrap_cken", "axi_ck", 22),
 };
 
 static int clk_mt6833_msdc0_probe(struct platform_device *pdev)

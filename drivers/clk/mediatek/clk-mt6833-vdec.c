@@ -53,13 +53,10 @@ static const struct mtk_gate_regs vdec1_cg_regs = {
 
 static const struct mtk_gate vdec_clks[] = {
 	/* VDEC0 */
-	GATE_VDEC0(CLK_VDEC_CKEN, "vdec_cken",
-			"vdec_ck", 0),
-	GATE_VDEC0(CLK_VDEC_ACTIVE, "vdec_active",
-			"vdec_ck", 4),
+	GATE_VDEC0(CLK_VDEC_CKEN, "vdec_cken", "vdec_ck", 0),
+	GATE_VDEC0(CLK_VDEC_ACTIVE, "vdec_active", "vdec_ck", 4),
 	/* VDEC1 */
-	GATE_VDEC1(CLK_VDEC_LARB1_CKEN, "vdec_larb1_cken",
-			"vdec_ck", 0),
+	GATE_VDEC1(CLK_VDEC_LARB1_CKEN, "vdec_larb1_cken", "vdec_ck", 0),
 };
 
 static int clk_mt6833_vdec_probe(struct platform_device *pdev)

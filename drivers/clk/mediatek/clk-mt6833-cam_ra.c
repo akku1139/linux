@@ -36,12 +36,9 @@ static const struct mtk_gate_regs cam_ra_cg_regs = {
 	}
 
 static const struct mtk_gate cam_ra_clks[] = {
-	GATE_CAM_RA(CLK_CAM_RA_LARBX, "cam_ra_larbx",
-			"cam_ck", 0),
-	GATE_CAM_RA(CLK_CAM_RA_CAM, "cam_ra_cam",
-			"cam_ck", 1),
-	GATE_CAM_RA(CLK_CAM_RA_CAMTG, "cam_ra_camtg",
-			"cam_ck", 2),
+	GATE_CAM_RA(CLK_CAM_RA_LARBX, "cam_ra_larbx", "cam_ck", 0),
+	GATE_CAM_RA(CLK_CAM_RA_CAM, "cam_ra_cam", "cam_ck", 1),
+	GATE_CAM_RA(CLK_CAM_RA_CAMTG, "cam_ra_camtg", "cam_ck", 2),
 };
 
 static int clk_mt6833_cam_ra_probe(struct platform_device *pdev)

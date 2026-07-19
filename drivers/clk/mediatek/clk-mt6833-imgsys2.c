@@ -36,18 +36,12 @@ static const struct mtk_gate_regs imgsys2_cg_regs = {
 	}
 
 static const struct mtk_gate imgsys2_clks[] = {
-	GATE_IMGSYS2(CLK_IMGSYS2_LARB9, "imgsys2_larb9",
-			"img1_ck", 0),
-	GATE_IMGSYS2(CLK_IMGSYS2_LARB10, "imgsys2_larb10",
-			"img1_ck", 1),
-	GATE_IMGSYS2(CLK_IMGSYS2_MFB, "imgsys2_mfb",
-			"img1_ck", 6),
-	GATE_IMGSYS2(CLK_IMGSYS2_WPE, "imgsys2_wpe",
-			"img1_ck", 7),
-	GATE_IMGSYS2(CLK_IMGSYS2_MSS, "imgsys2_mss",
-			"img1_ck", 8),
-	GATE_IMGSYS2(CLK_IMGSYS2_GALS, "imgsys2_gals",
-			"img1_ck", 12),
+	GATE_IMGSYS2(CLK_IMGSYS2_LARB9, "imgsys2_larb9", "img1_ck", 0),
+	GATE_IMGSYS2(CLK_IMGSYS2_LARB10, "imgsys2_larb10", "img1_ck", 1),
+	GATE_IMGSYS2(CLK_IMGSYS2_MFB, "imgsys2_mfb", "img1_ck", 6),
+	GATE_IMGSYS2(CLK_IMGSYS2_WPE, "imgsys2_wpe", "img1_ck", 7),
+	GATE_IMGSYS2(CLK_IMGSYS2_MSS, "imgsys2_mss", "img1_ck", 8),
+	GATE_IMGSYS2(CLK_IMGSYS2_GALS, "imgsys2_gals", "img1_ck", 12),
 };
 
 static int clk_mt6833_imgsys2_probe(struct platform_device *pdev)

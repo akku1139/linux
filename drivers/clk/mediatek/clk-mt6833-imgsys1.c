@@ -36,14 +36,10 @@ static const struct mtk_gate_regs imgsys1_cg_regs = {
 	}
 
 static const struct mtk_gate imgsys1_clks[] = {
-	GATE_IMGSYS1(CLK_IMGSYS1_LARB9, "imgsys1_larb9",
-			"img1_ck", 0),
-	GATE_IMGSYS1(CLK_IMGSYS1_LARB10, "imgsys1_larb10",
-			"img1_ck", 1),
-	GATE_IMGSYS1(CLK_IMGSYS1_DIP, "imgsys1_dip",
-			"img1_ck", 2),
-	GATE_IMGSYS1(CLK_IMGSYS1_GALS, "imgsys1_gals",
-			"img1_ck", 12),
+	GATE_IMGSYS1(CLK_IMGSYS1_LARB9, "imgsys1_larb9", "img1_ck", 0),
+	GATE_IMGSYS1(CLK_IMGSYS1_LARB10, "imgsys1_larb10", "img1_ck", 1),
+	GATE_IMGSYS1(CLK_IMGSYS1_DIP, "imgsys1_dip", "img1_ck", 2),
+	GATE_IMGSYS1(CLK_IMGSYS1_GALS, "imgsys1_gals", "img1_ck", 12),
 };
 
 static int clk_mt6833_imgsys1_probe(struct platform_device *pdev)

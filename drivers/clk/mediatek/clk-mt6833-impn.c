@@ -36,8 +36,7 @@ static const struct mtk_gate_regs impn_cg_regs = {
 	}
 
 static const struct mtk_gate impn_clks[] = {
-	GATE_IMPN(CLK_IMPN_AP_CLOCK_RO_I2C6, "impn_ap_i2c6",
-			"i2c_pseudo", 0),
+	GATE_IMPN(CLK_IMPN_AP_CLOCK_RO_I2C6, "impn_ap_i2c6", "i2c_pseudo", 0),
 };
 
 static int clk_mt6833_impn_probe(struct platform_device *pdev)
