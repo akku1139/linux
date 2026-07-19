@@ -13,8 +13,6 @@
 
 #define MT_CLKMGR_MODULE_INIT	0
 
-#define MT_CCF_BRINGUP			1
-
 #define INV_OFS			-1
 
 /* get spm power status struct to register inside clk_data */
@@ -52,10 +50,6 @@ static int clk_mt6833_impws_probe(struct platform_device *pdev)
 	int r;
 	struct device_node *node = pdev->dev.of_node;
 
-#if MT_CCF_BRINGUP
-	pr_notice("%s init begin\n", __func__);
-#endif
-
 	clk_data = mtk_alloc_clk_data(CLK_IMPWS_NR_CLK);
 
 	mtk_clk_register_gates(node, impws_clks, ARRAY_SIZE(impws_clks),
@@ -66,10 +60,6 @@ static int clk_mt6833_impws_probe(struct platform_device *pdev)
 	if (r)
 		pr_notice("%s(): could not register clock provider: %d\n",
 			__func__, r);
-
-#if MT_CCF_BRINGUP
-	pr_notice("%s init end\n", __func__);
-#endif
 
 	return r;
 }

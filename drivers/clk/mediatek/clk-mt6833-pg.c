@@ -24,7 +24,6 @@
 #include <dt-bindings/clock/mediatek,mt6833-clk.h>
 
 #define MT_CCF_DEBUG	0
-#define MT_CCF_BRINGUP	0
 #define CONTROL_LIMIT	1
 #define	CHECK_PWR_ST	1
 
@@ -4305,20 +4304,10 @@ static void init_clk_scpsys(struct clk_onecell_data *clk_data)
 	for (i = 0; i < ARRAY_SIZE(scp_clks); i++) {
 		struct mtk_power_gate *pg = &scp_clks[i];
 
-#if MT_CCF_BRINGUP
-		pr_notice("[CCF] %s: pgate %3d: %s begin\n", __func__,
-				i, pg->name);
-#endif
-
-#if !MT_CCF_BRINGUP
 		clk = mt_clk_register_power_gate(pg->name,
 			pg->parent_name, pg->pre_clk1_names,
 			pg->pre_clk2_names, pg->pd_id);
-#else
-		clk = mt_clk_register_power_gate(pg->name,
-			pg->parent_name, NULL,
-			NULL, pg->pd_id);
-#endif
+
 		if (IS_ERR(clk)) {
 			pr_notice("[CCF] %s: Failed to register clk %s: %ld\n",
 				__func__, pg->name, PTR_ERR(clk));
@@ -4327,11 +4316,6 @@ static void init_clk_scpsys(struct clk_onecell_data *clk_data)
 
 		if (clk_data)
 			clk_data->clks[pg->id] = clk;
-
-#if MT_CCF_BRINGUP
-		pr_notice("[CCF] %s: pgate %3d: %s end\n", __func__,
-				i, pg->name);
-#endif				/* MT_CCF_DEBUG */
 	}
 }
 
@@ -4379,9 +4363,6 @@ static int clk_mt6833_scpsys_probe(struct platform_device *pdev)
 	struct clk_onecell_data *clk_data;
 	int r;
 
-#if MT_CCF_BRINGUP
-	pr_notice("%s init begin\n", __func__);
-#endif
 	infracfg_base = get_reg(node, 0);
 	spm_base = get_reg(node, 1);
 	infra_base = get_reg(node, 2);
@@ -4401,9 +4382,6 @@ static int clk_mt6833_scpsys_probe(struct platform_device *pdev)
 
 
 	spin_lock_init(&pgcb_lock);
-#if MT_CCF_BRINGUP
-	pr_notice("%s init end\n", __func__);
-#endif
 	return r;
 }
 
