@@ -5,6 +5,7 @@
 
 #include <linux/clk-provider.h>
 #include <linux/platform_device.h>
+#include <linux/module.h>
 
 #include "clk-mtk.h"
 #include "clk-gate.h"
@@ -62,6 +63,7 @@ static const struct of_device_id of_match_clk_mt6833_imps[] = {
 	{ .compatible = "mediatek,mt6833-imp_iic_wrap_s", },
 	{}
 };
+MODULE_DEVICE_TABLE(of, of_match_clk_mt6833_imps);
 
 static struct platform_driver clk_mt6833_imps_drv = {
 	.probe = clk_mt6833_imps_probe,
