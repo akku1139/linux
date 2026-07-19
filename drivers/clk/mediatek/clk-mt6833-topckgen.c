@@ -1338,7 +1338,7 @@ static const struct mtk_clk_desc topckgen_desc = {
 	.num_factor_clks = ARRAY_SIZE(top_divs),
 	.mux_clks = top_muxes,
 	.num_mux_clks = ARRAY_SIZE(top_muxes),
-	.mtk_composite = top_composites,
+	.composite_clks = top_composites,
 	.num_composite_clks = ARRAY_SIZE(top_composites),
 	.clk_lock = &mt6833_topckgen_lock,
 };
