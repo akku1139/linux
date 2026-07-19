@@ -38,38 +38,24 @@ static const struct mtk_gate impe_clks[] = {
 	GATE_IMPE(CLK_IMPE_AP_CLOCK_RO_I2C3, "impe_ap_i2c3", "i2c_pseudo", 0),
 };
 
-static int clk_mt6833_impe_probe(struct platform_device *pdev)
-{
-	struct clk_onecell_data *clk_data;
-	int r;
-	struct device_node *node = pdev->dev.of_node;
-
-	clk_data = mtk_alloc_clk_data(CLK_IMPE_NR_CLK);
-
-	mtk_clk_register_gates(node, impe_clks, ARRAY_SIZE(impe_clks),
-			clk_data);
-
-	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-
-	if (r)
-		pr_notice("%s(): could not register clock provider: %d\n",
-			__func__, r);
-
-	return r;
-}
+static const struct mtk_clk_desc impe_desc = {
+	.clks = impe_clks,
+	.num_clks = ARRAY_SIZE(impe_clks),
+};
 
 static const struct of_device_id of_match_clk_mt6833_impe[] = {
-	{ .compatible = "mediatek,mt6833-imp_iic_wrap_e", },
+	{ .compatible = "mediatek,mt6833-imp_iic_wrap_e", .data = &impe_desc },
 	{}
 };
 MODULE_DEVICE_TABLE(of, of_match_clk_mt6833_impe);
 
 static struct platform_driver clk_mt6833_impe_drv = {
-	.probe = clk_mt6833_impe_probe,
+	.probe = mtk_clk_simple_probe,
+	.remove = mtk_clk_simple_remove,
 	.driver = {
 		.name = "clk-mt6833-impe",
 		.of_match_table = of_match_clk_mt6833_impe,
 	},
 };
 
-builtin_platform_driver(clk_mt6833_impe_drv);
+module_platform_driver(clk_mt6833_impe_drv);

@@ -40,38 +40,24 @@ static const struct mtk_gate cam_rb_clks[] = {
 	GATE_CAM_RB(CLK_CAM_RB_CAMTG, "cam_rb_camtg", "cam_ck", 2),
 };
 
-static int clk_mt6833_cam_rb_probe(struct platform_device *pdev)
-{
-	struct clk_onecell_data *clk_data;
-	int r;
-	struct device_node *node = pdev->dev.of_node;
-
-	clk_data = mtk_alloc_clk_data(CLK_CAM_RB_NR_CLK);
-
-	mtk_clk_register_gates(node, cam_rb_clks, ARRAY_SIZE(cam_rb_clks),
-			clk_data);
-
-	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-
-	if (r)
-		pr_notice("%s(): could not register clock provider: %d\n",
-			__func__, r);
-
-	return r;
-}
+static const struct mtk_clk_desc cam_rb_desc = {
+	.clks = cam_rb_clks,
+	.num_clks = ARRAY_SIZE(cam_rb_clks),
+};
 
 static const struct of_device_id of_match_clk_mt6833_cam_rb[] = {
-	{ .compatible = "mediatek,mt6833-camsys_rawb", },
+	{ .compatible = "mediatek,mt6833-camsys_rawb", .data = &cam_rb_desc },
 	{}
 };
 MODULE_DEVICE_TABLE(of, of_match_clk_mt6833_cam_rb);
 
 static struct platform_driver clk_mt6833_cam_rb_drv = {
-	.probe = clk_mt6833_cam_rb_probe,
+	.probe = mtk_clk_simple_probe,
+	.remove = mtk_clk_simple_remove,
 	.driver = {
 		.name = "clk-mt6833-cam_rb",
 		.of_match_table = of_match_clk_mt6833_cam_rb,
 	},
 };
 
-builtin_platform_driver(clk_mt6833_cam_rb_drv);
+module_platform_driver(clk_mt6833_cam_rb_drv);

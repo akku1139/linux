@@ -43,38 +43,24 @@ static const struct mtk_gate imgsys2_clks[] = {
 	GATE_IMGSYS2(CLK_IMGSYS2_GALS, "imgsys2_gals", "img1_ck", 12),
 };
 
-static int clk_mt6833_imgsys2_probe(struct platform_device *pdev)
-{
-	struct clk_onecell_data *clk_data;
-	int r;
-	struct device_node *node = pdev->dev.of_node;
-
-	clk_data = mtk_alloc_clk_data(CLK_IMGSYS2_NR_CLK);
-
-	mtk_clk_register_gates(node, imgsys2_clks, ARRAY_SIZE(imgsys2_clks),
-			clk_data);
-
-	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-
-	if (r)
-		pr_notice("%s(): could not register clock provider: %d\n",
-			__func__, r);
-
-	return r;
-}
+static const struct mtk_clk_desc imgsys2_desc = {
+	.clks = imgsys2_clks,
+	.num_clks = ARRAY_SIZE(imgsys2_clks),
+};
 
 static const struct of_device_id of_match_clk_mt6833_imgsys2[] = {
-	{ .compatible = "mediatek,mt6833-imgsys2", },
+	{ .compatible = "mediatek,mt6833-imgsys2", .data = &imgsys2_desc },
 	{}
 };
 MODULE_DEVICE_TABLE(of, of_match_clk_mt6833_imgsys2);
 
 static struct platform_driver clk_mt6833_imgsys2_drv = {
-	.probe = clk_mt6833_imgsys2_probe,
+	.probe = mtk_clk_simple_probe,
+	.remove = mtk_clk_simple_remove,
 	.driver = {
 		.name = "clk-mt6833-imgsys2",
 		.of_match_table = of_match_clk_mt6833_imgsys2,
 	},
 };
 
-builtin_platform_driver(clk_mt6833_imgsys2_drv);
+module_platform_driver(clk_mt6833_imgsys2_drv);

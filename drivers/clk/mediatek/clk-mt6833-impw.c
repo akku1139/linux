@@ -40,38 +40,24 @@ static const struct mtk_gate impw_clks[] = {
 	GATE_IMPW(CLK_IMPW_AP_CLOCK_RO_I2C7, "impw_ap_i2c7", "i2c_pseudo", 2),
 };
 
-static int clk_mt6833_impw_probe(struct platform_device *pdev)
-{
-	struct clk_onecell_data *clk_data;
-	int r;
-	struct device_node *node = pdev->dev.of_node;
-
-	clk_data = mtk_alloc_clk_data(CLK_IMPW_NR_CLK);
-
-	mtk_clk_register_gates(node, impw_clks, ARRAY_SIZE(impw_clks),
-			clk_data);
-
-	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-
-	if (r)
-		pr_notice("%s(): could not register clock provider: %d\n",
-			__func__, r);
-
-	return r;
-}
+static const struct mtk_clk_desc impw_desc = {
+	.clks = impw_clks,
+	.num_clks = ARRAY_SIZE(impw_clks),
+};
 
 static const struct of_device_id of_match_clk_mt6833_impw[] = {
-	{ .compatible = "mediatek,mt6833-imp_iic_wrap_w", },
+	{ .compatible = "mediatek,mt6833-imp_iic_wrap_w", .data = impw_desc },
 	{}
 };
 MODULE_DEVICE_TABLE(of, of_match_clk_mt6833_impw);
 
 static struct platform_driver clk_mt6833_impw_drv = {
-	.probe = clk_mt6833_impw_probe,
+	.probe = mtk_clk_simple_probe,
+	.remove = mtk_clk_simple_remove,
 	.driver = {
 		.name = "clk-mt6833-impw",
 		.of_match_table = of_match_clk_mt6833_impw,
 	},
 };
 
-builtin_platform_driver(clk_mt6833_impw_drv);
+module_platform_driver(clk_mt6833_impw_drv);

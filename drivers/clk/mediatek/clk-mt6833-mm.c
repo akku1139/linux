@@ -81,38 +81,24 @@ static const struct mtk_gate mm_clks[] = {
 	GATE_MM1(CLK_MM_DISP_26M, "mm_disp_26m_ck", "disp_ck", 10),
 };
 
-static int clk_mt6833_mm_probe(struct platform_device *pdev)
-{
-	struct clk_onecell_data *clk_data;
-	int r;
-	struct device_node *node = pdev->dev.of_node;
-
-	clk_data = mtk_alloc_clk_data(CLK_MM_NR_CLK);
-
-	mtk_clk_register_gates(node, mm_clks, ARRAY_SIZE(mm_clks),
-			clk_data);
-
-	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-
-	if (r)
-		pr_notice("%s(): could not register clock provider: %d\n",
-			__func__, r);
-
-	return r;
-}
+static const struct mtk_clk_desc mm_clks_desc = {
+	.clks = mm_clks,
+	.num_clks = ARRAY_SIZE(mm_clks),
+};
 
 static const struct of_device_id of_match_clk_mt6833_mm[] = {
-	{ .compatible = "mediatek,mt6833-mmsys_config", },
+	{ .compatible = "mediatek,mt6833-mmsys_config", .data = &mm_clks_desc },
 	{}
 };
 MODULE_DEVICE_TABLE(of, of_match_clk_mt6833_mm);
 
 static struct platform_driver clk_mt6833_mm_drv = {
-	.probe = clk_mt6833_mm_probe,
+	.probe = mtk_clk_simple_probe,
+	.remove = mtk_clk_simple_remove,
 	.driver = {
 		.name = "clk-mt6833-mm",
 		.of_match_table = of_match_clk_mt6833_mm,
 	},
 };
 
-builtin_platform_driver(clk_mt6833_mm_drv);
+module_platform_driver(clk_mt6833_mm_drv);
