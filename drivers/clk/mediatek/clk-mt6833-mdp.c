@@ -12,12 +12,6 @@
 
 #include <dt-bindings/clock/mediatek,mt6833-clk.h>
 
-#define INV_OFS			-1
-
-/* get spm power status struct to register inside clk_data */
-static struct pwr_status pwr_stat = GATE_PWR_STAT(0x16C,
-		0x170, INV_OFS, BIT(20), BIT(20));
-
 static const struct mtk_gate_regs mdp0_cg_regs = {
 	.set_ofs = 0x104,
 	.clr_ofs = 0x108,
@@ -46,7 +40,6 @@ static const struct mtk_gate_regs mdp1_cg_regs = {
 		.regs = &mdp1_cg_regs,			\
 		.shift = _shift,			\
 		.ops = &mtk_clk_gate_ops_setclr,	\
-		.pwr_stat = &pwr_stat,			\
 	}
 
 static const struct mtk_gate mdp_clks[] = {
