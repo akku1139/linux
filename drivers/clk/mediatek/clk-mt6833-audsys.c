@@ -110,7 +110,7 @@ static const struct mtk_clk_desc aud_desc = {
 };
 
 static const struct of_device_id of_match_clk_mt6833_audsys[] = {
-	{ .compatible = "mediatek,mt6833-audio", .data = &aud_desc },
+	{ .compatible = "mediatek,mt6833-audsys", .data = &aud_desc },
 	{}
 };
 MODULE_DEVICE_TABLE(of, of_match_clk_mt6833_audsys);
