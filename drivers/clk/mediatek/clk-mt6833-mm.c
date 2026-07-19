@@ -79,7 +79,7 @@ static const struct mtk_clk_desc mm_clks_desc = {
 };
 
 static const struct of_device_id of_match_clk_mt6833_mm[] = {
-	{ .compatible = "mediatek,mt6833-mmsys_config", .data = &mm_clks_desc },
+	{ .compatible = "mediatek,mt6833-mmsys", .data = &mm_clks_desc },
 	{}
 };
 MODULE_DEVICE_TABLE(of, of_match_clk_mt6833_mm);
@@ -95,5 +95,5 @@ static struct platform_driver clk_mt6833_mm_drv = {
 
 module_platform_driver(clk_mt6833_mm_drv);
 
-MODULE_DESCRIPTION("MediaTek MT6833 mmsys_config clocks driver");
+MODULE_DESCRIPTION("MediaTek MT6833 mmsys clocks driver");
 MODULE_LICENSE("GPL");
